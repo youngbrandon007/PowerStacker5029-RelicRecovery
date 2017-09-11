@@ -1,0 +1,24 @@
+***8/7/17***
+
+   1. PID for the motors
+   2. DC Servo Motor option thing
+   3. Omni Drive
+   4. Servos
+   5. Pineapple Settings
+   6. Encoder backtracking correction with slowdown as near target
+
+
+   Auto Functions
+  x 1. Turning Gyro
+   2. Drive While
+   3. Encoder Drive for drivetrain together
+   4. Correction control system
+   5. Multi Sensor operation
+   6. Vuforia
+   7. Wait until function
+   8. Directions Path Array (5ft, 30deg, ...)
+   9. Gyro veer correction PID
+   10. Line following
+   11. Wall Aligning
+   12. Wall Following
+   13.
