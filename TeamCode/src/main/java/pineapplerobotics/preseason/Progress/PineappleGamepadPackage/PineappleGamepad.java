@@ -17,7 +17,7 @@ public class PineappleGamepad extends Gamepad{
         advanced = new PineappleAdvencedGamepad();
     }
 
-    public void update(android.view.KeyEvent event) {
+    public void update(KeyEvent event) {
         /*
         int key = event.getKeyCode();
         if      (key == KeyEvent.KEYCODE_DPAD_UP) dpad_up = pressed(event);
@@ -38,7 +38,7 @@ public class PineappleGamepad extends Gamepad{
         */
     }
 
-    public void update(android.view.MotionEvent event) {
+    public void update(MotionEvent event) {
         /*
         left_stick_x = cleanMotionValues(event.getAxisValue(MotionEvent.AXIS_X));
         left_stick_y = cleanMotionValues(event.getAxisValue(MotionEvent.AXIS_Y));
