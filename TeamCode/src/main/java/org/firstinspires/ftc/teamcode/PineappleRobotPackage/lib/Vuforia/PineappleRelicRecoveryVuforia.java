@@ -60,10 +60,10 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia{
                 loc = PineappleEnum.VuMarkLocation.CENTER;
             }
             if (strPose.toLowerCase().equals("left")){
-                loc = PineappleEnum.VuMarkLocation.CENTER;
+                loc = PineappleEnum.VuMarkLocation.LEFT;
             }
             if (strPose.toLowerCase().equals("right")){
-                loc = PineappleEnum.VuMarkLocation.CENTER;
+                loc = PineappleEnum.VuMarkLocation.RIGHT;
             }
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
