@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.SensorExamples;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.SensorExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

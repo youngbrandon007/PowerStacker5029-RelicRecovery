@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.DriveExample;
 
-import com.qualcomm.hardware.motors.NeveRest60Gearmotor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,14 +12,13 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
  * Created by Brandon on 6/26/2017.
  */
 
-@TeleOp(name = "PineappleRobotTest", group = "Linear Opmode")
+@TeleOp(name = "PineEx-Motor", group = "Linear Opmode")
+@Disabled
 
-public class CustomMotorTest extends LinearOpMode{
+public class MotorExample extends LinearOpMode{
     PineappleRobot robot;
 
     PineappleMotor testMotor;
-    NeveRest60Gearmotor neveRest60Gearmotor;
-
 
     @Override
     public void runOpMode() throws InterruptedException {

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by Brandon on 3/31/2017.
  */
 
-@TeleOp(name = "BlankLinearOpMode", group = "Linear Opmode")
+@TeleOp(name = "PineEx-Config", group = "Linear Opmode")
 @Disabled
 
 

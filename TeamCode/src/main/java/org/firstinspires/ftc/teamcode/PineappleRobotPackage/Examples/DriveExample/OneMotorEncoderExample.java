@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.DriveExample;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,10 +13,10 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
  */
 
 
-@TeleOp(name = "PineappleRobotEncoderTest", group = "Linear Opmode")
+@TeleOp(name = "PineEx-EncoderOneMotor", group = "Linear Opmode")
+@Disabled
 
-
-public class encoderTest extends LinearOpMode {
+public class OneMotorEncoderExample extends LinearOpMode {
     PineappleRobot robot;
 
     PineappleMotor motor;
