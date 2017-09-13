@@ -15,7 +15,7 @@ public class PineappleAuto {
         this.drive = drive;
     }
 
-    public void driveUntil(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.condition condition,double sensorValue, double power){
+    public void driveUntil(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
             drive.setMotor(PineappleEnum.MotorLoc.RIGHT, power, true);
             drive.setMotor(PineappleEnum.MotorLoc.LEFT, power, true);
@@ -27,7 +27,7 @@ public class PineappleAuto {
         }
     }
 
-    public void lineFollow(PineappleSensor color, PineappleEnum.PineappleSensorEnum colorEnum, PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.condition condition, double sensorValue, double power){
+    public void lineFollow(PineappleSensor color, PineappleEnum.PineappleSensorEnum colorEnum, PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
 
 
@@ -50,7 +50,7 @@ public class PineappleAuto {
         }
     }
 
-    public void turnUntil(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.condition condition,double sensorValue, double rightPower, double leftPower){
+    public void turnUntil(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double rightPower, double leftPower){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
 
             double percent = 0;
@@ -75,7 +75,7 @@ public class PineappleAuto {
             drive.stop();
         }
     }
-    private boolean checkCondition(double sensorValue, double conditionValue, PineappleEnum.condition condition){
+    private boolean checkCondition(double sensorValue, double conditionValue, PineappleEnum.Condition condition){
         switch (condition) {
             case EQUAL:
                 if(sensorValue == conditionValue){

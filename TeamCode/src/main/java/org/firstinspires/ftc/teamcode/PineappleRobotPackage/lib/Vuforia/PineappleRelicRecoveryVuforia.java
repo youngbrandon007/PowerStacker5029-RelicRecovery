@@ -38,14 +38,14 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia{
         relicTrackables.activate();
     }
 
-    public PineappleEnum.vuMarkLocation getTrackingRelic(){
+    public PineappleEnum.VuMarkLocation getTrackingRelic(){
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        PineappleEnum.vuMarkLocation loc = PineappleEnum.vuMarkLocation.UNKNOWN;
+        PineappleEnum.VuMarkLocation loc = PineappleEnum.VuMarkLocation.UNKNOWN;
 
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
+                 * loop until this Condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
             resources.telemetry.addData("VuMark", "%s visible", vuMark);
 
@@ -57,13 +57,13 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia{
             resources.feedBack.sayFeedBackWithOutUpdate("Pose", strPose);
 
             if (strPose.toLowerCase().equals("center")){
-                loc = PineappleEnum.vuMarkLocation.CENTER;
+                loc = PineappleEnum.VuMarkLocation.CENTER;
             }
             if (strPose.toLowerCase().equals("left")){
-                loc = PineappleEnum.vuMarkLocation.CENTER;
+                loc = PineappleEnum.VuMarkLocation.CENTER;
             }
             if (strPose.toLowerCase().equals("right")){
-                loc = PineappleEnum.vuMarkLocation.CENTER;
+                loc = PineappleEnum.VuMarkLocation.CENTER;
             }
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */

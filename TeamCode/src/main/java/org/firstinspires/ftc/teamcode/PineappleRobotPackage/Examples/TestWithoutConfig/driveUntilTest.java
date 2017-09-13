@@ -38,6 +38,6 @@ public class driveUntilTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.auto.driveUntil(touch, PineappleEnum.PineappleSensorEnum.TOUCH, PineappleEnum.condition.EQUAL, 1, .2);
+        robot.auto.driveUntil(touch, PineappleEnum.PineappleSensorEnum.TOUCH, PineappleEnum.Condition.EQUAL, 1, .2);
     }
 }

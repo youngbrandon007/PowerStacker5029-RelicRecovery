@@ -27,12 +27,16 @@ public class PineappleEnum {
         NEV60, NEV40, NEV20, NEV3_7, UNDI
     }
 
-    public enum condition {
+    public enum Condition {
         EQUAL, LESSTHAN, GREATERTHAN
     }
 
-    public enum vuMarkLocation {
+    public enum VuMarkLocation {
         UNKNOWN, CENTER, RIGHT, LEFT
+    }
+
+    public enum ServoType{
+        CONTINUOUS, LIMIT
     }
 }
 

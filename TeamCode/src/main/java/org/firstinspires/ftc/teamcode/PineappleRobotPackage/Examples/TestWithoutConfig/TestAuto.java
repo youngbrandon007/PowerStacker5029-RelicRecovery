@@ -41,7 +41,7 @@ public class TestAuto extends LinearOpMode{
 
         waitForStart();
 
-        robot.auto.lineFollow(color, PineappleEnum.PineappleSensorEnum.ODSLIGHTDETECTED,touch, PineappleEnum.PineappleSensorEnum.TOUCH, PineappleEnum.condition.GREATERTHAN, 90, -.4);
+        robot.auto.lineFollow(color, PineappleEnum.PineappleSensorEnum.ODSLIGHTDETECTED,touch, PineappleEnum.PineappleSensorEnum.TOUCH, PineappleEnum.Condition.GREATERTHAN, 90, -.4);
 
     }
 }

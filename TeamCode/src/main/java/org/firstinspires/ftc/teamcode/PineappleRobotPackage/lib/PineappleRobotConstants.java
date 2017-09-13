@@ -13,4 +13,6 @@ public class PineappleRobotConstants {
     public static final double TETRIXCPR = 1440;
     public static final double CMTOINCH = 0.393701;
 
+    public static final double SERVOLIMIT = 202.5;
+
 }
