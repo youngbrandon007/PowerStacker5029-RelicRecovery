@@ -38,7 +38,7 @@ public class encoderDriveTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.auto.encoderDrive(0.5, 4, PineappleEnum.MotorValueType.INCH,4);
+        robot.auto.encoderDrive(0.5, "4in",4);
         robot.drive.setDirectPower(-1, -1);
         Thread.sleep(1000);
     }
