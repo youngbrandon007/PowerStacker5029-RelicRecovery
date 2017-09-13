@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.TestWithoutConfig;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

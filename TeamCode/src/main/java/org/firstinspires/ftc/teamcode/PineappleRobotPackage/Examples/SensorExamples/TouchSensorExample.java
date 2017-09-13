@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.TestWithoutConfig;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.SensorExamples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,11 +12,12 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors
  * Created by young on 8/7/2017.
  */
 
-@TeleOp(name = "PineappleRobotTouchSensorTest", group = "Linear Opmode")
+@TeleOp(name = "PineEx-TouchSensor", group = "Linear Opmode")
+@Disabled
 
 
+public class TouchSensorExample extends LinearOpMode {
 
-public class touchSensorExample extends LinearOpMode {
     PineappleRobot robot;
 
     PineappleTouchSensor touch;

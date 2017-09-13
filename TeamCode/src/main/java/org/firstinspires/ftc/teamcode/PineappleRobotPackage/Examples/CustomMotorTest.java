@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.TestWithoutConfig;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples;
 
 import com.qualcomm.hardware.motors.NeveRest60Gearmotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

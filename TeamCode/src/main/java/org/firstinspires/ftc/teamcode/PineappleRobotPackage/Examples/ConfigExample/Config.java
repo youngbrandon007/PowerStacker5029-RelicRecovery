@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.TestWithConfig;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.ConfigExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
  * Created by Brandon on 6/26/2017.
  */
 
-public class robotConfig extends PineappleConfig {
+public class Config extends PineappleConfig {
 
     public PineappleMotor testMotor;
 

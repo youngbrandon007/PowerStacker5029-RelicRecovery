@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.TestWithConfig;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.ConfigExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,9 +12,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Disabled
 
 
-public class CustomMotorTest extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
+public class Code extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
 
-    robotConfig r = new robotConfig();
+    //UNTESTED
+
+    Config r = new Config();
 
     @Override
     public void runOpMode() throws InterruptedException {
