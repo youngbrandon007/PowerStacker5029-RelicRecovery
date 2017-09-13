@@ -62,6 +62,14 @@ public class PineappleMotor {
         setupEncoder();
     }
 
+    public void setupEncoder(){
+        motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        resources.linearOpMode.idle();
+
+        motorObject.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+
     ///////////////////////////
     //Drive Encoder Functions//
     ///////////////////////////
@@ -83,12 +91,7 @@ public class PineappleMotor {
         }
     }
 
-    public void setupEncoder(){
-        motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        resources.linearOpMode.idle();
-
-        motorObject.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+    //Function called by user
 
     public void encoderDrive(double speed, double value, PineappleEnum.MotorValueType motorValueType, double wheelSize) {
         if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
@@ -98,6 +101,9 @@ public class PineappleMotor {
 
         }
     }
+
+    //Main encoder drive function
+
     private void encoderDriveCounts(double speed, int counts){
         int target;
         if(resources.linearOpMode.opModeIsActive()){
@@ -119,6 +125,11 @@ public class PineappleMotor {
             motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
+
+    //dist to Counts
+    //
+    //Used for encoders calculation
+
     public int distToCounts(double value, PineappleEnum.MotorValueType motorValueType, double wheelSize, PineappleEnum.MotorType motorType){
         switch (motorValueType) {
             case INCH:
@@ -133,6 +144,11 @@ public class PineappleMotor {
                 return 0;
         }
     }
+
+    //is Positive Functions
+    //
+    //used for calculations
+
     private boolean isPositive(double value){
         if(value>=0){
             return true;
@@ -140,6 +156,11 @@ public class PineappleMotor {
             return false;
         }
     }
+
+    //Drive dist
+    //
+    //input distance for wheel to move
+
     private void encoderDriveDist(double speed, double inches, double wheelSize, PineappleEnum.MotorValueType motorValueType ){
         int target;
         int counts = distToCounts(inches, motorValueType,wheelSize, motorType);
@@ -161,6 +182,10 @@ public class PineappleMotor {
             motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
+
+    //Encoder control functions
+    //
+    //start and stop function for motor
 
     public void encoderStart(double speed, int counts){
         int target;
@@ -184,9 +209,10 @@ public class PineappleMotor {
         return motorObject.isBusy();
     }
 
-    ///////////////////////
-    //Set Power Functions//
-    ///////////////////////
+
+    //Set Power Functions
+    //
+    //set Power function for setting the power manually
 
     double setPower(double power) {
         power = fixValue(power);
@@ -198,6 +224,10 @@ public class PineappleMotor {
     void setDirectPower(double power){
         motorObject.setPower(clip(power));
     }
+
+    //Update Function
+    //
+    //these are for telemetry update function
 
     public double update(double power) {
         return setPower(power);
@@ -214,9 +244,9 @@ public class PineappleMotor {
         else return setPower(defaultPower);
     }
 
-    /////////////////////
-    //Private Functions//
-    /////////////////////
+    //Private Function
+    //
+    //these are used to calculate the output to the motor for TeleOp such as scaling and range
 
     private double fixValue(double input) {
         input = scale(input);
