@@ -184,7 +184,7 @@ public class PineappleMotor {
     }
 
     void setDirectPower(double power){
-        motorObject.setPower(power);
+        motorObject.setPower(clip(power));
     }
 
     public double update(double power) {
