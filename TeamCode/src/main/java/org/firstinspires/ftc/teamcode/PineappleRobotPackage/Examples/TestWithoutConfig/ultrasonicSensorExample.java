@@ -27,8 +27,6 @@ public class ultrasonicSensorExample extends LinearOpMode {
 
         ultrasonicSensor = robot.sensorHandler.newUltrasonicSensor("us");
 
-        robot.mapRobot();
-
         waitForStart();
         while(opModeIsActive()) {
             robot.sayFeedBack(ultrasonicSensor.sensorName, ultrasonicSensor.getValue(PineappleEnum.PineappleSensorEnum.US));

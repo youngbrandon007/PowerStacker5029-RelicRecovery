@@ -32,8 +32,6 @@ public class driveUntilTest extends LinearOpMode {
 
         touch = robot.sensorHandler.newTouchSensor("touch");
 
-        robot.mapRobot();
-
         right.motorObject.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();

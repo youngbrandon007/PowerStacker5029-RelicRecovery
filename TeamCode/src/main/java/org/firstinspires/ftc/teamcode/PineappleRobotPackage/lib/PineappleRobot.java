@@ -38,11 +38,6 @@ public class PineappleRobot{
         vuforia = new PineappleVuforia(resources,maxTargets, direction, feedback, vuforiaLicenseKey);
     }
 
-
-    public void mapRobot(){
-        motorHandler.mapMotors();
-    }
-
     public void sayFeedBack(String objectName, double value){
         resources.feedBack.sayFeedBackWithOutUpdate(objectName, value);
     }

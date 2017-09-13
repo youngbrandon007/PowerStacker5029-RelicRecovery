@@ -28,10 +28,6 @@ public class driveTest extends LinearOpMode {
         right = robot.motorHandler.newDriveMotor("l", 1, true , true, PineappleEnum.MotorLoc.RIGHT, PineappleEnum.MotorType.NEV40);
 
 
-        robot.mapRobot();
-
-
-
         waitForStart();
         while (opModeIsActive()){
 

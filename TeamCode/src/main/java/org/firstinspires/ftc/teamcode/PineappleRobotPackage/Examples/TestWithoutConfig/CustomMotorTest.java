@@ -28,9 +28,6 @@ public class CustomMotorTest extends LinearOpMode{
 
         testMotor = robot.motorHandler.newMotor("test", 1, true , true, PineappleEnum.MotorType.NEV40);
 
-        robot.mapRobot();
-
-
 
         waitForStart();
         while (opModeIsActive()){

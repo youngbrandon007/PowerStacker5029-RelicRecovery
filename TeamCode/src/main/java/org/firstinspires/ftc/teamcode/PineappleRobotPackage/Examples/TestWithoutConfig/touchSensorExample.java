@@ -27,8 +27,6 @@ public class touchSensorExample extends LinearOpMode {
 
         touch = robot.sensorHandler.newTouchSensor("t");
 
-        robot.mapRobot();
-
         waitForStart();
         while(opModeIsActive()) {
             robot.sayFeedBack(touch.sensorName, touch.getValue(PineappleEnum.PineappleSensorEnum.TOUCH));

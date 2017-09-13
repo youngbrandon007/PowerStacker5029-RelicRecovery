@@ -66,21 +66,4 @@ public class PineappleMotorHandler {
         }
     }
 
-    public void mapMotors() {
-
-        if(resources.storage.motors.isEmpty()){
-            resources.feedBack.sayFeedBack("Emtpy Storage Error: ", 404);
-        }else {
-
-            for (Map.Entry<String, PineappleMotor> entry : resources.storage.motors.entrySet()) {
-                String name = entry.getKey();
-                PineappleMotor motor = entry.getValue();
-                motor.mapMotor();
-            }
-
-        }
-
-
-    }
-
 }

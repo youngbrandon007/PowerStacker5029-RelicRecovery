@@ -26,8 +26,6 @@ public class GyroExample  extends LinearOpMode {
 
         gyro = robot.sensorHandler.newGyroSensor("g");
 
-        robot.mapRobot();
-
         waitForStart();
 
         while(opModeIsActive()) {

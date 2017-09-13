@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.Range;
 
 public class PineappleMotor {
 
+    //Motor Properties
+
     public PineappleEnum.MotorLoc motorLoc = PineappleEnum.MotorLoc.NONE;
 
     public double maxPower = 1;
@@ -23,12 +25,22 @@ public class PineappleMotor {
 
     public boolean doDeadArea = false;
 
+    //Dead Area Array
+
     private final double[] deadAreaArray = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1.0};
+
+    //Motor Object
 
     public DcMotor motorObject;
     public String motorName;
 
+
+    //Resources
+
     private PineappleResources resources;
+
+
+    //Constructor
 
     public PineappleMotor(PineappleResources res, String name, double powerMin, double powerMax, double powerDefault, double scale, boolean exp, boolean deadArea, PineappleEnum.MotorLoc loc, PineappleEnum.MotorType type) {
         resources = res;
@@ -42,8 +54,8 @@ public class PineappleMotor {
         motorName = name;
         motorType = type;
         cpr = motorTypeToCPR(type);
-}
-
+        mapMotor();
+    }
 
     public void mapMotor() {
         motorObject = resources.hardwareMap.dcMotor.get(motorName);

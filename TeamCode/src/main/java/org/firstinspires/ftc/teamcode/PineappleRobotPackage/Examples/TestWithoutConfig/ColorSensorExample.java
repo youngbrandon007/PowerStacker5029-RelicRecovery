@@ -26,8 +26,6 @@ public class ColorSensorExample  extends LinearOpMode {
 
         color = robot.sensorHandler.newColorSensor("c");
 
-        robot.mapRobot();
-
         waitForStart();
         while(opModeIsActive()) {
             robot.sayFeedBack("alpha", color.getValue(PineappleEnum.PineappleSensorEnum.CSALPHA));

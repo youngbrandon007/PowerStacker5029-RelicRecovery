@@ -35,8 +35,6 @@ public class TestAuto extends LinearOpMode{
         color = robot.sensorHandler.newOpticalDistanceSensor("o");
         touch = robot.sensorHandler.newTouchSensor("t");
 
-        robot.mapRobot();
-
         right.motorObject.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();

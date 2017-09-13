@@ -27,9 +27,6 @@ public class encoderTest extends LinearOpMode {
 
         motor = robot.motorHandler.newMotor("motor", 1, true , true, PineappleEnum.MotorType.NEV40);
 
-
-        robot.mapRobot();
-
         waitForStart();
         motor.encoderDrive(1, 90, PineappleEnum.MotorValueType.DEGREES, 4);
 

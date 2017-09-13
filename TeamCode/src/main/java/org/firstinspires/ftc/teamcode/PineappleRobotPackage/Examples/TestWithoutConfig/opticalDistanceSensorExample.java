@@ -26,8 +26,6 @@ public class opticalDistanceSensorExample extends LinearOpMode {
 
         optical = robot.sensorHandler.newOpticalDistanceSensor("o");
 
-        robot.mapRobot();
-
         waitForStart();
         optical.ODSLEDToggle(true);
 
