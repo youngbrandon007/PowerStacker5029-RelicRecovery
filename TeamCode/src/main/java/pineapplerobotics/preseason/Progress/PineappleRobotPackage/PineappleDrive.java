@@ -119,16 +119,41 @@ public class PineappleDrive {
     ///////////////////////////
 
 
-     void encoderDrive(double speed, double value, PineappleEnum.MotorValueType motorValueType, double wheelSize) {
+     void encoderDrive(double speed, String distance, double wheelSize) {
+        PineappleEnum.MotorValueType motorValueType = getUnit(distance);
+         double value = getVal(distance);
         if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
             encoderDriveCounts(speed, (int) value);
         } else {
-            encoderDriveDist(speed, value, wheelSize, motorValueType);
+            encoderDriveDist(speed, distance, wheelSize);
 
         }
     }
 
-
+    private PineappleEnum.MotorValueType getUnit(String val) {
+        val = val.substring(val.length() - 2);
+        switch (val) {
+            case "in":
+                return PineappleEnum.MotorValueType.INCH;
+            case "ct":
+                return PineappleEnum.MotorValueType.COUNTS;
+            case "dg":
+                return PineappleEnum.MotorValueType.DEGREES;
+            case "cm":
+                return PineappleEnum.MotorValueType.CM;
+            case "rd":
+                return PineappleEnum.MotorValueType.RADIANS;
+            case "mt":
+                return PineappleEnum.MotorValueType.METER;
+            case "ft":
+                return PineappleEnum.MotorValueType.FEET;
+            default:
+                return PineappleEnum.MotorValueType.INCH;
+        }
+    }
+    private double getVal(String val){
+        return Double.parseDouble(val.substring(0, val.length() - 2));
+    }
     private void encoderDriveCounts(double speed, int counts) {
         if (resources.linearOpMode.opModeIsActive()) {
             if (isPositive(speed) != isPositive(counts)) {
@@ -162,6 +187,12 @@ public class PineappleDrive {
                 return (int) (cpr * ((value * PineappleRobotConstants.CMTOINCH) / (PineappleRobotConstants.PI * wheelSize)));
             case RADIANS:
                 return (int) (cpr * (value / (2 * PineappleRobotConstants.PI)));
+            case METER:
+                return (int) (cpr * (((value*100) * PineappleRobotConstants.CMTOINCH) / (PineappleRobotConstants.PI * wheelSize)));
+            case FEET:
+                return (int) (cpr * ((value*12) / (PineappleRobotConstants.PI * wheelSize)));
+            case YARDS:
+                return (int) (cpr * ((value*36) / (PineappleRobotConstants.PI * wheelSize)));
             default:
                 return 0;
         }
@@ -175,9 +206,11 @@ public class PineappleDrive {
         }
     }
 
-    private void encoderDriveDist(double speed, double value, double wheelSize, PineappleEnum.MotorValueType motorValueType) {
+    private void encoderDriveDist(double speed, String distance, double wheelSize) {
+        PineappleEnum.MotorValueType motorValueType = getUnit(distance);
+        double value = getVal(distance);
         int counts = distToCounts(value, motorValueType, wheelSize, getMotorType());
-
-        encoderDrive(speed, counts, PineappleEnum.MotorValueType.COUNTS, wheelSize);
+        String countsSring = counts+"ct";
+        encoderDrive(speed, countsSring, wheelSize);
     }
 }

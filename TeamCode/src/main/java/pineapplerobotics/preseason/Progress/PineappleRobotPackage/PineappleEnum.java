@@ -20,7 +20,7 @@ public class PineappleEnum {
     }
 
     public enum MotorValueType {
-        INCH, COUNTS, DEGREES, CM, RADIANS
+        INCH, COUNTS, DEGREES, CM, RADIANS, METER, FEET, YARDS
     }
 
     public enum MotorType {
