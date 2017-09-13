@@ -23,10 +23,9 @@ public class PineappleVuforia {
     VuforiaLocalizer vuforia;
     VuforiaTrackables targets;
 
-    public PineappleVuforia(PineappleResources r){
+    public PineappleVuforia(PineappleResources r, int maxItemCount, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey){
         resources = r;
-    }
-    public void init(int maxItemCount, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey){
+
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         params.cameraDirection = direction;
         params.vuforiaLicenseKey = vuforiaLicenseKey;

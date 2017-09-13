@@ -30,5 +30,9 @@ public class PineappleEnum {
     public enum condition {
         EQUAL, LESSTHAN, GREATERTHAN
     }
+
+    public enum vuMarkLocation {
+        UNKNOWN, CENTER, RIGHT, LEFT
+    }
 }
 
