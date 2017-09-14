@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Humanoid;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfig;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
  * Created by Brandon on 8/26/2017.
  */
 
-public class HConfig extends PineappleConfig{
+public class HConfigLinearOpMode extends PineappleConfigLinearOpMode {
 
     PineappleRobot robot;
 

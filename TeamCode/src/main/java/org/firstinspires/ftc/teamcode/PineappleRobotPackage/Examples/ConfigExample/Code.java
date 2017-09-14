@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.ConfigExam
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
+
 /**
  * Created by Brandon on 3/31/2017.
  */
@@ -12,22 +14,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Disabled
 
 
-public class Code extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
+public class Code extends Config {
 
     //UNTESTED
 
-    Config r = new Config();
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        r.config(this);
+        config(this);
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            r.testMotor.update(gamepad1.left_stick_x);
+            testMotor.update(gamepad1.left_stick_x);
         }
     }
 

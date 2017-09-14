@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 public class Walking extends LinearOpMode{
-    HConfig config = new HConfig();
+    HConfigLinearOpMode config = new HConfigLinearOpMode();
 
 
     @Override
