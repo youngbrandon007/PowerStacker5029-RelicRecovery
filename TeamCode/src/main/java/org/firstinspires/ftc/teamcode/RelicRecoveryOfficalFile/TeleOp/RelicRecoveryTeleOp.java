@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
 /**
  * Created by young on 9/14/2017.
  */
 
-public class RelicRecoveryTeleOp extends RelicRecoveryConfig{
+public class RelicRecoveryTeleOp extends RelicRecoveryConfig {
 
     private ElapsedTime runtime = new ElapsedTime();
 

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PineappleSettings;
+
 import java.util.ArrayList;
 
 /**
@@ -17,8 +19,30 @@ public class PineappleDrive {
     }
 
     public void setPower(double leftPower, double rightPower) {
-        setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, false);
+
+        setMotor(PineappleEnum.MotorLoc.LEFT, scalePower(leftPower), false);
+        setMotor(PineappleEnum.MotorLoc.RIGHT, scalePower(rightPower), false);
+    }
+
+    public double scalePower(double in){
+
+        boolean pos = true;
+
+        if(in < 0){
+            pos = false;
+        }
+
+        if(PineappleSettings.driveExponential){
+            in = in*in;
+        }
+
+        double out = in * PineappleSettings.driveScaleSpeed;
+
+        if(!pos){
+            out = -out;
+        }
+
+        return out;
     }
 
     public void setDirectPower(double leftPower, double rightPower) {

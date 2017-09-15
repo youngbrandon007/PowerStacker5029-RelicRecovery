@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
  * Created by young on 9/14/2017.
  */
 
-abstract class RelicRecoveryConfig extends PineappleConfigLinearOpMode {
+abstract public class RelicRecoveryConfig extends PineappleConfigLinearOpMode {
 
     public PineappleMotor driveFrontRight;
     public PineappleMotor driveFrontLeft;
