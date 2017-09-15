@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PineappleSettings;
 
 /**
  * Created by ftcpi on 6/29/2017.
@@ -14,6 +15,7 @@ public class PineappleFeedBack {
 
     public PineappleFeedBack(Telemetry t){
         telemetry = t;
+        giveFeedBack = PineappleSettings.feedBack;
     }
 
     public void sayFeedBack(String objectName, double amount){
