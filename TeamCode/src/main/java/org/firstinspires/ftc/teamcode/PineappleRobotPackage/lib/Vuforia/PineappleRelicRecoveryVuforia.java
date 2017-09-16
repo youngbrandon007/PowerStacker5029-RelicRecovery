@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
 import android.graphics.Bitmap;
-import android.graphics.Rect;
+
 
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
@@ -28,6 +28,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
