@@ -35,7 +35,14 @@ public class PineappleRobot{
     }
 
     public void addVuforia(int maxTargets, VuforiaLocalizer.CameraDirection direction,  VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey){
-        vuforia = new PineappleVuforia(resources,maxTargets, direction, feedback, vuforiaLicenseKey);
+        vuforia = new PineappleVuforia(maxTargets, direction, feedback, vuforiaLicenseKey);
+        vuforia.addResources(resources);
+    }
+
+    public PineappleVuforia addCustomVuforia(PineappleVuforia vuforiaObject){
+        vuforiaObject.addResources(resources);
+        vuforia = vuforiaObject;
+        return vuforiaObject;
     }
 
     public void sayFeedBack(String objectName, double value){
