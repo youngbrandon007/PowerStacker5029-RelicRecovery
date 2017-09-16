@@ -12,6 +12,8 @@ public class PineappleRobotConstants {
     public static final double NEV3_7CPR = 25.9;
     public static final double TETRIXCPR = 1440;
     public static final double CMTOINCH = 0.393701;
+    public final static Scalar blueLow = new Scalar(108, 0 , 220);
+    public final static Scalar blueHigh = new Scalar(178, 255 , 255);
 
     public static final double SERVOLIMIT = 202.5;
 

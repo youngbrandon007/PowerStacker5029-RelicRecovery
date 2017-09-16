@@ -20,7 +20,7 @@ public class PineappleVuforia {
 
     PineappleResources resources;
 
-    VuforiaLocalizer vuforia;
+    PineappleVuforiaLocalizerImplSubclass vuforia;
     VuforiaTrackables targets;
 
     public PineappleVuforia(PineappleResources r, int maxItemCount, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey){
@@ -31,7 +31,7 @@ public class PineappleVuforia {
         params.vuforiaLicenseKey = vuforiaLicenseKey;
         params.cameraMonitorFeedback =  feedback;
 
-        vuforia = ClassFactory.createVuforiaLocalizer(params);
+        vuforia = new PineappleVuforiaLocalizerImplSubclass(params);
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS,maxItemCount);
     }
 

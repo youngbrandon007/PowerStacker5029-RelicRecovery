@@ -38,5 +38,10 @@ public class PineappleEnum {
     public enum ServoType{
         CONTINUOUS, LIMIT
     }
+    public enum JewelState {
+        //Left to right
+        //NON = nothing
+        BLUE_RED, RED_BLUE, NON_BLUE, NON_RED, BLUE_NON, RED_NON, NON_NON
+    }
 }
 
