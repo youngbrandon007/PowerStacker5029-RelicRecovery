@@ -24,7 +24,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
 
 
         double delay = 0;
-        RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.RED;
+        RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
         RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
         boolean moreGlyph = true;
         boolean gyroEnabled = true;

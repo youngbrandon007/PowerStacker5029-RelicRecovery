@@ -55,4 +55,9 @@ public class HConfigLinearOpMode extends PineappleConfigLinearOpMode {
         LegLeftWaist.encoderStop();
         LegLeftKnee.encoderStop();
     }
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+    }
 }

@@ -11,5 +11,10 @@ public class BlueFrontAuto extends RelicRecoveryAbstractAutonomous{
     @Override
     public void runOpMode() throws InterruptedException {
 
+        waitForStart();
+        while (opModeIsActive()) {
+            telemetry.addData("Order", vuforia.getJewelState());
+            telemetry.update();
+        }
     }
 }
