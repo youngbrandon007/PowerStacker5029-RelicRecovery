@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlankAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlueAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.RedAuto;
@@ -19,10 +22,16 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
         //Load Switch Board
 
 
-
-
-
+        double delay = 0;
         RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
+        RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
+        boolean moreGlyph = true;
+        boolean gyroEnabled = true;
+        boolean pidEnabled = false;
+        boolean encoderEnabled = true;
+        boolean jewelsEnabled = true;
+        boolean vuforiaAlign = true;
+        boolean colorAlign = false;
 
         RelicRecoveryAbstractAutonomous auto;
 

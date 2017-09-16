@@ -8,4 +8,10 @@ public class RelicRecoveryEnums {
     public enum AutoColor{
         RED, BLUE
     }
+
+
+    //Front is toward audience
+    public enum StartingPosition{
+        FRONT, BACK
+    }
 }
