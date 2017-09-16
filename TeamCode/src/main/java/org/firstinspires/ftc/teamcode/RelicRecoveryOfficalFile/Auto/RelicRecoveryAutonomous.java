@@ -18,6 +18,10 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
 
         //Load Switch Board
 
+
+
+
+
         RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
 
         RelicRecoveryAbstractAutonomous auto;
