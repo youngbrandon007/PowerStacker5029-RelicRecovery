@@ -23,8 +23,8 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia{
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
 
-    public PineappleRelicRecoveryVuforia(PineappleResources r, int maxItemCount, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
-        super(r, maxItemCount, direction, feedback, vuforiaLicenseKey);
+    public PineappleRelicRecoveryVuforia(int maxItemCount, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
+        super( maxItemCount, direction, feedback, vuforiaLicenseKey);
 
     }
 

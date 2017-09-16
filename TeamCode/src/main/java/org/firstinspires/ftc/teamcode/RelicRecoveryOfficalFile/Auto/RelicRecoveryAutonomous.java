@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlankAuto;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlueAuto;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.RedAuto;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Blue.BlueFrontAuto;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Red.RedFrontAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryEnums;
 
 /**
  * Created by young on 9/14/2017.
  */
+
+@Autonomous(name = "RelicRecoveryAuto", group = "Linear Opmode")
 
 public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
 
@@ -23,7 +24,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
 
 
         double delay = 0;
-        RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
+        RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.RED;
         RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
         boolean moreGlyph = true;
         boolean gyroEnabled = true;
@@ -34,17 +35,27 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
         boolean colorAlign = false;
 
         RelicRecoveryAbstractAutonomous auto;
-
-        switch (color) {
-            case RED:
-                auto = new RedAuto();
-                break;
-            case BLUE:
-                auto = new BlueAuto();
+        switch (position) {
+            case FRONT:
+                switch (color) {
+                    case RED:
+                    auto = new RedFrontAuto();
+                        break;
+                    case BLUE:
+                        auto = new BlueFrontAuto();
+                        break;
+                    default:
+                        auto = new BlankAuto();
+                }
+            break;
+            case BACK:
+                auto = new BlankAuto();
                 break;
             default:
                 auto = new BlankAuto();
         }
+
+        waitForStart();
 
         auto.runOpMode();
     }
