@@ -24,9 +24,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
+
 
 import java.util.Arrays;
 
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.BLUE_RED;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.RED_BLUE;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants.blueHigh;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants.blueLow;
 
@@ -105,21 +114,21 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
         return loc;
     }
 
-    public PineappleEnum.JewelState getJewelConfig() throws InterruptedException {
-        return getJewelState(getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), vuforia.getCameraCalibration());
+    public PineappleEnum.JewelState getJewelState() throws InterruptedException {
+        return getJewelConfig(getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), vuforia.getCameraCalibration());
     }
-    private PineappleEnum.JewelState getJewelState(Image img, CameraCalibration camCal) {
+    private PineappleEnum.JewelState getJewelConfig(Image img, CameraCalibration camCal) {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getRawPose();
         if (pose !=null && img != null&&img.getPixels() !=null) {
             Matrix34F rawPose = new Matrix34F() ;
             float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
             rawPose.setData(poseData);
             float[][] corners = new float[4][2];
-            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-22,0)).getData();//TL
-            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-22,0)).getData();//TR
-            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-118,0)).getData();//BR
-            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-118,0)).getData();//BL
-            Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565)
+            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-22,0)).getData();//UL
+            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-22,0)).getData();//UR
+            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-118,0)).getData();//LR
+            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-118,0)).getData();//LL
+            Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             bm.copyPixelsFromBuffer(img.getPixels());
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
             Utils.bitmapToMat(bm, crop);
@@ -137,15 +146,15 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             Core.inRange(cropped, blueLow, blueHigh, mask);
             Moments mmnts = Imgproc.moments(mask, true);
             if ((mmnts.get_m01()/mmnts.get_m00())< cropped.rows()/2) {
-                return PineappleEnum.JewelState.RED_BLUE;
+                return RED_BLUE;
             } else {
-                return PineappleEnum.JewelState.BLUE_RED;
+                return BLUE_RED;
             }
 
         }
         return null;
     }
-    public Image getImageFromFrame(VuforiaLocalizer.CloseableFrame frame, int pixelFormat){
+    private Image getImageFromFrame(VuforiaLocalizer.CloseableFrame frame, int pixelFormat){
         long numbImgs = frame.getNumImages();
         for (int i=0;i<numbImgs;i++){
             if (frame.getImage(i).getFormat()==pixelFormat) {
