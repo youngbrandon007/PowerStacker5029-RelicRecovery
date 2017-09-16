@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Blue;
 
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecoveryAbstractAutonomous;
 
 /**
@@ -11,22 +12,21 @@ public class BlueFrontAuto extends RelicRecoveryAbstractAutonomous{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        waitForStart();
-        while (opModeIsActive()) {
-            switch(vuforia.getJewelState()){
 
-                case BLUE_RED:
-                    telemetry.addData("Order", "BLUE_RED");
-                    break;
-                case RED_BLUE:
-                    telemetry.addData("Order", "BLUE_RED");
-                    break;
-                default:
-                    telemetry.addData("Order", "BLUE_RED");
-                    break;
-            }
-
-            telemetry.update();
-        }
+//        while (true) {
+//            switch(PineappleEnum.JewelState.BLUE_RED){
+//
+//                case BLUE_RED:
+//                    robotHandler.sayFeedBack("Order", "BLUE_RED");
+//                    break;
+//                case RED_BLUE:
+//                    robotHandler.sayFeedBack("Order", "BLUE_RED");
+//                    break;
+//                default:
+//                    robotHandler.sayFeedBack("Order", "BLUE_RED");
+//                    break;
+//            }
+//
+//        }
     }
 }

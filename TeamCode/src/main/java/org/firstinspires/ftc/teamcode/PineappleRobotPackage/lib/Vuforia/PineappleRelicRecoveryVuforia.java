@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
 import android.graphics.Bitmap;
 
-
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
 import com.vuforia.Matrix34F;
@@ -36,6 +35,7 @@ import org.opencv.imgproc.Moments;
 import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.BLUE_RED;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.NON_NON;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.RED_BLUE;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants.blueHigh;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants.blueLow;
@@ -153,7 +153,7 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             }
 
         }
-        return null;
+        return NON_NON;
     }
     private Image getImageFromFrame(VuforiaLocalizer.CloseableFrame frame, int pixelFormat){
         long numbImgs = frame.getNumImages();

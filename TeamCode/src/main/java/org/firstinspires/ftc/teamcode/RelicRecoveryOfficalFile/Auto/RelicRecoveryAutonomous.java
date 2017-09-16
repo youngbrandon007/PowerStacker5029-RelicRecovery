@@ -58,7 +58,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
         auto.AutoData(delay,moreGlyph,gyroEnabled,pidEnabled,encoderEnabled,jewelsEnabled,vuforiaAlign,colorAlign);
 
         waitForStart();
-
+        
         auto.runOpMode();
     }
 }

@@ -20,7 +20,8 @@ public class PineappleVuforia {
 
     PineappleResources resources;
 
-    PineappleVuforiaLocalizerImplSubclass vuforia;
+//    PineappleVuforiaLocalizerImplSubclass vuforia;
+    VuforiaLocalizer vuforia;
     VuforiaTrackables targets;
 
     public void addResources(PineappleResources r){
@@ -34,7 +35,8 @@ public class PineappleVuforia {
         params.vuforiaLicenseKey = vuforiaLicenseKey;
         params.cameraMonitorFeedback =  feedback;
 
-        vuforia = new PineappleVuforiaLocalizerImplSubclass(params);
+//        vuforia = new PineappleVuforiaLocalizerImplSubclass(params);
+        vuforia = ClassFactory.createVuforiaLocalizer(params);;
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS,maxItemCount);
     }
 
