@@ -13,7 +13,19 @@ public class BlueFrontAuto extends RelicRecoveryAbstractAutonomous{
 
         waitForStart();
         while (opModeIsActive()) {
-            telemetry.addData("Order", vuforia.getJewelState());
+            switch(vuforia.getJewelState()){
+
+                case BLUE_RED:
+                    telemetry.addData("Order", "BLUE_RED");
+                    break;
+                case RED_BLUE:
+                    telemetry.addData("Order", "BLUE_RED");
+                    break;
+                default:
+                    telemetry.addData("Order", "BLUE_RED");
+                    break;
+            }
+
             telemetry.update();
         }
     }
