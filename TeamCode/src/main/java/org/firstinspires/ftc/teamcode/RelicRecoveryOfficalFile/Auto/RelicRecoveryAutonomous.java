@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlankAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Blue.BlueFrontAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Red.RedFrontAuto;
@@ -58,7 +59,37 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
         auto.AutoData(delay,moreGlyph,gyroEnabled,pidEnabled,encoderEnabled,jewelsEnabled,vuforiaAlign,colorAlign);
 
         waitForStart();
-        
-        auto.runOpMode();
+        telemetry.addData("Order", "Blasdfa");
+        telemetry.update();
+        Thread.sleep(2003);
+         while (opModeIsActive()) {
+//            switch(vuforia.getJewelState()){
+//
+//                case BLUE_RED:
+//                    telemetry.addData("Order", "BLUE_RED");
+//                    break;
+//                case RED_BLUE:
+//                    telemetry.addData("Order", "RED_BLUE");
+//                    break;
+//                case NON_NON:
+//                    telemetry.addData("Order", "NON_NON");
+//                    break;
+//                default:
+//                    telemetry.addData("Order", "adfadfa");
+//                    break;
+//            }
+             if (vuforia.getJewelState() == PineappleEnum.JewelState.NON_NON) {
+                 telemetry.addData("Thing ", "NON");
+             }
+             if (vuforia.getJewelState() == PineappleEnum.JewelState.BLUE_RED) {
+                 telemetry.addData("Thing ", "BLUERED");
+             }
+             if (vuforia.getJewelState() == PineappleEnum.JewelState.RED_BLUE) {
+                 telemetry.addData("Thing ", "REDBLUE");
+             }
+             telemetry.update();
+
+        }
+//        auto.runOpMode();
     }
 }
