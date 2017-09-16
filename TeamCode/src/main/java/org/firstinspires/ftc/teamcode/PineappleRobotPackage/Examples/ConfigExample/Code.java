@@ -16,9 +16,6 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigL
 
 public class Code extends Config {
 
-    //UNTESTED
-
-
     @Override
     public void runOpMode() throws InterruptedException {
 

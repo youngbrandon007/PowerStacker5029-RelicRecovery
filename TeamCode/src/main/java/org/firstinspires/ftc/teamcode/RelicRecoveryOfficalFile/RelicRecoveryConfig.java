@@ -27,7 +27,7 @@ abstract public class RelicRecoveryConfig extends PineappleConfigLinearOpMode {
         driveFrontRight = robotHandler.motorHandler.newDriveMotor("frontright", 1, true, true, PineappleEnum.MotorLoc.RIGHT, PineappleEnum.MotorType.NEV40);
         driveFrontLeft = robotHandler.motorHandler.newDriveMotor("frontleft", 1, true, true, PineappleEnum.MotorLoc.LEFT, PineappleEnum.MotorType.NEV40);
 
-        relicLinearLift = robotHandler.motorHandler.newMotor("reliclift", 1, true, true, PineappleEnum.MotorType.NEV40);
+        relicLinearLift = robotHandler.motorHandler.newMotor("reliclift", -.2, .2,0,1, true, true, PineappleEnum.MotorType.NEV40);
         relicGrabberServo = robotHandler.servoHandler.newLimitServo("Grabber");
     }
 }
