@@ -12,12 +12,17 @@ public class RedFrontAuto extends RelicRecoveryAbstractAutonomous {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        config(linearOpMode);
+
+        linearOpMode.waitForStart();
 
         PineappleEnum.VuMarkLocation boxLoc = vuforia.getTrackingRelic();
 
         //jewel
 
-
+        robotHandler.sayFeedBack("It IS", "WORKING");
+        robotHandler.updateFeedBack();
+/*
         String dis = "24in";
 
         switch (boxLoc) {
@@ -36,6 +41,7 @@ public class RedFrontAuto extends RelicRecoveryAbstractAutonomous {
 
 
         robotHandler.auto.turnUntil(gyroSensor, PineappleEnum.PineappleSensorEnum.GSHEADING, PineappleEnum.Condition.EQUAL,270, .2,-.2);
+*/
 
         //Align for Block insert
     }
