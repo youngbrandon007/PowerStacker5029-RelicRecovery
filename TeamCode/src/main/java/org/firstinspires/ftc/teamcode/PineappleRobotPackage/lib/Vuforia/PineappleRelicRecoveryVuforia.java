@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
@@ -32,6 +33,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.BLUE_RED;
@@ -115,11 +117,11 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
         return loc;
     }
 
-    public PineappleEnum.JewelState getJewelState() throws InterruptedException {
-        return getJewelConfig(getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), vuforia.getCameraCalibration());
-    }
-    private PineappleEnum.JewelState getJewelConfig(Image img, CameraCalibration camCal) {
-        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getRawPose();
+//    public static PineappleEnum.JewelState getJewelState(Image img,VuforiaTrackableDefaultListener track, CameraCalibration cameraCalibration) throws InterruptedException {
+//        return getJewelConfig(getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration());
+//    }
+    public static PineappleEnum.JewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track,  CameraCalibration camCal) {
+        OpenGLMatrix pose = track.getRawPose();
         if (pose !=null && img != null&&img.getPixels() !=null) {
             Matrix34F rawPose = new Matrix34F() ;
             float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
@@ -130,7 +132,8 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-118,0)).getData();//LR
             corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-118,0)).getData();//LL
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(img.getPixels());
+            ByteBuffer pix = img.getPixels();
+            bm.copyPixelsFromBuffer(pix);
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
             Utils.bitmapToMat(bm, crop);
             float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
@@ -146,6 +149,8 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             Mat mask = new Mat();
             Core.inRange(cropped, blueLow, blueHigh, mask);
             Moments mmnts = Imgproc.moments(mask, true);
+            Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
+            Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
             if ((mmnts.get_m01()/mmnts.get_m00())< cropped.rows()/2) {
                 return RED_BLUE;
             } else {

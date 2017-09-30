@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
 import com.vuforia.HINT;
+import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -37,6 +38,8 @@ public class PineappleVuforia {
 
 //        vuforia = new PineappleVuforiaLocalizerImplSubclass(params);
         vuforia = ClassFactory.createVuforiaLocalizer(params);;
+        vuforia.setFrameQueueCapacity(1);
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS,maxItemCount);
     }
 

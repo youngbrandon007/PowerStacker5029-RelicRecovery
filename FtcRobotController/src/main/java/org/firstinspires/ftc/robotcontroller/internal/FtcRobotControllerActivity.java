@@ -108,6 +108,9 @@ import org.firstinspires.ftc.robotcore.internal.ui.UILocation;
 import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo;
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -161,7 +164,21 @@ public class FtcRobotControllerActivity extends Activity
     }
 
   }
-
+    private BaseLoaderCallback mOpenCVCallBack = new BaseLoaderCallback(this) {
+      @Override
+      public void onManagerConnected(int status) {
+        switch (status) {
+          case LoaderCallbackInterface.SUCCESS:
+          {
+            RobotLog.i(TAG, "OpenCV loaded successfully");
+          } break;
+          default:
+          {
+            super.onManagerConnected(status);
+          } break;
+        }
+      }
+    };
   protected ServiceConnection connection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
@@ -304,6 +321,13 @@ public class FtcRobotControllerActivity extends Activity
     ServiceController.startService(FtcRobotControllerWatchdogService.class);
     bindToService();
     logPackageVersions();
+    if (!OpenCVLoader.initDebug()) {
+      RobotLog.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+      OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mOpenCVCallBack);
+    } else {
+      RobotLog.d("OpenCV", "OpenCV library found inside package. Using it!");
+      mOpenCVCallBack.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+    }//else
   }
 
   protected UpdateUI createUpdateUI() {

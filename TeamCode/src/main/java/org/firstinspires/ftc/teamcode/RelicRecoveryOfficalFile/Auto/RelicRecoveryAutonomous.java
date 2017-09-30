@@ -40,7 +40,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
             case FRONT:
                 switch (color) {
                     case RED:
-                    auto = new RedFrontAuto();
+                        auto = new RedFrontAuto();
                         break;
                     case BLUE:
                         auto = new BlueFrontAuto();
@@ -48,7 +48,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
                     default:
                         auto = new BlankAuto();
                 }
-            break;
+                break;
             case BACK:
                 auto = new BlankAuto();
                 break;
@@ -56,40 +56,24 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
                 auto = new BlankAuto();
         }
 
-        auto.AutoData(delay,moreGlyph,gyroEnabled,pidEnabled,encoderEnabled,jewelsEnabled,vuforiaAlign,colorAlign);
+        auto.AutoData(delay, moreGlyph, gyroEnabled, pidEnabled, encoderEnabled, jewelsEnabled, vuforiaAlign, colorAlign);
 
         waitForStart();
-        telemetry.addData("Order", "Blasdfa");
-        telemetry.update();
-        Thread.sleep(2003);
-         while (opModeIsActive()) {
-//            switch(vuforia.getJewelState()){
+//        PineappleEnum.JewelState state = vuforia.getJewelState();
 //
-//                case BLUE_RED:
-//                    telemetry.addData("Order", "BLUE_RED");
-//                    break;
-//                case RED_BLUE:
-//                    telemetry.addData("Order", "RED_BLUE");
-//                    break;
-//                case NON_NON:
-//                    telemetry.addData("Order", "NON_NON");
-//                    break;
-//                default:
-//                    telemetry.addData("Order", "adfadfa");
-//                    break;
-//            }
-             if (vuforia.getJewelState() == PineappleEnum.JewelState.NON_NON) {
-                 telemetry.addData("Thing ", "NON");
-             }
-             if (vuforia.getJewelState() == PineappleEnum.JewelState.BLUE_RED) {
-                 telemetry.addData("Thing ", "BLUERED");
-             }
-             if (vuforia.getJewelState() == PineappleEnum.JewelState.RED_BLUE) {
-                 telemetry.addData("Thing ", "REDBLUE");
-             }
-             telemetry.update();
+//        if (state == PineappleEnum.JewelState.NON_NON) {
+//            telemetry.addData("Thing ", "NON");
+//        } else if (state == PineappleEnum.JewelState.BLUE_RED) {
+//            telemetry.addData("Thing ", "BLUERED");
+//        } else if (state == PineappleEnum.JewelState.RED_BLUE) {
+//            telemetry.addData("Thing ", "REDBLUE");
+//        } else {
+//            telemetry.addData("Thing ", "UNDI");
+//        }
+//
+//        telemetry.update();
+//        Thread.sleep(10000);
 
-        }
 //        auto.runOpMode();
     }
 }
