@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
 /**
@@ -16,7 +20,9 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     public boolean vuforiaAlign = true;
     public boolean colorAlign = false;
 
-    public void AutoData(double time, boolean moreGlyph, boolean gyroEnabled,boolean pidEnabled,boolean encoderEnabled,boolean jewelsEnabled,boolean vuforiaAlign,boolean colorAlign){
+    public LinearOpMode linearOpMode;
+
+    public void AutoData(double time, boolean moreGlyph, boolean gyroEnabled,boolean pidEnabled,boolean encoderEnabled,boolean jewelsEnabled,boolean vuforiaAlign,boolean colorAlign, RelicRecoveryConfig config){
         this.time = time;
         this.moreGlyph = moreGlyph;
         this.gyroEnabled = gyroEnabled;
@@ -25,5 +31,10 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         this.jewelsEnabled = jewelsEnabled;
         this.vuforiaAlign = vuforiaAlign;
         this.colorAlign = colorAlign;
+        this.linearOpMode = config;
     }
+
+
 }
+
+

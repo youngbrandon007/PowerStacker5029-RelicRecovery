@@ -52,4 +52,5 @@ abstract public class RelicRecoveryConfig extends PineappleConfigLinearOpMode {
 
 
     }
+
 }
