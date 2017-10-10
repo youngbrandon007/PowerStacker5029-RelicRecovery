@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConf
  * Created by young on 9/16/2017.
  */
 @TeleOp(name = "VuMarkTest", group = "Linear Opmode")
-
+@Disabled
 public class RelicRecoveryVuforiaTest extends RelicRecoveryConfig{
 
 
@@ -20,7 +21,7 @@ public class RelicRecoveryVuforiaTest extends RelicRecoveryConfig{
 
 
         while(opModeIsActive()) {
-            vuforia.getTrackingRelic();
+
         }
     }
 }
