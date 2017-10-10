@@ -20,7 +20,7 @@ public class RelicRecoveryVuforiaTest extends RelicRecoveryConfig{
 
 
         while(opModeIsActive()) {
-            vuforia.getTrackingRelic();
+
         }
     }
 }

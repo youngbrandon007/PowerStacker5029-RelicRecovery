@@ -26,16 +26,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfig {
 
         while (opModeIsActive()){
 
-
-            if(gamepad1.a){
-                relicGrabberServo.setDegrees(90);
-            }else{
-                relicGrabberServo.setDegrees(0);
-            }
-
-            relicLinearLift.update(gamepad1.dpad_up,gamepad1.dpad_down);
-
-
             robotHandler.drive.setPower(gamepad1.left_stick_x, gamepad1.right_stick_x);
 
 
