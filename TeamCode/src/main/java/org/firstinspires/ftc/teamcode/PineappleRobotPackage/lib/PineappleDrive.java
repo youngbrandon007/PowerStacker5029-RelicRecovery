@@ -14,35 +14,69 @@ public class PineappleDrive {
 
     private PineappleResources resources;
 
+    public PineappleEnum.DriveType driveType = PineappleEnum.DriveType.TANK;
+
     public PineappleDrive(PineappleResources res) {
         resources = res;
     }
 
-    public void setPower(double leftPower, double rightPower) {
-
-        setMotor(PineappleEnum.MotorLoc.LEFT, scalePower(leftPower), false);
-        setMotor(PineappleEnum.MotorLoc.RIGHT, scalePower(rightPower), false);
+    public void setDriveType(PineappleEnum.DriveType type){
+        driveType = type;
     }
 
-    public double scalePower(double in){
-
-        boolean pos = true;
-
-        if(in < 0){
-            pos = false;
+    public void update(double leftPower, double rightPower) {
+        switch (driveType) {
+            case TANK:
+                setMotor(PineappleEnum.MotorLoc.LEFT, scalePower(leftPower), false);
+                setMotor(PineappleEnum.MotorLoc.RIGHT, scalePower(rightPower), false);
+                break;
+            case MECANUM:
+                setMotor(PineappleEnum.MotorLoc.LEFTFRONT, scalePower(leftPower), false);
+                setMotor(PineappleEnum.MotorLoc.LEFTBACK, scalePower(leftPower), false);
+                setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, scalePower(rightPower), false);
+                setMotor(PineappleEnum.MotorLoc.RIGHTBACK, scalePower(rightPower), false);
+                break;
         }
+    }
 
-        if(PineappleSettings.driveExponential){
-            in = in*in;
+    public  void setPower(double leftPower, double rightPower) {
+        switch (driveType) {
+            case TANK:
+                setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, false);
+                setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, false);
+                break;
+            case MECANUM:
+                setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftPower, false);
+                setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftPower, false);
+                setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightPower, false);
+                setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, false);
+                break;
         }
+    }
 
-        double out = in * PineappleSettings.driveScaleSpeed;
 
-        if(!pos){
-            out = -out;
-        }
+    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
+    public void updateMecanum(double forwardBack, double leftRight, double turn){
+        double leftFront = turn + forwardBack + leftRight;
+        double rightFront = -turn + forwardBack - leftRight;
+        double leftBack = turn + forwardBack - leftRight;
+        double rightBack = -turn + forwardBack + leftRight;
 
-        return out;
+        double f = 0.0;
+
+        if(Math.abs(leftFront) > f) f = leftFront;
+        if(Math.abs(rightFront) > f) f = rightFront;
+        if(Math.abs(leftBack) > f) f = leftBack;
+        if(Math.abs(rightBack) > f) f = rightBack;
+
+        setPowerMecanum(leftFront/f, rightFront/f, leftBack/f, rightBack/f);
+    }
+
+    public void setPowerMecanum(double leftFront, double rightFront, double leftBack, double rightBack){
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftFront, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightFront, false);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftBack, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightBack, false);
     }
 
     public void setDirectPower(double leftPower, double rightPower) {
@@ -138,6 +172,13 @@ public class PineappleDrive {
         }
         return motorType;
     }
+
+
+
+
+
+
+
     ///////////////////////////
     //Drive Encoder Functions//
     ///////////////////////////
@@ -236,5 +277,26 @@ public class PineappleDrive {
         int counts = distToCounts(value, motorValueType, wheelSize, getMotorType());
         String countsSring = counts+"ct";
         encoderDrive(speed, countsSring, wheelSize);
+    }
+
+    public double scalePower(double in){
+
+        boolean pos = true;
+
+        if(in < 0){
+            pos = false;
+        }
+
+        if(PineappleSettings.driveExponential){
+            in = in*in;
+            if(!pos){
+
+                in = -in;
+            }
+        }
+
+        double out = in * PineappleSettings.driveScaleSpeed;
+
+        return out;
     }
 }

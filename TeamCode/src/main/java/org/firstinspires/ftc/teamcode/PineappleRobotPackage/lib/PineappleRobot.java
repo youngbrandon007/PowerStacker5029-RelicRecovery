@@ -34,7 +34,7 @@ public class PineappleRobot{
         servoHandler = new PineappleServoHandler(resources);
     }
 
-    public void addVuforia(int maxTargets, VuforiaLocalizer.CameraDirection direction,  VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey){
+    public void addVuforia(int maxTargets, VuforiaLocalizer.CameraDirection direction,  VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
         vuforia = new PineappleVuforia(maxTargets, direction, feedback, vuforiaLicenseKey);
         vuforia.addResources(resources);
     }
