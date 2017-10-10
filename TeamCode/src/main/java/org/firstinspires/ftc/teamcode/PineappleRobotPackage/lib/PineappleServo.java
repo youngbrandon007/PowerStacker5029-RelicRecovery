@@ -34,7 +34,9 @@ public class PineappleServo {
 
     public void setDegrees(double degrees){
 
+
         double position = clipDegrees(degrees/totalRotation);
+
 
         setPosition(position);
     }
