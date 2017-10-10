@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryDriveTestConfig;
 
 /**
  * Created by young on 9/14/2017.
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConf
 @TeleOp(name = "RelicRecoveryTeleOp", group = "Linear Opmode")
 
 
-public class RelicRecoveryTeleOp extends RelicRecoveryConfig {
+public class RelicRecoveryTeleOp extends RelicRecoveryDriveTestConfig {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -24,20 +25,13 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfig {
         runtime.reset();
 
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
 
 
-            if(gamepad1.a){
-                relicGrabberServo.setDegrees(90);
-            }else{
-                relicGrabberServo.setDegrees(0);
-            }
-
-            relicLinearLift.update(gamepad1.dpad_up,gamepad1.dpad_down);
-
-
-            robotHandler.drive.setPower(gamepad1.left_stick_x, gamepad1.right_stick_x);
-
+            setMovement(mecDirectionFromJoystick(gamepad1),
+                    mecSpeedFromJoystick(gamepad1),
+                    mecSpinFromJoystick(gamepad1),
+                    1);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
