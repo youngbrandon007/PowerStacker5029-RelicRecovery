@@ -21,15 +21,12 @@ public class PineappleDrive {
     private PineappleResources resources;
 
     public PineappleEnum.DriveType driveType = PineappleEnum.DriveType.TANK;
-
     public PineappleDrive(PineappleResources res) {
         resources = res;
     }
-
     public void setDriveType(PineappleEnum.DriveType type){
         driveType = type;
     }
-
     public void update(double leftPower, double rightPower) {
         switch (driveType) {
             case TANK:
@@ -44,7 +41,6 @@ public class PineappleDrive {
                 break;
         }
     }
-
     public  void setPower(double leftPower, double rightPower) {
         switch (driveType) {
             case TANK:
@@ -62,7 +58,6 @@ public class PineappleDrive {
     private static double mecDirectionFromJoystick(Gamepad pad) {
         return Math.atan2(-pad.left_stick_y, pad.left_stick_x);
     }
-
     private static double mecSpeedFromJoystick(Gamepad pad) {
         // If the joystick is close enough to the middle, return a 0 (no movement)
         if (abs(pad.left_stick_x) < 0.15f
@@ -73,7 +68,6 @@ public class PineappleDrive {
                     + (pad.left_stick_x * pad.left_stick_x));
         }
     }
-
     public void updateMecanum(Gamepad pad, double scale) {
 
         double angle = mecDirectionFromJoystick(pad);
@@ -107,12 +101,10 @@ public class PineappleDrive {
         setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, false);
         setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[1] * scale, false);
     }
-
     private static double mecSpinFromJoystick(Gamepad pad) {
         return (abs(pad.right_stick_x) > 0.15f)
                 ? pad.right_stick_x : 0.0;
     }
-
 
 //    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
 //    public void updateMecanum(double forwardBack, double leftRight, double turn){
@@ -142,12 +134,10 @@ public class PineappleDrive {
         setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, true);
         setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, true);
     }
-
     public void stop() {
         setMotor(PineappleEnum.MotorLoc.LEFT, 0, true);
         setMotor(PineappleEnum.MotorLoc.RIGHT, 0, true);
     }
-
     void setMotor(PineappleEnum.MotorLoc location, double power, boolean direct) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
         for (PineappleMotor motor : motors) {
@@ -158,7 +148,6 @@ public class PineappleDrive {
             }
         }
     }
-
     void setEncoderDrive(PineappleEnum.MotorLoc location, double power, int counts) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
         for (PineappleMotor motor : motors) {
@@ -169,7 +158,6 @@ public class PineappleDrive {
 
         }
     }
-
     boolean isBusy() {
         boolean output = false;
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
@@ -183,7 +171,6 @@ public class PineappleDrive {
 
         return output;
     }
-
     void runWithoutEncoder(PineappleEnum.MotorLoc location) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
         for (PineappleMotor motor : motors) {
@@ -191,7 +178,6 @@ public class PineappleDrive {
         }
 
     }
-
     double getDriveCPR()  {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
         double lastCPR = 0;
@@ -211,7 +197,6 @@ public class PineappleDrive {
         }
         return lastCPR;
     }
-
     PineappleEnum.MotorType getMotorType() {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
         PineappleEnum.MotorType motorType = PineappleEnum.MotorType.UNDI;
@@ -234,16 +219,12 @@ public class PineappleDrive {
 
 
 
-
-
-
-
     ///////////////////////////
     //Drive Encoder Functions//
     ///////////////////////////
 
 
-     void encoderDrive(double speed, String distance, double wheelSize) {
+    void encoderDrive(double speed, String distance, double wheelSize) {
         PineappleEnum.MotorValueType motorValueType = getUnit(distance);
          double value = getVal(distance);
         if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
@@ -253,7 +234,6 @@ public class PineappleDrive {
 
         }
     }
-
     private PineappleEnum.MotorValueType getUnit(String val) {
         val = val.substring(val.length() - 2);
         switch (val) {
@@ -299,7 +279,6 @@ public class PineappleDrive {
 
         }
     }
-
     private int distToCounts(double value, PineappleEnum.MotorValueType motorValueType, double wheelSize, PineappleEnum.MotorType motorType) {
         double cpr = getDriveCPR();
         switch (motorValueType) {
@@ -321,7 +300,6 @@ public class PineappleDrive {
                 return 0;
         }
     }
-
     private boolean isPositive(double value) {
         if (value >= 0) {
             return true;
@@ -329,7 +307,6 @@ public class PineappleDrive {
             return false;
         }
     }
-
     private void encoderDriveDist(double speed, String distance, double wheelSize) {
         PineappleEnum.MotorValueType motorValueType = getUnit(distance);
         double value = getVal(distance);
@@ -337,7 +314,6 @@ public class PineappleDrive {
         String countsSring = counts+"ct";
         encoderDrive(speed, countsSring, wheelSize);
     }
-
     public double scalePower(double in){
 
         boolean pos = true;
