@@ -62,7 +62,7 @@ public class PineappleDrive {
         double leftBack = turn + forwardBack - leftRight;
         double rightBack = -turn + forwardBack + leftRight;
 
-        double f = 0.0;
+        double f = 1.0;
 
         if(Math.abs(leftFront) > f) f = leftFront;
         if(Math.abs(rightFront) > f) f = rightFront;
