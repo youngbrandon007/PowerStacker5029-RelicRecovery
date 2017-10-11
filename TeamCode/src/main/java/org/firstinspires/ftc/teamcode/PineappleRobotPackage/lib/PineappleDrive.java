@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PineappleSettings;
 
 import java.util.ArrayList;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 
 /**
  * Created by ftcpi on 6/29/2017.
@@ -15,15 +21,12 @@ public class PineappleDrive {
     private PineappleResources resources;
 
     public PineappleEnum.DriveType driveType = PineappleEnum.DriveType.TANK;
-
     public PineappleDrive(PineappleResources res) {
         resources = res;
     }
-
     public void setDriveType(PineappleEnum.DriveType type){
         driveType = type;
     }
-
     public void update(double leftPower, double rightPower) {
         switch (driveType) {
             case TANK:
@@ -38,7 +41,6 @@ public class PineappleDrive {
                 break;
         }
     }
-
     public  void setPower(double leftPower, double rightPower) {
         switch (driveType) {
             case TANK:
@@ -55,8 +57,9 @@ public class PineappleDrive {
     }
 
 
+
     //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
-    public void updateMecanum(double forwardBack, double leftRight, double turn){
+    public void updateMecanum(double forwardBack, double leftRight, double turn) {
         double leftFront = turn + forwardBack + leftRight;
         double rightFront = -turn + forwardBack - leftRight;
         double leftBack = turn + forwardBack - leftRight;
@@ -64,31 +67,97 @@ public class PineappleDrive {
 
         double f = 1.0;
 
-        if(Math.abs(leftFront) > f) f = leftFront;
-        if(Math.abs(rightFront) > f) f = rightFront;
-        if(Math.abs(leftBack) > f) f = leftBack;
-        if(Math.abs(rightBack) > f) f = rightBack;
+        if (Math.abs(leftFront) > f) f = leftFront;
+        if (Math.abs(rightFront) > f) f = rightFront;
+        if (Math.abs(leftBack) > f) f = leftBack;
+        if (Math.abs(rightBack) > f) f = rightBack;
 
-        setPowerMecanum(leftFront/f, rightFront/f, leftBack/f, rightBack/f);
+        setPowerMecanum(leftFront / f, rightFront / f, leftBack / f, rightBack / f);
     }
 
-    public void setPowerMecanum(double leftFront, double rightFront, double leftBack, double rightBack){
-        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftFront, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightFront, false);
-        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftBack, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightBack, false);
+    private static double mecDirectionFromJoystick(Gamepad pad) {
+        return Math.atan2(-pad.left_stick_y, pad.left_stick_x);
     }
+    private static double mecSpeedFromJoystick(Gamepad pad) {
+        // If the joystick is close enough to the middle, return a 0 (no movement)
+        if (abs(pad.left_stick_x) < 0.15f
+                && abs(pad.left_stick_y) < 0.15f) {
+            return 0.0;
+        } else {
+            return sqrt((pad.left_stick_y * pad.left_stick_y)
+                    + (pad.left_stick_x * pad.left_stick_x));
+        }
+    }
+    public void updateMecanum(Gamepad pad, double scale) {
+
+        double angle = mecDirectionFromJoystick(pad);
+        double speed = mecSpeedFromJoystick(pad);
+        double rotation = mecSpinFromJoystick(pad);
+        angle += Math.PI / 4;
+        speed *= sqrt(2);
+
+        double sinDir = sin(angle);
+        double cosDir = cos(angle);
+        double multipliers[] = new double[4];
+        multipliers[0] = (speed * sinDir) + rotation;
+        multipliers[1] = (speed * cosDir) + rotation;
+        multipliers[2] = (speed * -cosDir) + rotation;
+        multipliers[3] = (speed * -sinDir) + rotation;
+
+        double largest = abs(multipliers[0]);
+        for (int i = 1; i < 4; i++) {
+            if (abs(multipliers[i]) > largest)
+                largest = abs(multipliers[i]);
+        }
+
+        // Only normalize multipliers if largest exceeds 1.0
+        if (largest > 1.0) {
+            for (int i = 0; i < 4; i++) {
+                multipliers[i] = multipliers[i] / largest;
+            }
+        }
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[3] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[1] * scale, false);
+    }
+    private static double mecSpinFromJoystick(Gamepad pad) {
+        return (abs(pad.right_stick_x) > 0.15f)
+                ? pad.right_stick_x : 0.0;
+    }
+
+//    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
+//    public void updateMecanum(double forwardBack, double leftRight, double turn){
+//        double leftFront = turn + forwardBack + leftRight;
+//        double rightFront = -turn + forwardBack - leftRight;
+//        double leftBack = turn + forwardBack - leftRight;
+//        double rightBack = -turn + forwardBack + leftRight;
+//
+//        double f = 0.0;
+//
+//        if(abs(leftFront) > f) f = leftFront;
+//        if(abs(rightFront) > f) f = rightFront;
+//        if(abs(leftBack) > f) f = leftBack;
+//        if(abs(rightBack) > f) f = rightBack;
+//
+//        setPowerMecanum(leftFront/f, rightFront/f, leftBack/f, rightBack/f);
+//    }
+//
+//    public void setPowerMecanum(double leftFront, double rightFront, double leftBack, double rightBack){
+//        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftFront, false);
+//        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightFront, false);
+//        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftBack, false);
+//        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightBack, false);
+//    }
 
     public void setDirectPower(double leftPower, double rightPower) {
         setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, true);
         setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, true);
     }
-
     public void stop() {
         setMotor(PineappleEnum.MotorLoc.LEFT, 0, true);
         setMotor(PineappleEnum.MotorLoc.RIGHT, 0, true);
     }
-
     void setMotor(PineappleEnum.MotorLoc location, double power, boolean direct) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
         for (PineappleMotor motor : motors) {
@@ -99,7 +168,6 @@ public class PineappleDrive {
             }
         }
     }
-
     void setEncoderDrive(PineappleEnum.MotorLoc location, double power, int counts) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
         for (PineappleMotor motor : motors) {
@@ -110,7 +178,6 @@ public class PineappleDrive {
 
         }
     }
-
     boolean isBusy() {
         boolean output = false;
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
@@ -124,7 +191,6 @@ public class PineappleDrive {
 
         return output;
     }
-
     void runWithoutEncoder(PineappleEnum.MotorLoc location) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
         for (PineappleMotor motor : motors) {
@@ -132,7 +198,6 @@ public class PineappleDrive {
         }
 
     }
-
     double getDriveCPR()  {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
         double lastCPR = 0;
@@ -152,7 +217,6 @@ public class PineappleDrive {
         }
         return lastCPR;
     }
-
     PineappleEnum.MotorType getMotorType() {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
         PineappleEnum.MotorType motorType = PineappleEnum.MotorType.UNDI;
@@ -175,16 +239,12 @@ public class PineappleDrive {
 
 
 
-
-
-
-
     ///////////////////////////
     //Drive Encoder Functions//
     ///////////////////////////
 
 
-     void encoderDrive(double speed, String distance, double wheelSize) {
+    void encoderDrive(double speed, String distance, double wheelSize) {
         PineappleEnum.MotorValueType motorValueType = getUnit(distance);
          double value = getVal(distance);
         if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
@@ -194,7 +254,6 @@ public class PineappleDrive {
 
         }
     }
-
     private PineappleEnum.MotorValueType getUnit(String val) {
         val = val.substring(val.length() - 2);
         switch (val) {
@@ -240,7 +299,6 @@ public class PineappleDrive {
 
         }
     }
-
     private int distToCounts(double value, PineappleEnum.MotorValueType motorValueType, double wheelSize, PineappleEnum.MotorType motorType) {
         double cpr = getDriveCPR();
         switch (motorValueType) {
@@ -262,7 +320,6 @@ public class PineappleDrive {
                 return 0;
         }
     }
-
     private boolean isPositive(double value) {
         if (value >= 0) {
             return true;
@@ -270,7 +327,6 @@ public class PineappleDrive {
             return false;
         }
     }
-
     private void encoderDriveDist(double speed, String distance, double wheelSize) {
         PineappleEnum.MotorValueType motorValueType = getUnit(distance);
         double value = getVal(distance);
@@ -278,7 +334,6 @@ public class PineappleDrive {
         String countsSring = counts+"ct";
         encoderDrive(speed, countsSring, wheelSize);
     }
-
     public double scalePower(double in){
 
         boolean pos = true;
