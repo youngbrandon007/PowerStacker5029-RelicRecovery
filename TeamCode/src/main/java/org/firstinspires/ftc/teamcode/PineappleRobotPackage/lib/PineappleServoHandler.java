@@ -12,11 +12,11 @@ public class PineappleServoHandler {
         resources = r;
     }
 
-    public PineappleServo newLimitServo(String name) {
-        return new PineappleServo(resources, name, PineappleEnum.ServoType.LIMIT);
+    public PineappleServo newLimitServo(String name, double degrees) {
+        return new PineappleServo(resources, name, PineappleEnum.ServoType.LIMIT, degrees);
     }
 
     public PineappleServo newContinuousServo(String name){
-        return new PineappleServo(resources, name, PineappleEnum.ServoType.CONTINUOUS);
+        return new PineappleServo(resources, name, PineappleEnum.ServoType.CONTINUOUS, 1);
     }
 }

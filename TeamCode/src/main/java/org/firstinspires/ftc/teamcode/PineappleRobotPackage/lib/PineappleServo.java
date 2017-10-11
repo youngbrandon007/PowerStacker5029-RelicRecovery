@@ -13,14 +13,17 @@ public class PineappleServo {
 
     public String servoName;
 
+    public double totalRotation;
+
     public Servo servoObject;
 
     public PineappleEnum.ServoType servoType;
 
-    public PineappleServo(PineappleResources r, String name, PineappleEnum.ServoType type){
+    public PineappleServo(PineappleResources r, String name, PineappleEnum.ServoType type, double rotation){
         resources = r;
         servoName = name;
         servoType = type;
+        totalRotation = rotation;
 
         servoObject  = resources.hardwareMap.servo.get(servoName);
     }
@@ -31,7 +34,9 @@ public class PineappleServo {
 
     public void setDegrees(double degrees){
 
-        double position = clipDegrees(degrees/202.5);
+
+        double position = clipDegrees(degrees/totalRotation);
+
 
         setPosition(position);
     }
