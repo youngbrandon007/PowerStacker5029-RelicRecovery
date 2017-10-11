@@ -73,6 +73,7 @@ public class PineappleDrive {
                     + (pad.left_stick_x * pad.left_stick_x));
         }
     }
+
     public void updateMecanum(Gamepad pad, double scale) {
 
         double angle = mecDirectionFromJoystick(pad);
@@ -107,7 +108,7 @@ public class PineappleDrive {
         setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[1] * scale, false);
     }
 
-    public static double mecSpinFromJoystick(Gamepad pad) {
+    private static double mecSpinFromJoystick(Gamepad pad) {
         return (abs(pad.right_stick_x) > 0.15f)
                 ? pad.right_stick_x : 0.0;
     }

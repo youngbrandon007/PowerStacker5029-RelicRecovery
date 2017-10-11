@@ -293,7 +293,7 @@ public class PineappleMotor {
     }
 
     private double clip(double input) {
-//        input = Range.clip(input, minPower, maxPower);
+        input = Range.clip(input, minPower, maxPower);
         input = Range.clip(input, -1, 1);
         return input;
     }
