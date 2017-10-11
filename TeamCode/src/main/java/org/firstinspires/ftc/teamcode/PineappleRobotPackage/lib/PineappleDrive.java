@@ -56,25 +56,7 @@ public class PineappleDrive {
         }
     }
 
-
-
-    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
-    public void updateMecanum(double forwardBack, double leftRight, double turn) {
-        double leftFront = turn + forwardBack + leftRight;
-        double rightFront = -turn + forwardBack - leftRight;
-        double leftBack = turn + forwardBack - leftRight;
-        double rightBack = -turn + forwardBack + leftRight;
-
-        double f = 1.0;
-
-        if (Math.abs(leftFront) > f) f = leftFront;
-        if (Math.abs(rightFront) > f) f = rightFront;
-        if (Math.abs(leftBack) > f) f = leftBack;
-        if (Math.abs(rightBack) > f) f = rightBack;
-
-        setPowerMecanum(leftFront / f, rightFront / f, leftBack / f, rightBack / f);
-    }
-
+    
     private static double mecDirectionFromJoystick(Gamepad pad) {
         return Math.atan2(-pad.left_stick_y, pad.left_stick_x);
     }
