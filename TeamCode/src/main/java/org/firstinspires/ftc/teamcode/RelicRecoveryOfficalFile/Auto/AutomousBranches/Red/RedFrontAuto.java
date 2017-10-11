@@ -16,7 +16,6 @@ public class RedFrontAuto extends RelicRecoveryAbstractAutonomous {
 
         linearOpMode.waitForStart();
 
-        PineappleEnum.VuMarkLocation boxLoc = vuforia.getTrackingRelic();
 
         //jewel
 
