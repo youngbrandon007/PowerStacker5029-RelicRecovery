@@ -106,29 +106,29 @@ public class PineappleDrive {
                 ? pad.right_stick_x : 0.0;
     }
 
-//    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
-//    public void updateMecanum(double forwardBack, double leftRight, double turn){
-//        double leftFront = turn + forwardBack + leftRight;
-//        double rightFront = -turn + forwardBack - leftRight;
-//        double leftBack = turn + forwardBack - leftRight;
-//        double rightBack = -turn + forwardBack + leftRight;
-//
-//        double f = 0.0;
-//
-//        if(abs(leftFront) > f) f = leftFront;
-//        if(abs(rightFront) > f) f = rightFront;
-//        if(abs(leftBack) > f) f = leftBack;
-//        if(abs(rightBack) > f) f = rightBack;
-//
-//        setPowerMecanum(leftFront/f, rightFront/f, leftBack/f, rightBack/f);
-//    }
-//
-//    public void setPowerMecanum(double leftFront, double rightFront, double leftBack, double rightBack){
-//        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftFront, false);
-//        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightFront, false);
-//        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftBack, false);
-//        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightBack, false);
-//    }
+    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
+    public void updateMecanum(double forwardBack, double leftRight, double turn){
+        double leftFront = turn + forwardBack + leftRight;
+        double rightFront = -turn + forwardBack - leftRight;
+        double leftBack = turn + forwardBack - leftRight;
+        double rightBack = -turn + forwardBack + leftRight;
+
+        double f = 1;
+
+        if(abs(leftFront) > f) f = leftFront;
+        if(abs(rightFront) > f) f = rightFront;
+        if(abs(leftBack) > f) f = leftBack;
+        if(abs(rightBack) > f) f = rightBack;
+
+        setPowerMecanum(leftFront/f, rightFront/f, leftBack/f, rightBack/f);
+    }
+
+    public void setPowerMecanum(double leftFront, double rightFront, double leftBack, double rightBack){
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftFront, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightFront, false);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftBack, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightBack, false);
+    }
 
     public void setDirectPower(double leftPower, double rightPower) {
         setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, true);
