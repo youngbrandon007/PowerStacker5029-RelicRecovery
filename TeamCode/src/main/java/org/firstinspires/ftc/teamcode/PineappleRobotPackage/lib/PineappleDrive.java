@@ -76,8 +76,10 @@ public class PineappleDrive {
     }
 
 
-    public void encoderMecanum(double angle, double speed, String dis, double wheelSize, PineappleEnum.MotorType motorType  , PineappleGyroSensor gyroSensor){
+    public void encoderMecanum(double angle, double speed, String dis, double wheelSize, PineappleEnum.MotorType motorType  , PineappleGyroSensor gyroSensor) throws InterruptedException {
         double defaultDirection = gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING);
+
+        angle = angle*Math.PI/180;
 
         PineappleEnum.MotorValueType type = getUnit(dis);
         double distance = getVal(dis);
@@ -90,11 +92,11 @@ public class PineappleDrive {
         double x = xy[0];
         double y = xy[1];
 
+        int LFTarget = (int) (-x + y);
+        int RFTarget = (int) (-x - y);
+        int LBTarget = (int) (x + y);
+        int RBTarget = (int) (x - y);
 
-        int LFTarget = (int) (-x + y)/2;
-        int RFTarget = (int) (-x - y)/2;
-        int LBTarget = (int) (x + y)/2;
-        int RBTarget = (int) (x - y)/2;
 
 
 
@@ -103,9 +105,12 @@ public class PineappleDrive {
         setEncoderDrive(PineappleEnum.MotorLoc.LEFTBACK, 0 ,LBTarget);
         setEncoderDrive(PineappleEnum.MotorLoc.RIGHTBACK, 0 ,RBTarget);
 
-        while(isBusy()){
+        setMecanum(angle, speed, rotation, 1);
+
+        while(resources.linearOpMode.opModeIsActive() && isBusy()){
             //rotation = (gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - defaultDirection)/90;
             setMecanum(angle, speed, rotation, 1);
+            resources.telemetry.update();
         }
         stop();
 
@@ -117,8 +122,8 @@ public class PineappleDrive {
         double x = 0;
         double y = 0;
 
-        x = (Math.cos(degrees * Math.PI / 180F)/counts);
-        y = (Math.sin(degrees * Math.PI / 180F)/counts);
+        x = (Math.cos(degrees)*counts);
+        y = (Math.sin(degrees)*counts);
         x = round(x, 4);
         y = round(y, 4);
         xy[0] = x;
@@ -126,11 +131,11 @@ public class PineappleDrive {
         return xy;
     }
     public static double round(double val, int place){
-        return Math.round(val*(10^place))/(10^place);
+        return Math.round(val*Math.pow(10, place))/Math.pow(10,place);
     }
     public void setMecanum(double angle, double speed, double rotation, double scale){
-        angle += Math.PI / 4;
-        speed *= sqrt(2);
+        angle += Math.PI/4;
+        speed *= Math.sqrt(2);
 
         double sinDir = sin(angle);
         double cosDir = cos(angle);
@@ -152,10 +157,13 @@ public class PineappleDrive {
                 multipliers[i] = multipliers[i] / largest;
             }
         }
+
+
         setMotor(PineappleEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[3] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[1] * scale, false);
         setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[1] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[3] * scale, false);
+
     }
 
     public void updateMecanum(Gamepad pad, double scale) {
