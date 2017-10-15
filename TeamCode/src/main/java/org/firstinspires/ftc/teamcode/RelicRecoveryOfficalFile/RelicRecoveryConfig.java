@@ -35,6 +35,8 @@ abstract public class RelicRecoveryConfig extends PineappleConfigLinearOpMode {
         driveFrontLeft = robotHandler.motorHandler.newDriveMotor("FL", 1, false, false, PineappleEnum.MotorLoc.LEFTFRONT, PineappleEnum.MotorType.NEV40);
         driveBackRight = robotHandler.motorHandler.newDriveMotor("BR", 1, false, false, PineappleEnum.MotorLoc.RIGHTBACK, PineappleEnum.MotorType.NEV40);
         driveBackLeft = robotHandler.motorHandler.newDriveMotor("BL", 1, false, false, PineappleEnum.MotorLoc.LEFTBACK, PineappleEnum.MotorType.NEV40);
+
+
         robotHandler.drive.setDriveType(PineappleEnum.DriveType.MECANUM);
         gyroSensor = robotHandler.sensorHandler.newGyroSensor("GS");
     }

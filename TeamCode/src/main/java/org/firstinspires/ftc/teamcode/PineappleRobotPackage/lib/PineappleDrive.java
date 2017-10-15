@@ -2,13 +2,17 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PineappleSettings;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleGyroSensor;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
+import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 
@@ -70,11 +74,61 @@ public class PineappleDrive {
                     + (pad.left_stick_x * pad.left_stick_x));
         }
     }
-    public void updateMecanum(Gamepad pad, double scale) {
 
-        double angle = mecDirectionFromJoystick(pad);
-        double speed = mecSpeedFromJoystick(pad);
-        double rotation = mecSpinFromJoystick(pad);
+
+    public void encoderMecanum(double angle, double speed, String dis, double wheelSize, PineappleEnum.MotorType motorType  , PineappleGyroSensor gyroSensor){
+        double defaultDirection = gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING);
+
+        PineappleEnum.MotorValueType type = getUnit(dis);
+        double distance = getVal(dis);
+
+        int counts = distToCounts(distance, type, wheelSize, motorType);
+
+        double rotation = 0.0;
+
+        double[] xy = getXY(angle, counts);
+        double x = xy[0];
+        double y = xy[1];
+
+
+        int LFTarget = (int) (-x + y)/2;
+        int RFTarget = (int) (-x - y)/2;
+        int LBTarget = (int) (x + y)/2;
+        int RBTarget = (int) (x - y)/2;
+
+
+
+        setEncoderDrive(PineappleEnum.MotorLoc.LEFTFRONT, 0 ,LFTarget);
+        setEncoderDrive(PineappleEnum.MotorLoc.RIGHTFRONT, 0 ,RFTarget);
+        setEncoderDrive(PineappleEnum.MotorLoc.LEFTBACK, 0 ,LBTarget);
+        setEncoderDrive(PineappleEnum.MotorLoc.RIGHTBACK, 0 ,RBTarget);
+
+        while(isBusy()){
+            //rotation = (gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - defaultDirection)/90;
+            setMecanum(angle, speed, rotation, 1);
+        }
+        stop();
+
+    }
+
+    public double[] getXY(double degrees, double counts){
+
+        double[] xy = new double[2];
+        double x = 0;
+        double y = 0;
+
+        x = (Math.cos(degrees * Math.PI / 180F)/counts);
+        y = (Math.sin(degrees * Math.PI / 180F)/counts);
+        x = round(x, 4);
+        y = round(y, 4);
+        xy[0] = x;
+        xy[1] = y;
+        return xy;
+    }
+    public static double round(double val, int place){
+        return Math.round(val*(10^place))/(10^place);
+    }
+    public void setMecanum(double angle, double speed, double rotation, double scale){
         angle += Math.PI / 4;
         speed *= sqrt(2);
 
@@ -102,6 +156,16 @@ public class PineappleDrive {
         setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[3] * scale, false);
         setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, false);
         setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[1] * scale, false);
+    }
+
+    public void updateMecanum(Gamepad pad, double scale) {
+
+        double angle = mecDirectionFromJoystick(pad);
+        double speed = mecSpeedFromJoystick(pad);
+        double rotation = mecSpinFromJoystick(pad);
+
+        setMecanum(angle, speed, rotation, scale);
+
     }
     private static double mecSpinFromJoystick(Gamepad pad) {
         return (abs(pad.right_stick_x) > 0.15f)
@@ -139,6 +203,10 @@ public class PineappleDrive {
     public void stop() {
         setMotor(PineappleEnum.MotorLoc.LEFT, 0, true);
         setMotor(PineappleEnum.MotorLoc.RIGHT, 0, true);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, 0, true);
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, 0, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, 0, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, 0, true);
     }
     void setMotor(PineappleEnum.MotorLoc location, double power, boolean direct) {
         ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);

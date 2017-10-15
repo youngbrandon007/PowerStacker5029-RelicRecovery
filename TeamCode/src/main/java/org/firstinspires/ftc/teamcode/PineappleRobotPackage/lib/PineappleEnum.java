@@ -43,8 +43,6 @@ public class PineappleEnum {
         EQUAL, LESSTHAN, GREATERTHAN
     }
 
-
-
     //Servo
     public enum ServoType{
         CONTINUOUS, LIMIT

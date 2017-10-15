@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
 /**
@@ -20,10 +21,7 @@ public class RelicRecoveryMecanumTest extends RelicRecoveryConfig {
         waitForStart();
         runtime.reset();
 
-        
-        while (opModeIsActive()) {
-//            robotHandler.drive.updateMecanum(gamepad1, 1);
-            robotHandler.drive.updateMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        }
+        robotHandler.drive.encoderMecanum(90,0.5, "1ft", 4, PineappleEnum.MotorType.NEV40, gyroSensor);
+
     }
 }
