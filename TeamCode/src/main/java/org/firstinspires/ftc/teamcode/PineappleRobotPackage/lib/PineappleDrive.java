@@ -88,17 +88,21 @@ public class PineappleDrive {
 
         double rotation = 0.0;
 
-        double[] xy = getXY(angle, counts);
-        double x = xy[0];
-        double y = xy[1];
-
-        int LFTarget = (int) (-x + y);
-        int RFTarget = (int) (-x - y);
-        int LBTarget = (int) (x + y);
-        int RBTarget = (int) (x - y);
+        double sinDir = sin(angle);
+        double cosDir = cos(angle);
+        int LFTarget = (int)(counts * sinDir) ;
+        int RFTarget = (int)(counts * cosDir) ;
+        int LBTarget = (int)(counts * -cosDir);
+        int RBTarget = (int)(counts * -sinDir);
 
 
+        resources.feedBack.sayFeedBack("LeftFront Target", LFTarget);
+        resources.feedBack.sayFeedBack("RightFront Target", RFTarget);
+        resources.feedBack.sayFeedBack("LeftBack Target", LBTarget);
+        resources.feedBack.sayFeedBack("RightBack Target", RBTarget);
+        resources.telemetry.update();
 
+        Thread.sleep(4000);
 
         setEncoderDrive(PineappleEnum.MotorLoc.LEFTFRONT, 0 ,LFTarget);
         setEncoderDrive(PineappleEnum.MotorLoc.RIGHTFRONT, 0 ,RFTarget);
@@ -116,14 +120,14 @@ public class PineappleDrive {
 
     }
 
-    public double[] getXY(double degrees, double counts){
+    public double[] getXY(double rad, double counts){
 
         double[] xy = new double[2];
         double x = 0;
         double y = 0;
 
-        x = (Math.cos(degrees)*counts);
-        y = (Math.sin(degrees)*counts);
+        x = (Math.cos(rad)*counts);
+        y = (Math.sin(rad)*counts);
         x = round(x, 4);
         y = round(y, 4);
         xy[0] = x;

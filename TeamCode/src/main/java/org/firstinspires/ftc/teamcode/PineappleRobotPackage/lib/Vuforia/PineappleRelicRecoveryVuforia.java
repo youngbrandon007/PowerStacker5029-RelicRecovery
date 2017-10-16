@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 import com.vuforia.CameraCalibration;
@@ -33,14 +34,15 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.BLUE_RED;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.NON_NON;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.RED_BLUE;
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants.blueHigh;
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants.blueLow;
+
 
 /**
  * Created by young on 9/13/2017.
@@ -120,6 +122,25 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
 //    public static PineappleEnum.JewelState getJewelState(Image img,VuforiaTrackableDefaultListener track, CameraCalibration cameraCalibration) throws InterruptedException {
 //        return getJewelConfig(getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration());
 //    }
+public static void SaveImage(Bitmap finalBitmap, String name) {
+
+    String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+    File myDir = new File(root + "/saved_images");
+    myDir.mkdirs();
+
+    String fname = name+".jpg";
+    File file = new File (myDir, fname);
+    if (file.exists ()) file.delete ();
+    try {
+        FileOutputStream out = new FileOutputStream(file);
+        finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        out.flush();
+        out.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     public static PineappleEnum.JewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track,  CameraCalibration camCal) {
         OpenGLMatrix pose = track.getRawPose();
         if (pose !=null && img != null&&img.getPixels() !=null) {
@@ -147,7 +168,7 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
             Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
             Mat mask = new Mat();
-            Core.inRange(cropped, blueLow, blueHigh, mask);
+//            Core.inRange(cropped, blueLow, blueHigh, mask);
             Moments mmnts = Imgproc.moments(mask, true);
             Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
             Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
