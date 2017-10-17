@@ -30,6 +30,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
@@ -49,7 +50,8 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
  */
 
 public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
-
+    public final static Scalar blueLow = new Scalar(108, 0 , 220);
+    public final static Scalar blueHigh = new Scalar(178, 255 , 255);
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
 
@@ -168,7 +170,7 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
             Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
             Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
             Mat mask = new Mat();
-//            Core.inRange(cropped, blueLow, blueHigh, mask);
+            Core.inRange(cropped, blueLow, blueHigh, mask);
             Moments mmnts = Imgproc.moments(mask, true);
             Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
             Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
