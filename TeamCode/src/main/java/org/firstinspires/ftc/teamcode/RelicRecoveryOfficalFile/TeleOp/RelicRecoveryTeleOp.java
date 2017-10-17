@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
@@ -20,7 +21,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfig {
 
         waitForStart();
         runtime.reset();
-
 
 
         while (opModeIsActive()) {

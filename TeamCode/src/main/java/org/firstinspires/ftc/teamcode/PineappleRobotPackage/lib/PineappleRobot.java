@@ -23,6 +23,8 @@ public class PineappleRobot{
 
     public PineappleVuforia vuforia;
 
+    public PineappleSwitchBoard switchBoard;
+
     public PineappleServoHandler servoHandler;
 
     public PineappleRobot(LinearOpMode LOM){
@@ -32,6 +34,7 @@ public class PineappleRobot{
         auto = new PineappleAuto(resources, drive);
         sensorHandler = new PineappleSensorHandler(resources);
         servoHandler = new PineappleServoHandler(resources);
+        switchBoard = new PineappleSwitchBoard(resources);
     }
 
     public void addVuforia(int maxTargets, VuforiaLocalizer.CameraDirection direction,  VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
