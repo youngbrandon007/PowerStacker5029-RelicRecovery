@@ -138,20 +138,7 @@ public class VuforiaTest extends LinearOpMode {
 
         return null;
     }
-    public static Mat bitmapToMat (Bitmap bit, int cvType) {
-        Mat newMat = new Mat(bit.getHeight(), bit.getWidth(), cvType);
 
-        Utils.bitmapToMat(bit, newMat);
-
-        return newMat;
-    }
-    public static Bitmap matToBitmap (Mat mat) {
-        Bitmap newBit = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
-
-        Utils.matToBitmap(mat, newBit);
-
-        return newBit;
-    }
 //    public static String[] hsvToRgb(float[] HSV) {
 //    float hue = HSV[0];
 //    float saturation = HSV[1];

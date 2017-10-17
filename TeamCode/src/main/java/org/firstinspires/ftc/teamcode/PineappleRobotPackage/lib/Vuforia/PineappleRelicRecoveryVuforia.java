@@ -150,13 +150,14 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
             float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
             rawPose.setData(poseData);
             float[][] corners = new float[4][2];
-            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-22,0)).getData();//UL
-            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-22,0)).getData();//UR
+            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-35,0)).getData();//UL
+            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-35,0)).getData();//UR
             corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-118,0)).getData();//LR
             corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-118,0)).getData();//LL
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             ByteBuffer pix = img.getPixels();
             bm.copyPixelsFromBuffer(pix);
+            SaveImage(bm, "orginialImage ");
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
             Utils.bitmapToMat(bm, crop);
             float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
@@ -168,9 +169,11 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
             width = (x+width>crop.cols())?crop.cols() - x:width;
             height = (x+height>crop.rows())?crop.rows() - x:height;
             Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
+            SaveImage(matToBitmap(cropped), "crop");
             Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
             Mat mask = new Mat();
             Core.inRange(cropped, blueLow, blueHigh, mask);
+            SaveImage(matToBitmap(mask), "mask");
             Moments mmnts = Imgproc.moments(mask, true);
             Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
             Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
@@ -183,13 +186,18 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
         }
         return NON_NON;
     }
-    private Image getImageFromFrame(VuforiaLocalizer.CloseableFrame frame, int pixelFormat){
-        long numbImgs = frame.getNumImages();
-        for (int i=0;i<numbImgs;i++){
-            if (frame.getImage(i).getFormat()==pixelFormat) {
-                return frame.getImage(i);
-            }
-        }
-        return null;
+    public static Mat bitmapToMat (Bitmap bit, int cvType) {
+        Mat newMat = new Mat(bit.getHeight(), bit.getWidth(), cvType);
+
+        Utils.bitmapToMat(bit, newMat);
+
+        return newMat;
+    }
+    public static Bitmap matToBitmap (Mat mat) {
+        Bitmap newBit = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
+
+        Utils.matToBitmap(mat, newBit);
+
+        return newBit;
     }
 }
