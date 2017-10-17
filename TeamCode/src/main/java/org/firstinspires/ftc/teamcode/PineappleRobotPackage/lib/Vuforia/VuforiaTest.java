@@ -42,8 +42,10 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
 @Autonomous(name = "VuforiaTestJewel", group = "Linear Opmode")
 
 public class VuforiaTest extends LinearOpMode {
-    public final static Scalar blueLow = new Scalar(108, 0 , 220);
-    public final static Scalar blueHigh = new Scalar(178, 255 , 255);
+    float[] blueLowHSV = {240,90,34};
+    float[] blueHighHSV= {186,33,95};
+    public final static Scalar blueLow = new Scalar(stringArrtoIntArr(hsvToRgb(blueLowHSV))[0], stringArrtoIntArr(hsvToRgb(blueLowHSV))[1] , stringArrtoIntArr(hsvToRgb(blueLowHSV))[2]);
+    public final static Scalar blueHigh = new Scalar(stringArrtoIntArr(hsvToRgb(blueHighHSV))[0], stringArrtoIntArr(hsvToRgb(blueHighHSV))[1] , stringArrtoIntArr(hsvToRgb(blueHighHSV))[2]);
     @Override
     public void runOpMode() throws InterruptedException {
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -146,5 +148,40 @@ public class VuforiaTest extends LinearOpMode {
         Utils.matToBitmap(mat, newBit);
 
         return newBit;
+    }
+    public static String[] hsvToRgb(float[] HSV) {
+    float hue = HSV[0]
+    float saturation = HSV[1];
+    float value = HSV[2];
+    int h = (int)(hue * 6);
+    float f = hue * 6 - h;
+    float p = value * (1 - saturation);
+    float q = value * (1 - f * saturation);
+    float t = value * (1 - (1 - f) * saturation);
+
+    switch (h) {
+      case 0: return rgbToString(value, t, p);
+      case 1: return rgbToString(q, value, p);
+      case 2: return rgbToString(p, value, t);
+      case 3: return rgbToString(p, q, value);
+      case 4: return rgbToString(t, p, value);
+      case 5: return rgbToString(value, p, q);
+      default: throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + hue + ", " + saturation + ", " + value);
+    }
+}
+
+public static String[] rgbToString(float r, float g, float b) {
+    String rs = Integer.toHexString((int)(r * 256));
+    String gs = Integer.toHexString((int)(g * 256));
+    String bs = Integer.toHexString((int)(b * 256));
+    String[] arr = new String[3];
+    arr[0] = rs;
+    arr[2] = rs;
+    arr[3] = rs;
+    return arr;
+}
+    public static int[] stringArrtoIntArr(String[] sArr){
+        int[] array = Arrays.asList(sArr).stream().mapToInt(Integer::parseInt).toArray();
+        return array;
     }
 }
