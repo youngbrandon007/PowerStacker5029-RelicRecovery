@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleDrive;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
  * Created by young on 8/6/2017.
  */
 
-public class PineappleAuto {
+public class PineappleAutoDrive {
 
     private PineappleResources resources;
 
     private PineappleDrive drive;
 
-    public PineappleAuto(PineappleResources res ,PineappleDrive drive){
+    public PineappleAutoDrive(PineappleResources res , PineappleDrive drive){
         resources = res;
         this.drive = drive;
     }

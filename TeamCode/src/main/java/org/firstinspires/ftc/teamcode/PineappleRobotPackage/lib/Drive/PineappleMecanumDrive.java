@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleGyroSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleGyroSensor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleStaticFunction;
 
 import static java.lang.Math.abs;
@@ -16,7 +16,7 @@ import static java.lang.Math.sqrt;
  * Created by Brandon on 10/21/2017.
  */
 
-class PineappleMecanumDrive extends PineappleDriveAbstract{
+public class PineappleMecanumDrive extends PineappleDriveAbstract{
 
 
     PineappleMecanumDrive(PineappleResources r) {

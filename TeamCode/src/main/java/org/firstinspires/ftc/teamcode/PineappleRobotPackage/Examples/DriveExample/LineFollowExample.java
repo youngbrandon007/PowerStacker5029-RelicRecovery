@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleOpticalDistanceSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleTouchSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleOpticalDistanceSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleTouchSensor;
 
 /**
  * Created by Brandon on 8/14/2017.

@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleControllers;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Controllers;
 
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.LegacyModule;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleController;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;

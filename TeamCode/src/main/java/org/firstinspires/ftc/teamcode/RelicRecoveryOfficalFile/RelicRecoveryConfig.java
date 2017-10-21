@@ -2,15 +2,11 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleGyroSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleGyroSensor;
 
 /**
  * Created by young on 9/14/2017.
@@ -36,8 +32,6 @@ abstract public class RelicRecoveryConfig extends PineappleConfigLinearOpMode {
         driveBackRight = robotHandler.motorHandler.newDriveMotor("BR", 1, false, false, PineappleEnum.MotorLoc.RIGHTBACK, PineappleEnum.MotorType.NEV40);
         driveBackLeft = robotHandler.motorHandler.newDriveMotor("BL", 1, false, false, PineappleEnum.MotorLoc.LEFTBACK, PineappleEnum.MotorType.NEV40);
 
-
-        robotHandler.drive.setDriveType(PineappleEnum.DriveType.MECANUM);
         gyroSensor = robotHandler.sensorHandler.newGyroSensor("GS");
     }
 

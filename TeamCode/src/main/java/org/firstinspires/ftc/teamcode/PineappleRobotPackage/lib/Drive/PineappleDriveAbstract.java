@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by Brandon on 10/21/2017.
  */
 
-class PineappleDriveAbstract {
+public class PineappleDriveAbstract {
 
     PineappleResources resources;
 

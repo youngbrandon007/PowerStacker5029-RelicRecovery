@@ -6,7 +6,7 @@ import java.util.Map;
  * Created by Brandon on 6/26/2017.
  */
 
-class PineappleMotorHandler {
+public class PineappleMotorHandler {
 
     private PineappleResources resources;
 

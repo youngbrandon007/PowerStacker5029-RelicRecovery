@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleStaticF
  * Created by Brandon on 10/21/2017.
  */
 
-class PineappleTankDrive extends  PineappleDriveAbstract{
+public class PineappleTankDrive extends  PineappleDriveAbstract{
 
     PineappleTankDrive(PineappleResources r) {
         super(r);

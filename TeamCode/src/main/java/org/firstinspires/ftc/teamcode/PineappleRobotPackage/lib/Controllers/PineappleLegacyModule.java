@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleControllers;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Controllers;
 
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.LegacyModule;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleController;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
@@ -10,12 +9,11 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResourc
  * Created by ftcpi on 8/7/2017.
  */
 
-public class PineappleServoController extends PineappleController {
-    public ServoController servoController;
-
+public class PineappleLegacyModule extends PineappleController {
+    public LegacyModule legacyModule;
     private PineappleResources resources;
 
-    public PineappleServoController(String name, PineappleResources pineappleResources) {
+    public PineappleLegacyModule(String name, PineappleResources pineappleResources) {
         resources = pineappleResources;
         makeController(name, pineappleResources);
     }
@@ -23,10 +21,8 @@ public class PineappleServoController extends PineappleController {
     @Override
     public void makeController(String name, PineappleResources pineappleResources) {
         controllerName = name;
-        servoController = resources.hardwareMap.servoController.get(controllerName);
-
+        legacyModule = resources.hardwareMap.legacyModule.get(controllerName);
     }
-
 
 
 }

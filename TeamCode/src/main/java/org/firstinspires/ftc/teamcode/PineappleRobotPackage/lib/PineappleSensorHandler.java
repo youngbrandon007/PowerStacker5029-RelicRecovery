@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleColorSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleGyroSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleOpticalDistanceSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleTouchSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleUltrasonicSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleColorSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleGyroSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleOpticalDistanceSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleTouchSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleUltrasonicSensor;
 
 /**
  * Created by young on 8/7/2017.
  */
 
-class PineappleSensorHandler {
+public class PineappleSensorHandler {
 
     private PineappleResources resources;
 

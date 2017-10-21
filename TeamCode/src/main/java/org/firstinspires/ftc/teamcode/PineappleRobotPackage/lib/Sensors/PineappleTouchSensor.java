@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors;
 
 import com.qualcomm.robotcore.hardware.TouchSensor;
 

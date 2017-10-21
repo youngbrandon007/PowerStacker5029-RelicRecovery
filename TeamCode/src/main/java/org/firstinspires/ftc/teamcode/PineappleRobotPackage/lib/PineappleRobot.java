@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto.PineappleAuto;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto.PineappleSwitchBoard;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto.PineappleAutoDrive;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto.PineappleSwitchBoard;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleDrive;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleVuforia;
 
@@ -18,7 +18,7 @@ public class PineappleRobot{
 
     public PineappleDrive drive;
 
-    public PineappleAuto auto;
+    public PineappleAutoDrive auto;
 
     public PineappleSensorHandler sensorHandler;
 
@@ -34,7 +34,7 @@ public class PineappleRobot{
         resources = new PineappleResources(LOM);
         motorHandler = new PineappleMotorHandler(resources);
         drive = new PineappleDrive(resources);
-        auto = new PineappleAuto(resources, drive);
+        auto = new PineappleAutoDrive(resources, drive);
         sensorHandler = new PineappleSensorHandler(resources);
         servoHandler = new PineappleServoHandler(resources);
         switchBoard = new PineappleSwitchBoard(resources);
