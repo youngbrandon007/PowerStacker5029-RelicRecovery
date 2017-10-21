@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConf
  */
 @TeleOp(name = "RRmecanum", group = "Linear Opmode")
 
-public class RelicRecoveryMecanumTeleOP extends RelicRecoveryConfig {
+public class
+RelicRecoveryMecanumTeleOP extends RelicRecoveryConfig {
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override

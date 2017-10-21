@@ -23,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@TeleOp(name="Concept: VuMark Id", group ="Concept")
+@TeleOp(name="KrishnaVuforiaTest", group ="Concept")
 
 public class RelicRecoveryVuforia extends LinearOpMode {
 
@@ -40,6 +40,7 @@ public class RelicRecoveryVuforia extends LinearOpMode {
     @Override public void runOpMode() {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
 
@@ -55,6 +56,8 @@ public class RelicRecoveryVuforia extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
+        VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
+
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
@@ -69,7 +72,7 @@ public class RelicRecoveryVuforia extends LinearOpMode {
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
+                //telemetry.addData("VuMark", "%s visible", vuMark);
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
@@ -77,7 +80,7 @@ public class RelicRecoveryVuforia extends LinearOpMode {
 
 
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getRawPose();
-                telemetry.addData("Pose", format(pose));
+                //telemetry.addData("Pose", format(pose));
 
 
 
@@ -97,6 +100,14 @@ public class RelicRecoveryVuforia extends LinearOpMode {
                     double rX = rot.firstAngle;
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
+
+                    VectorF angles = anglesFromTarget(listener);
+
+                    VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(500, 0, 0));
+
+                    String distance = "X-" + (int)tran.get(0) + " Y-" +  (int)tran.get(2);
+                    telemetry.addData("Distance", distance);
+
                 }
             }
             else {
@@ -109,5 +120,19 @@ public class RelicRecoveryVuforia extends LinearOpMode {
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+
+    public VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall){
+        return new VectorF((float) (trans.get(0) - offWall.get(0) * Math.sin(Math.toRadians(robotAngle)) - offWall.get(2) * Math.cos(Math.toRadians(robotAngle))), trans.get(1), (float) (trans.get(2) + offWall.get(0) * Math.cos(Math.toRadians(robotAngle)) - offWall.get(2) * Math.sin(Math.toRadians(robotAngle))));
+    }
+
+    public VectorF anglesFromTarget(VuforiaTrackableDefaultListener image){
+        float [] data = image.getRawPose().getData();
+        float [] [] rotation = {{data[0], data[1]}, {data[4], data[5], data[6]}, {data[8], data[9], data[10]}};
+
+        double thetaX = Math.atan2(rotation[2][1], rotation[2][2]);
+        double thetaY = Math.atan2(-rotation[2][0], Math.sqrt(rotation[2][1] * rotation[2][1] + rotation[2][2] * rotation[2][2]));
+        double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]);
+        return new VectorF((float)thetaX, (float)thetaY, (float)thetaZ);
     }
 }
