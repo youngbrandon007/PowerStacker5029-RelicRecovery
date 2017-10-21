@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
  * Created by Brandon on 9/13/2017.
  */
 
-public class PineappleServoHandler {
+class PineappleServoHandler {
 
     private PineappleResources resources;
 

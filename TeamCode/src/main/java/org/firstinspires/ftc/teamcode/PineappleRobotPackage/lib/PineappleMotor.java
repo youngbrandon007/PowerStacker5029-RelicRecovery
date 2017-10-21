@@ -66,7 +66,7 @@ public class PineappleMotor {
         motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         resources.linearOpMode.idle();
 
-        motorObject.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -107,7 +107,7 @@ public class PineappleMotor {
     private void encoderDriveCounts(double speed, int counts){
         int target;
         if(resources.linearOpMode.opModeIsActive()){
-            if (isPositive(speed) != isPositive(counts)){counts=-counts;}
+            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
 
             target = motorObject.getCurrentPosition() + counts;
 
@@ -123,37 +123,6 @@ public class PineappleMotor {
             motorObject.setPower(0);
 
             motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-    }
-
-    //dist to Counts
-    //
-    //Used for encoders calculation
-
-    public int distToCounts(double value, PineappleEnum.MotorValueType motorValueType, double wheelSize, PineappleEnum.MotorType motorType){
-        switch (motorValueType) {
-            case INCH:
-                return (int)(cpr*(value/(PineappleRobotConstants.PI*wheelSize)));
-            case DEGREES:
-                return (int)(cpr*(value/360));
-            case CM:
-                return (int)(cpr*((value*PineappleRobotConstants.CMTOINCH)/(PineappleRobotConstants.PI*wheelSize)));
-            case RADIANS:
-                return (int)(cpr*(value/(2*PineappleRobotConstants.PI)));
-            default:
-                return 0;
-        }
-    }
-
-    //is Positive Functions
-    //
-    //used for calculations
-
-    private boolean isPositive(double value){
-        if(value>=0){
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -162,25 +131,8 @@ public class PineappleMotor {
     //input distance for wheel to move
 
     private void encoderDriveDist(double speed, double inches, double wheelSize, PineappleEnum.MotorValueType motorValueType ){
-        int target;
-        int counts = distToCounts(inches, motorValueType,wheelSize, motorType);
-        if(resources.linearOpMode.opModeIsActive()){
-            if (isPositive(speed) != isPositive(counts)){counts=-counts;}
-            target = motorObject.getCurrentPosition() + counts;
-
-            motorObject.setTargetPosition(target);
-            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            motorObject.setPower(speed);
-
-            while (resources.linearOpMode.opModeIsActive() && motorObject.isBusy()){
-                resources.feedBack.sayFeedBack(motorName + " encoder", motorObject.getCurrentPosition());
-            }
-
-            motorObject.setPower(0);
-
-            motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        int counts = PineappleStaticFunction.distToCounts(inches, motorValueType,wheelSize, cpr);
+        encoderDriveCounts(speed, counts);
     }
 
     //Encoder control functions
@@ -190,7 +142,7 @@ public class PineappleMotor {
     public void encoderStart(double speed, int counts){
         int target;
         if(resources.linearOpMode.opModeIsActive()){
-            if (isPositive(speed) != isPositive(counts)){counts=-counts;}
+            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
             target = motorObject.getCurrentPosition() + counts;
 
             motorObject.setTargetPosition(target);
@@ -214,14 +166,8 @@ public class PineappleMotor {
     //
     //set Power function for setting the power manually
 
-    double setPower(double power) {
-        power = fixValue(power);
-        resources.feedBack.sayFeedBack(motorName, power);
-        motorObject.setPower(power);
-        return power;
-    }
 
-    void setDirectPower(double power){
+    public void setPower(double power){
         motorObject.setPower(clip(power));
     }
 
@@ -230,18 +176,21 @@ public class PineappleMotor {
     //these are for telemetry update function
 
     public double update(double power) {
-        return setPower(power);
+        power = fixValue(power);
+        resources.feedBack.sayFeedBack(motorName, power);
+        motorObject.setPower(power);
+        return power;
     }
 
     public double update(boolean on) {
-        if (on) return setPower(maxPower);
-        else return setPower(defaultPower);
+        if (on) return update(maxPower);
+        else return update(defaultPower);
     }
 
     public double update(boolean forward, boolean backward) {
-        if (forward) return setPower(maxPower);
-        else if (backward) return setPower(minPower);
-        else return setPower(defaultPower);
+        if (forward) return update(maxPower);
+        else if (backward) return update(minPower);
+        else return update(defaultPower);
     }
 
     //Private Function

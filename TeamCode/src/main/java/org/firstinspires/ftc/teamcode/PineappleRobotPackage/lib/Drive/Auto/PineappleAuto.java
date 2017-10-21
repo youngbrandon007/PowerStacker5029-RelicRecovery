@@ -1,4 +1,9 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto;
+
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleDrive;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
 
 /**
  * Created by young on 8/6/2017.
@@ -95,8 +100,4 @@ public class PineappleAuto {
         }
         return true;
     }
-    public void encoderDrive(double speed, String distance, double wheelSize) {
-        drive.encoderDrive(speed, distance, wheelSize);
-    }
-
 }

@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto.PineappleAuto;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto.PineappleSwitchBoard;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleDrive;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleVuforia;
 
 /**

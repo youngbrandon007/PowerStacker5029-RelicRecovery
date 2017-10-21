@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.Auto;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.AnalogSensor;
@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleControllers.PineappleDeviceInterfaceModule;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
 
 /**
  * Created by Brandon on 10/17/2017.

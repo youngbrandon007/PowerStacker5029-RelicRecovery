@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors
  * Created by young on 8/7/2017.
  */
 
-public class PineappleSensorHandler {
+class PineappleSensorHandler {
 
     private PineappleResources resources;
 
