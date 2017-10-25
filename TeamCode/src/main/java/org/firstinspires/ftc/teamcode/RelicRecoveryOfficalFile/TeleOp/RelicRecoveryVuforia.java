@@ -22,10 +22,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
 @TeleOp(name="KrishnaVuforiaTest", group ="Concept")
 
-public class RelicRecoveryVuforia extends LinearOpMode {
+public class RelicRecoveryVuforia extends RelicRecoveryConfig {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -37,7 +38,9 @@ public class RelicRecoveryVuforia extends LinearOpMode {
      */
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
+    @Override public void runOpMode() throws InterruptedException {
+
+        config(this);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -101,13 +104,58 @@ public class RelicRecoveryVuforia extends LinearOpMode {
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
 
+
+
                     VectorF angles = anglesFromTarget(listener);
 
                     VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(-500, 0, 0));
 
-                    String distance = "X-" + (int)tran.get(0) + " Y-" +  (int)tran.get(2);
-                    telemetry.addData("Distance", distance);
 
+
+
+                    double distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
+                    double angle = Math.atan2(tran.get(0), tran.get(2));
+                    telemetry.addData("Distance", distance);
+                    telemetry.addData("Angle", angle);
+
+
+                    if(Math.abs(distance) > 50 && gamepad1.a) {
+                        robotHandler.drive.mecanum.setMecanum(angle, .2, 0, 1);
+                    }else if(gamepad1.b && Math.abs(angle) > 5 ) {
+                        if (angle < 0) {
+                            robotHandler.drive.mecanum.setMecanum(0, .2, .2, 1);
+                        } else {
+                            robotHandler.drive.mecanum.setMecanum(0, .2, -.2, 1);
+                        }
+                    }else if(gamepad1.x){
+                        robotHandler.drive.stop();
+
+                        angles = anglesFromTarget(listener);
+                        tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(500, 0, 0));
+
+                        distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
+                        angle = Math.atan2(tran.get(0), tran.get(2));
+
+                        String dis = Double.toString(distance * 10) + "CM";
+
+                        robotHandler.drive.mecanum.encoderMecanum(angle, .2, dis, 4, gyroSensor);
+
+                        while (opModeIsActive() && (listener.getPose() == null || Math.abs(listener.getPose().getTranslation().get(0)) > 10)){
+                            if(listener.getPose() != null){
+                                if(listener.getPose().getTranslation().get(0) > 0){
+                                    robotHandler.drive.mecanum.setPower(-.2, .2);
+                                }else{
+                                    robotHandler.drive.mecanum.setPower(.2, -.2);
+                                }
+                            }else{
+                                robotHandler.drive.mecanum.setPower(-.2, .2);
+                            }
+                        }
+
+                        robotHandler.drive.stop();
+                    }else{
+                        robotHandler.drive.stop();
+                    }
                 }
             }
             else {

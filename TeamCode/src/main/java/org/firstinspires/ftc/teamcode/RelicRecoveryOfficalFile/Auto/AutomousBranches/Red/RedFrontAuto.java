@@ -43,6 +43,36 @@ public class RedFrontAuto extends RelicRecoveryAbstractAutonomous {
 */
 
         //Align for Block insert
+
+
+
+
+        //Back up to glyph
+
+        while(opModeIsActive()) {
+            robotHandler.drive.mecanum.setPower(-.5, -.5);
+
+            //run collector
+
+            Thread.sleep(1000);
+
+            robotHandler.drive.mecanum.setPower(-.1, -.1);
+
+            Thread.sleep(2000);
+
+            robotHandler.drive.stop();
+
+            Thread.sleep(1000);
+
+            robotHandler.drive.mecanum.setPower(.4, .4);
+
+            Thread.sleep(750);
+
+            //Search for Vuforia
+
+            //Align using vuforia
+        }
+
     }
 }
 
