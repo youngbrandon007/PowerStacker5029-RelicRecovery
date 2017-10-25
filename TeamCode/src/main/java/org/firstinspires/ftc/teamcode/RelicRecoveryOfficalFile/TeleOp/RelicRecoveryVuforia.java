@@ -22,10 +22,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
 @TeleOp(name="KrishnaVuforiaTest", group ="Concept")
 
-public class RelicRecoveryVuforia extends LinearOpMode {
+public class RelicRecoveryVuforia extends RelicRecoveryConfig {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -38,6 +39,8 @@ public class RelicRecoveryVuforia extends LinearOpMode {
     VuforiaLocalizer vuforia;
 
     @Override public void runOpMode() {
+
+        config(this);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -101,13 +104,27 @@ public class RelicRecoveryVuforia extends LinearOpMode {
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
 
+
+
                     VectorF angles = anglesFromTarget(listener);
+
+
 
                     VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(500, 0, 0));
 
-                    String distance = "X-" + (int)tran.get(0) + " Y-" +  (int)tran.get(2);
-                    telemetry.addData("Distance", distance);
 
+
+                    double distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
+                    double angle = Math.atan2(tran.get(0), tran.get(2));
+                    telemetry.addData("Distance", distance);
+                    telemetry.addData("Angle", angle);
+
+
+                    if(Math.abs(distance) > 50 && gamepad1.a) {
+                        robotHandler.drive.mecanum.setMecanum(angle, .2, 0, 1);
+                    }else{
+                        robotHandler.drive.stop();
+                    }
                 }
             }
             else {
