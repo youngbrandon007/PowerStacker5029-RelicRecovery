@@ -38,7 +38,7 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
      */
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
+    @Override public void runOpMode() throws InterruptedException {
 
         config(this);
 
@@ -128,6 +128,32 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
                         } else {
                             robotHandler.drive.mecanum.setMecanum(0, .2, -.2, 1);
                         }
+                    }else if(gamepad1.x){
+                        robotHandler.drive.stop();
+
+                        angles = anglesFromTarget(listener);
+                        tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(500, 0, 0));
+
+                        distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
+                        angle = Math.atan2(tran.get(0), tran.get(2));
+
+                        String dis = Double.toString(distance * 10) + "CM";
+
+                        robotHandler.drive.mecanum.encoderMecanum(angle, .2, dis, 4, gyroSensor);
+
+                        while (opModeIsActive() && (listener.getPose() == null || Math.abs(listener.getPose().getTranslation().get(0)) > 10)){
+                            if(listener.getPose() != null){
+                                if(listener.getPose().getTranslation().get(0) > 0){
+                                    robotHandler.drive.mecanum.setPower(-.2, .2);
+                                }else{
+                                    robotHandler.drive.mecanum.setPower(.2, -.2);
+                                }
+                            }else{
+                                robotHandler.drive.mecanum.setPower(-.2, .2);
+                            }
+                        }
+
+                        robotHandler.drive.stop();
                     }else{
                         robotHandler.drive.stop();
                     }
