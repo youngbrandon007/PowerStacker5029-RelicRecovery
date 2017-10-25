@@ -60,10 +60,12 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
-
+        telemetry.addData("Things: ",robotHandler.switchBoard.loadAnalog("D"));
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
+
+
 
         relicTrackables.activate();
 
@@ -99,67 +101,76 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
-                    // Extract the rotational components of the target relative to the robot
+// Extract the rotational components of the target relative to the robot
                     double rX = rot.firstAngle;
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
 
 
 
-                    VectorF angles = anglesFromTarget(listener);
 
-                    VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(-500, 0, 0));
+                    if(listener.getPose() != null) {
+                        VectorF angles = anglesFromTarget(listener);
+                        telemetry.addData("pose 0", Math.toDegrees(angles.get(0)) + 180);
 
-
-
-
-                    double distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
-                    double angle = Math.atan2(tran.get(0), tran.get(2));
-                    telemetry.addData("Distance", distance);
-                    telemetry.addData("Angle", angle);
-
-
-                    if(Math.abs(distance) > 50 && gamepad1.a) {
-                        robotHandler.drive.mecanum.setMecanum(angle, .2, 0, 1);
-                    }else if(gamepad1.b && Math.abs(angle) > 5 ) {
-                        if (angle < 0) {
-                            robotHandler.drive.mecanum.setMecanum(0, .2, .2, 1);
-                        } else {
-                            robotHandler.drive.mecanum.setMecanum(0, .2, -.2, 1);
-                        }
-                    }else if(gamepad1.x){
-                        robotHandler.drive.stop();
-
-                        angles = anglesFromTarget(listener);
-                        tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(500, 0, 0));
-
-                        distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
-                        angle = Math.atan2(tran.get(0), tran.get(2));
-
-                        String dis = Double.toString(distance * 10) + "CM";
-
-                        robotHandler.drive.mecanum.encoderMecanum(angle, .2, dis, 4, gyroSensor);
-
-                        while (opModeIsActive() && (listener.getPose() == null || Math.abs(listener.getPose().getTranslation().get(0)) > 10)){
-                            if(listener.getPose() != null){
-                                if(listener.getPose().getTranslation().get(0) > 0){
-                                    robotHandler.drive.mecanum.setPower(-.2, .2);
-                                }else{
-                                    robotHandler.drive.mecanum.setPower(.2, -.2);
-                                }
-                            }else{
-                                robotHandler.drive.mecanum.setPower(-.2, .2);
+                        VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)), new VectorF(-500, 0, 0));
+                        double tranAngle = Math.atan2(tran.get(0), tran.get(2)) - Math.PI/2;
+                        double distance = Math.sqrt(Math.pow(tran.get(0),2)+Math.pow(tran.get(2),2));
+                        double rotation = 0;
+                        double angle = Math.toDegrees(angles.get(0)) + 180;
+                        if (angle > 2 && angle < 180) {
+                            rotation = .1;
+                            robotHandler.drive.tank.setPower(rotation, rotation);
+                        } else if (angle < 358 && angle > 179) {
+                            rotation = -.1;
+                            robotHandler.drive.tank.setPower(rotation, rotation);
+                        }else{
+                            if(distance > 20) {
+                                robotHandler.drive.mecanum.setMecanum(tranAngle, .5, 0 , 1);
                             }
                         }
 
-                        robotHandler.drive.stop();
-                    }else{
-                        robotHandler.drive.stop();
                     }
+
+
+//                    }else if(gamepad1.b && Math.abs(angle) > 5 ) {
+//                        if (angle < 0) {
+//                            robotHandler.drive.mecanum.setMecanum(0, .5, .5, 1);
+//                        } else {
+//                            robotHandler.drive.mecanum.setMecanum(0, .5, -.5, 1);
+//                        }
+//                    }else if(gamepad1.x){
+//                        robotHandler.drive.stop();
+//
+//                        angles = anglesFromTarget(listener);
+//                        tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(-500, 0, 0));
+//
+//                        distance = Math.sqrt(Math.pow(tran.get(0),2) + Math.pow(tran.get(2),2));
+//                        angle = Math.atan2(tran.get(0), tran.get(2));
+//
+//                        String dis = Double.toString(distance * 10) + "CM";
+//
+//                        robotHandler.drive.mecanum.encoderMecanum(angle, .5, dis, 4, gyroSensor);
+//
+//                        while (opModeIsActive() && (listener.getPose() == null || Math.abs(listener.getPose().getTranslation().get(0)) > 10)){
+//                            if(listener.getPose() != null){
+//                                if(listener.getPose().getTranslation().get(0) > 0){
+//                                    robotHandler.drive.mecanum.setPower(-.5, .5);
+//                                }else{
+//                                    robotHandler.drive.mecanum.setPower(.5, -.5);
+//                                }
+//                            }else{
+//                                robotHandler.drive.mecanum.setPower(-.5, .5);
+//                            }
+//                        }
+//
+//                        robotHandler.drive.stop();
+
                 }
             }
             else {
                 telemetry.addData("VuMark", "not visible");
+                robotHandler.drive.stop();
             }
 
             telemetry.update();
