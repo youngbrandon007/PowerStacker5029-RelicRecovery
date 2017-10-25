@@ -122,6 +122,12 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
 
                     if(Math.abs(distance) > 50 && gamepad1.a) {
                         robotHandler.drive.mecanum.setMecanum(angle, .2, 0, 1);
+                    }else if(gamepad1.b && Math.abs(angle) > 5 ) {
+                        if (angle < 0) {
+                            robotHandler.drive.mecanum.setMecanum(0, .2, .2, 1);
+                        } else {
+                            robotHandler.drive.mecanum.setMecanum(0, .2, -.2, 1);
+                        }
                     }else{
                         robotHandler.drive.stop();
                     }
