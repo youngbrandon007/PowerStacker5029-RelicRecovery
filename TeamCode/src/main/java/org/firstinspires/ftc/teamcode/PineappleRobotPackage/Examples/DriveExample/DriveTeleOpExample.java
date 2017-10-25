@@ -33,7 +33,7 @@ public class DriveTeleOpExample extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()){
 
-            robot.drive.setPower(gamepad1.left_stick_y, gamepad1.right_stick_y);
+//            robot.drive.setPower(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
         }
     }

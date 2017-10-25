@@ -38,7 +38,7 @@ public class Walking extends LinearOpMode{
                 config.Sholder.update(0);
 
             }
-            config.robot.drive.setDirectPower(gamepad2.left_stick_y, gamepad2.right_stick_y);
+            //config.robot.drive.setDirectPower(gamepad2.left_stick_y, gamepad2.right_stick_y);
             config.Elbow.update((gamepad1.right_stick_y >= 0.1) ? config.Elbow.update(0.05) : (gamepad1.right_stick_y <= -0.1) ? config.Elbow.update(-0.05) : config.Elbow.update(0));
 
         }

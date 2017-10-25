@@ -22,7 +22,7 @@ public class RelicRecoveryMecanumTest extends RelicRecoveryConfig {
         waitForStart();
         runtime.reset();
 
-        robotHandler.drive.encoderMecanum(90,0.5, "3ft", 4, PineappleEnum.MotorType.NEV40, gyroSensor);
+//        robotHandler.drive.encoderMecanum(90,0.5, "3ft", 4, PineappleEnum.MotorType.NEV40, gyroSensor);
 
 
 

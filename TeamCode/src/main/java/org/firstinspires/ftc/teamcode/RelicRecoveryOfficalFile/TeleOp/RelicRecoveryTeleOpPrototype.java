@@ -24,7 +24,7 @@ public class RelicRecoveryTeleOpPrototype extends RelicRecoveryConfigPrototype {
 
 
         while (opModeIsActive()) {
-            robotHandler.drive.setDirectPower(gamepad1.left_stick_y, gamepad1.right_stick_y);
+//            robotHandler.drive.setDirectPower(gamepad1.left_stick_y, gamepad1.right_stick_y);
             if (gamepad1.right_bumper) {
                 collectLeft.update(1);
                 collectRight.update(-1);

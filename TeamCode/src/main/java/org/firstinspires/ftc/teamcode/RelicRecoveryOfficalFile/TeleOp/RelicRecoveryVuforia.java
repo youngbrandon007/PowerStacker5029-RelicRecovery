@@ -103,7 +103,7 @@ public class RelicRecoveryVuforia extends LinearOpMode {
 
                     VectorF angles = anglesFromTarget(listener);
 
-                    VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(500, 0, 0));
+                    VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)),new VectorF(-500, 0, 0));
 
                     String distance = "X-" + (int)tran.get(0) + " Y-" +  (int)tran.get(2);
                     telemetry.addData("Distance", distance);

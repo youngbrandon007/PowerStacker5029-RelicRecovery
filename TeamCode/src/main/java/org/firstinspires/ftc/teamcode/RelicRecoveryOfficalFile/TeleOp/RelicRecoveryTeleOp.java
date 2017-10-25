@@ -27,7 +27,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfig {
 
 
 
-            robotHandler.drive.setPower(gamepad1.left_stick_x, gamepad1.right_stick_x);
+//            robotHandler.drive.setPower(gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();

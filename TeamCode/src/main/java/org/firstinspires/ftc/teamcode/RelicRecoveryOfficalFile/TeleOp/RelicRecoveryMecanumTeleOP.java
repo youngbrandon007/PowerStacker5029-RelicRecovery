@@ -24,7 +24,7 @@ RelicRecoveryMecanumTeleOP extends RelicRecoveryConfig {
         runtime.reset();
 
         while(opModeIsActive()){
-            robotHandler.drive.updateMecanum(gamepad1, 1);
+//            robotHandler.drive.updateMecanum(gamepad1, 1);
         }
 
 

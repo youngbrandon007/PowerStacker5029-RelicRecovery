@@ -37,8 +37,8 @@ public class DriveEncoderExample extends LinearOpMode {
 
         waitForStart();
 
-        robot.auto.encoderDrive(0.5, "4in",4);
-        robot.drive.setDirectPower(-1, -1);
-        Thread.sleep(1000);
+//        robot.drive.encoderDrive(0.5, "4in",4);
+//        robot.drive.setDirectPower(-1, -1);
+//        Thread.sleep(1000);
     }
 }
