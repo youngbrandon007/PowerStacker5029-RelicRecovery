@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -60,9 +61,14 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
-        telemetry.addData("Things: ",robotHandler.switchBoard.loadAnalog("D"));
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
+        AnalogInput thing;
+        thing = hardwareMap.analogInput.get("D");
+        while (thing.getVoltage()<20){
+            telemetry.addData("Things: ",thing.getVoltage());
+            telemetry.update();
+        }
         waitForStart();
 
 
