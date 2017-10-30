@@ -63,7 +63,7 @@ public class VuforiaTest extends LinearOpMode {
         VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
         relicTrackables.activate();
         waitForStart();
-        PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration());
+        PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration(), telemetry);
 //
 //        Image img = getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565);
 //

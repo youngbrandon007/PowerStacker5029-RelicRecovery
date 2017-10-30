@@ -12,6 +12,7 @@ import com.vuforia.Tool;
 import com.vuforia.Vec2F;
 import com.vuforia.Vec3F;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -143,7 +144,7 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
         e.printStackTrace();
     }
 }
-    public static PineappleEnum.JewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track,  CameraCalibration camCal) {
+    public static PineappleEnum.JewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
         OpenGLMatrix pose = track.getRawPose();
         if (pose !=null && img != null&&img.getPixels() !=null) {
             Matrix34F rawPose = new Matrix34F() ;
@@ -175,6 +176,9 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
             Core.inRange(cropped, blueLow, blueHigh, mask);
             SaveImage(matToBitmap(mask), "mask");
             Moments mmnts = Imgproc.moments(mask, true);
+            telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()) );
+            telemetry.addData("Centroid Y", (mmnts.get_m01() / mmnts.get_m00()) );
+            telemetry.update();
             Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
             Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
             if ((mmnts.get_m01()/mmnts.get_m00())< cropped.rows()/2) {
