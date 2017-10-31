@@ -17,4 +17,6 @@ apply from: '../build.common.gradle'
 dependencies {
     //    compile project(path: ':openCV')
     compile project(':openCV330')
+    compile (name:'navx_ftc-release', ext:'aar')
+
 }
