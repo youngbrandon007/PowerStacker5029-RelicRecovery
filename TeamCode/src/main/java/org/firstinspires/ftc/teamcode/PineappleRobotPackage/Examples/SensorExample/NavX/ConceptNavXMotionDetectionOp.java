@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.SensorExample.NavX;
 
 import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,6 +47,7 @@ import java.text.DecimalFormat;
  * as telemetry data.
  */
 @TeleOp(name = "Concept: navX Motion Detection", group = "Concept")
+@Disabled
 // @Disabled Comment this in to remove this from the Driver Station OpMode List
 public class ConceptNavXMotionDetectionOp extends OpMode {
 

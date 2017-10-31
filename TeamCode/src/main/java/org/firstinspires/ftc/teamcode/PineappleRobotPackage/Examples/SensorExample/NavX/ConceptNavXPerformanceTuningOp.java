@@ -35,6 +35,7 @@ import android.os.SystemClock;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPerformanceMonitor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -65,6 +66,7 @@ import java.text.DecimalFormat;
  * samples over the last minute reaches zero.
  */
 @TeleOp(name = "Concept: navX Performance Tuning", group = "Concept")
+@Disabled
 // @Disabled Comment this in to remove this from the Driver Station OpMode List
 public class ConceptNavXPerformanceTuningOp extends OpMode {
 
