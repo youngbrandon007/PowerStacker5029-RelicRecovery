@@ -151,6 +151,7 @@ public class ConceptNavXDriveStraightPIDLinearOp extends LinearOpMode {
                     !Thread.currentThread().isInterrupted()) {
                 if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
                     if (yawPIDResult.isOnTarget()) {
+
                         leftMotor.setPower(drive_speed);
                         rightMotor.setPower(drive_speed);
                         telemetry.addData("PIDOutput", df.format(drive_speed) + ", " +
