@@ -4,11 +4,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
  * Created by Brandon on 10/15/2017.
  */
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -18,11 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.android.dx.io.instructions.ThreeRegisterDecodedInstruction;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
 
 @TeleOp(name="KrishnaVuforiaTest", group ="Concept")
@@ -178,4 +174,69 @@ public class RelicRecoveryVuforia extends RelicRecoveryConfig {
         double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]);
         return new VectorF((float)thetaX, (float)thetaY, (float)thetaZ);
     }
+
+    public void allign(VuforiaTrackableDefaultListener listener) throws InterruptedException {
+
+        boolean go = true;
+        double rotation = 0;
+        while(go && opModeIsActive()){
+            if(listener.getPose() != null){
+
+                double robotAngle = getRobotAngle(listener);
+                double distance = getDistance(listener);
+                double moveAngle = getMoveAngle(listener);
+
+                //Robot Rotation First
+                if (robotAngle > 1 && robotAngle < 180) {
+                    rotation = .1;
+                    robotHandler.drive.tank.setPower(rotation, rotation);
+                } else if (robotAngle < 359 && robotAngle > 179) {
+                    rotation = -.1;
+                    robotHandler.drive.tank.setPower(rotation, rotation);
+                }else{
+                    //Robot Movement
+                    if(distance > 50) {
+                        robotHandler.drive.mecanum.setMecanum(moveAngle, .5, 0, 1);
+                    }else if(distance > 5){
+                        robotHandler.drive.mecanum.setMecanum(moveAngle, .3, 0, 1);
+                        Thread.sleep(100);
+                        robotHandler.drive.stop();
+                    }else{
+                        go = false;
+                    }
+                }
+            }else{
+                //Null position of picture
+                robotHandler.drive.tank.setPower(.1,-.1);
+            }
+        }
+        robotHandler.drive.stop();
+    }
+
+    double getRobotAngle(VuforiaTrackableDefaultListener listener){
+        VectorF angles = anglesFromTarget(listener);
+
+        double angle = Math.toDegrees(angles.get(0)) + 180;
+        return angle;
+    }
+
+    double getDistance(VuforiaTrackableDefaultListener listener){
+        VectorF angles = anglesFromTarget(listener);
+
+        VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)), new VectorF(-500, 0, 0));
+
+        double distance = Math.sqrt(Math.pow(tran.get(0), 2) + Math.pow(tran.get(2), 2));
+
+        return distance;
+    }
+
+    double getMoveAngle(VuforiaTrackableDefaultListener listener){
+        VectorF angles = anglesFromTarget(listener);
+
+        VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)), new VectorF(-500, 0, 0));
+
+        double tranAngle = Math.atan2(tran.get(0), tran.get(2)) - Math.PI / 2;
+        return tranAngle;
+    }
+
 }
