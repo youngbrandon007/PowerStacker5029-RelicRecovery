@@ -14,7 +14,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     public double time;
     public boolean moreGlyph = true;
     public boolean gyroEnabled = true;
-    public  boolean pidEnabled = false;
+    public boolean pidEnabled = false;
     public boolean encoderEnabled = true;
     public boolean jewelsEnabled = true;
     public boolean vuforiaAlign = true;
