@@ -57,12 +57,12 @@ public class PineappleMotor {
         mapMotor();
     }
 
-    public void mapMotor() {
+    private void mapMotor() {
         motorObject = resources.hardwareMap.dcMotor.get(motorName);
         setupEncoder();
     }
 
-    public void setupEncoder(){
+    private void setupEncoder(){
         motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         resources.linearOpMode.idle();
 
@@ -74,7 +74,7 @@ public class PineappleMotor {
     //Drive Encoder Functions//
     ///////////////////////////
 
-    public double motorTypeToCPR(PineappleEnum.MotorType type){
+    private double motorTypeToCPR(PineappleEnum.MotorType type){
         switch (type) {
             case NEV60:
                 return PineappleRobotConstants.NEV60CPR;
