@@ -41,7 +41,7 @@ public class PineappleServo {
         setPosition(position);
     }
 
-    public double clipDegrees(double degrees){
+    private double clipDegrees(double degrees){
         return Range.clip(degrees, 0 , 1);
     }
 }
