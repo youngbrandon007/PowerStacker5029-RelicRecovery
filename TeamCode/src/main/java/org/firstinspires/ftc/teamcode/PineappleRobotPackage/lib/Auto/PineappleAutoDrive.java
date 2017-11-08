@@ -46,12 +46,13 @@ public class PineappleAutoDrive {
     }
 
     /**
-     * @param sensor
-     * @param sensorEnum
-     * @param condition
-     * @param sensorValue
-     * @param power
-     * @param angle
+     * Moves the robot until a sensor is in a certain specified threshold specific for mechnum drive
+     * @param sensor The sensor that the robot moves until
+     * @param sensorEnum The specified type of sensor
+     * @param condition What should happen for the driver to stop
+     * @param sensorValue What is the specified value for the robot to stop at
+     * @param power What power the robot should move at
+     * @param angle Angle for the Mechnum drive if needed
      */
     public void driveUntilMechnum(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power, double angle){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
@@ -63,6 +64,7 @@ public class PineappleAutoDrive {
             drive.stop();
         }
     }
+
     public void lineFollow(PineappleSensor color, PineappleEnum.PineappleSensorEnum colorEnum, PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
 
@@ -86,6 +88,15 @@ public class PineappleAutoDrive {
         }
     }
 
+    /**
+     * Turns the robot until a sensor is triggered
+     * @param sensor The sensor to be triggered
+     * @param sensorEnum The type of sensor for id
+     * @param condition When it should stop
+     * @param sensorValue what the value of the sensor is when it stops
+     * @param rightPower The power of the right side while turning
+     * @param leftPower The power of the left side while turning
+     */
     public void turnUntil(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double rightPower, double leftPower){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
 
@@ -111,6 +122,13 @@ public class PineappleAutoDrive {
             drive.stop();
         }
     }
+
+    /**
+     * @param sensorValue Method for checking if the sensor has reached goal
+     * @param conditionValue The Type of specified operator
+     * @param condition The type of operator the value is check by
+     * @return - whether or not it has reached
+     */
     private boolean checkCondition(double sensorValue, double conditionValue, PineappleEnum.Condition condition){
         switch (condition) {
             case EQUAL:
