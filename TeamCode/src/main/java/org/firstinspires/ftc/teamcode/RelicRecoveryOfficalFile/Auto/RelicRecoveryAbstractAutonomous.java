@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 
 /**
  * Created by young on 9/15/2017.

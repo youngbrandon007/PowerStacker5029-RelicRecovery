@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.OLD;
 
 /**
  * Created by Brandon on 10/15/2017.
@@ -18,12 +18,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.android.dx.io.instructions.ThreeRegisterDecodedInstruction;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 
 @TeleOp(name="KrishnaVuforiaTest", group ="Concept")
 
-public class RelicRecoveryVuforia extends RelicRecoveryConfig {
+public class RelicRecoveryVuforiaTest extends RelicRecoveryConfig {
 
     public static final String TAG = "Vuforia VuMark Sample";
 

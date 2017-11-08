@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Red;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecoveryAbstractAutonomous;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryEnums;
 
 /**
  * Created by young on 9/15/2017.

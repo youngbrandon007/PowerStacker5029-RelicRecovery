@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutonumousTesting;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.OLD;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -9,13 +9,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 
 /**
  * Created by Brandon on 10/31/2017.
  */
 @Autonomous(name = "_11/1Test", group = "Linear Opmode")
-
+@Disabled
 public class AutonumousTest10_31_2017 extends RelicRecoveryConfig{
 
     private static final VectorF vector = new VectorF(-700, 0, -700);

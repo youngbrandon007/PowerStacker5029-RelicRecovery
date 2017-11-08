@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryEnums;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
  * Created by Brandon on 10/17/2017.

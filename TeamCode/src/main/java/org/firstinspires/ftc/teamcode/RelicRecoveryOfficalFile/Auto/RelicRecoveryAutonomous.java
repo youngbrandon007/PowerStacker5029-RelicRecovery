@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlankAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Blue.BlueFrontAuto;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Red.RedFrontAuto;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConfig;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryEnums;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
  * Created by young on 9/14/2017.

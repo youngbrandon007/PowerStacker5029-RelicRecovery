@@ -41,6 +41,10 @@ public class PineappleRobot{
         switchBoard = new PineappleSwitchBoard(resources);
     }
 
+    public boolean opModeIsActive(){
+        return resources.linearOpMode.opModeIsActive();
+    }
+
     public void addVuforia(int maxTargets, VuforiaLocalizer.CameraDirection direction,  VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
         vuforia = new PineappleVuforia(maxTargets, direction, feedback, vuforiaLicenseKey);
         vuforia.addResources(resources);
