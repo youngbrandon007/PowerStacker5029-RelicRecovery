@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicRecoveryConf
 
 public class AutonumousTest10_31_2017 extends RelicRecoveryConfig{
 
-    private static final VectorF vector = new VectorF(-500, 0, 0);
+    private static final VectorF vector = new VectorF(-700, 0, -700);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,7 +41,9 @@ public class AutonumousTest10_31_2017 extends RelicRecoveryConfig{
 
         relicTrackables.activate();
 
-        waitForStart();
+        while (!isStarted()){
+            listener.getPose();
+        }
 
         align(listener,vector);
     }
@@ -56,22 +58,28 @@ public class AutonumousTest10_31_2017 extends RelicRecoveryConfig{
         while(go && opModeIsActive()){
             if(null != listener.getPose()){
 
-                double robotAngle = getRobotAngle(listener);
+                double robotAngle = getRobotAngle(listener) - 45;
+                robotAngle += (robotAngle< 0) ? 360: 0;
+
                 double distance = getDistance(listener, vector);
-                double moveAngle = getMoveAngle(listener, vector);
+                double moveAngle = getMoveAngle(listener, vector)+90;
+                moveAngle -=(moveAngle>360) ? 360:0;
                 double rotation;
 
                 telemetry.addData("Angle°", robotAngle);
                 telemetry.addData("Distance", distance);
                 telemetry.addData("Drive°", moveAngle);
-
+                telemetry.update();
                 //Robot Rotation First
-                if (robotAngle > 1 && robotAngle < 180) {
+                if (robotAngle > 5 && robotAngle < 180) {
                     rotation = .1;
                     robotHandler.drive.tank.setPower(rotation, rotation);
-                } else if (robotAngle < 359 && robotAngle > 179) {
+                } else if (robotAngle < 355 && robotAngle > 179) {
                     rotation = -.1;
                     robotHandler.drive.tank.setPower(rotation, rotation);
+                    Thread.sleep(100);
+                    robotHandler.drive.stop();
+                    Thread.sleep(50);
                 }else{
                     //Robot Movement
                     if(distance > 50) {
@@ -80,13 +88,14 @@ public class AutonumousTest10_31_2017 extends RelicRecoveryConfig{
                         robotHandler.drive.mecanum.setMecanum(moveAngle, .3, 0, 1);
                         Thread.sleep(100);
                         robotHandler.drive.stop();
+                        Thread.sleep(50);
                     }else{
                         go = false;
                     }
                 }
             }else{
                 //Null position of picture
-                robotHandler.drive.tank.setPower(.1,-.1);
+                robotHandler.drive.tank.setPower(.1,.1);
             }
         }
         robotHandler.drive.stop();
@@ -94,8 +103,8 @@ public class AutonumousTest10_31_2017 extends RelicRecoveryConfig{
 
     private double getRobotAngle(VuforiaTrackableDefaultListener listener){
         VectorF angles = anglesFromTarget(listener);
-
-        return Math.toDegrees(angles.get(0)) + 180;
+        double robotAngle = Math.toDegrees(angles.get(0)) + 180;
+        return robotAngle;
     }
 
     private double getDistance(VuforiaTrackableDefaultListener listener, VectorF vector){
