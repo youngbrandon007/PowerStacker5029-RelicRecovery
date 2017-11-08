@@ -13,11 +13,21 @@ public class PineappleDeviceInterfaceModule extends PineappleController {
     public DeviceInterfaceModule deviceInterfaceModule;
     private PineappleResources resources;
 
+    /**
+     * Used to make a CDMI
+     * @param name Hardware map name from the Sensor Handler
+     * @param pineappleResources Resources passed through so that the makeController can hardware map properly
+     */
     public PineappleDeviceInterfaceModule(String name, PineappleResources pineappleResources) {
         resources = pineappleResources;
         makeController(name, pineappleResources);
     }
 
+    /**
+     * Hardware maps the CDIM
+     * @param name Hardware map name
+     * @param pineappleResources So that the method has access to the hardware map to register the sensor
+     */
     @Override
     public void makeController(String name, PineappleResources pineappleResources) {
         controllerName = name;

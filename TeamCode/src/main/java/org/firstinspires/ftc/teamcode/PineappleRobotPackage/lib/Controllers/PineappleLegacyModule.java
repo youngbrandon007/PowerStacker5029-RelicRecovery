@@ -12,12 +12,20 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResourc
 public class PineappleLegacyModule extends PineappleController {
     public LegacyModule legacyModule;
     private PineappleResources resources;
-
+    /**
+     * Used to make a Legacy Module
+     * @param name Hardware map name from the Sensor Handler
+     * @param pineappleResources Resources passed through so that the makeController can hardware map properly
+     */
     public PineappleLegacyModule(String name, PineappleResources pineappleResources) {
         resources = pineappleResources;
         makeController(name, pineappleResources);
     }
-
+    /**
+     * Hardware maps the controller
+     * @param name Hardware map name
+     * @param pineappleResources So that the method has access to the hardware map to register the sensor
+     */
     @Override
     public void makeController(String name, PineappleResources pineappleResources) {
         controllerName = name;

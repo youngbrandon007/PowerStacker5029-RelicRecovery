@@ -13,12 +13,20 @@ public class PineappleServoController extends PineappleController {
     public ServoController servoController;
 
     private PineappleResources resources;
-
+    /**
+     * Used to make a servo controller
+     * @param name Hardware map name from the Sensor Handler
+     * @param pineappleResources Resources passed through so that the makeController can hardware map properly
+     */
     public PineappleServoController(String name, PineappleResources pineappleResources) {
         resources = pineappleResources;
         makeController(name, pineappleResources);
     }
-
+    /**
+     * Hard ware maps the servo controller
+     * @param name Hardware map name
+     * @param pineappleResources So that the method has access to the hardware map to register the sensor
+     */
     @Override
     public void makeController(String name, PineappleResources pineappleResources) {
         controllerName = name;

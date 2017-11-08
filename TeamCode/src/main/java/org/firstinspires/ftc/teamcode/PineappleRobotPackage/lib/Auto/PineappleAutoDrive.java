@@ -15,11 +15,24 @@ public class PineappleAutoDrive {
 
     private PineappleDrive drive;
 
+    /**
+     * Constructor of the Auto drive class
+     * @param res Passes the resources for use in methods
+     * @param drive gives direct access to the drive methods for ease of use
+     */
     public PineappleAutoDrive(PineappleResources res , PineappleDrive drive){
         resources = res;
         this.drive = drive;
     }
 
+    /**
+     * Moves the robot until a sensor is in a certain specified threshold
+     * @param sensor The sensor that the robot moves until
+     * @param sensorEnum The specified type of sensor
+     * @param condition What should happen for the driver to stop
+     * @param sensorValue What is the specified value for the robot to stop at
+     * @param power What power the robot should move at
+     */
     public void driveUntil(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
             drive.setMotor(PineappleEnum.MotorLoc.RIGHT, power, true);
@@ -32,6 +45,24 @@ public class PineappleAutoDrive {
         }
     }
 
+    /**
+     * @param sensor
+     * @param sensorEnum
+     * @param condition
+     * @param sensorValue
+     * @param power
+     * @param angle
+     */
+    public void driveUntilMechnum(PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power, double angle){
+        if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
+            drive.mecanum.setMecanum(angle, power, 0, 1);
+            while (checkCondition(sensor.getValue(sensorEnum), sensorValue, condition) && resources.linearOpMode.opModeIsActive()){
+                resources.feedBack.sayFeedBack(sensor.sensorName, sensor.getValue(sensorEnum));
+            }
+
+            drive.stop();
+        }
+    }
     public void lineFollow(PineappleSensor color, PineappleEnum.PineappleSensorEnum colorEnum, PineappleSensor sensor, PineappleEnum.PineappleSensorEnum sensorEnum, PineappleEnum.Condition condition, double sensorValue, double power){
         if(checkCondition(sensor.getValue(sensorEnum), sensorValue, condition)){
 
