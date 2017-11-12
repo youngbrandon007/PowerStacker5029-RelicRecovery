@@ -17,44 +17,44 @@ public class HConfigLinearOpMode extends PineappleConfigLinearOpMode {
 
     PineappleRobot robot;
 
-    Servo HandFourFingers;
-    Servo Head;
+//    Servo HandFourFingers;
+//    Servo Head;
     PineappleMotor Sholder;
-    PineappleMotor Elbow;
+//    PineappleMotor Elbow;
     PineappleMotor RightDrive;
     PineappleMotor LeftDrive;
     @Override
     public void config(LinearOpMode linearOpMode) {
         robot = new PineappleRobot(linearOpMode);
 
-        HandFourFingers = linearOpMode.hardwareMap.servo.get("HFF");
-        Head = linearOpMode.hardwareMap.servo.get("H");
+//        HandFourFingers = linearOpMode.hardwareMap.servo.get("HFF");
+//        Head = linearOpMode.hardwareMap.servo.get("H");
         RightDrive = robot.motorHandler.newDriveMotor("RD", PineappleEnum.MotorLoc.RIGHT, PineappleEnum.MotorType.NEV60);
         LeftDrive = robot.motorHandler.newDriveMotor("LD", PineappleEnum.MotorLoc.LEFT, PineappleEnum.MotorType.NEV60);
         RightDrive.maxPower = 0.5;
         LeftDrive.maxPower = 0.5;
         Sholder = robot.motorHandler.newMotor("S", 1,false, false, PineappleEnum.MotorType.NEV60);
-        Elbow = robot.motorHandler.newMotor("E", 1,false, false, PineappleEnum.MotorType.NEV60);
-        Elbow.maxPower = 0.1;
+//        Elbow = robot.motorHandler.newMotor("E", 1,false, false, PineappleEnum.MotorType.NEV60);
+//        Elbow.maxPower = 0.1;
 
-        setHandRestingPos();
+//        setHandRestingPos();
     }
 
-    /**
-     * This method sets the position
-     * @param val
-     */
-    public void setFourFingersPos(double val){
-        HandFourFingers.setPosition(val);
-    }
-    public void setHandRestingPos(){
-        setFourFingersPos(PineappleRobotConstants.HUMANOIDFINGERREST);
-    }
-    public void setHandFullPos(){
-        setFourFingersPos(PineappleRobotConstants.HUMANOIDFINGERFULL);
-    }
-    @Override
+//    /**
+//     * This method sets the position
+//     * @param val
+//     */
+//    public void setFourFingersPos(double val){
+//        HandFourFingers.setPosition(val);
+//    }
+//    public void setHandRestingPos(){
+//        setFourFingersPos(PineappleRobotConstants.HUMANOIDFINGERREST);
+//    }
+//    public void setHandFullPos(){
+//        setFourFingersPos(PineappleRobotConstants.HUMANOIDFINGERFULL);
+//    }
+//    @Override
     public void runOpMode() throws InterruptedException {
 
-    }
+}
 }
