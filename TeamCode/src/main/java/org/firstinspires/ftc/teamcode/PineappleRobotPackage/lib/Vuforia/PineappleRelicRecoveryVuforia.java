@@ -51,7 +51,9 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
  */
 
 public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
-    public final static Scalar blueLow = new Scalar(108, 0 , 220);
+//    public final static Scalar blueLow = new Scalar(108, 0 , 220);
+    public final static Scalar blueLow = new Scalar(3, 43, 186);
+
     public final static Scalar blueHigh = new Scalar(178, 255 , 255);
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
@@ -179,12 +181,13 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
             telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()) );
             telemetry.addData("Centroid Y", (mmnts.get_m01() / mmnts.get_m00()) );
             telemetry.update();
-            Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
-            Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
+
             if ((mmnts.get_m01()/mmnts.get_m00())< cropped.rows()/2) {
                 return RED_BLUE;
-            } else {
+            } else if((mmnts.get_m01()/mmnts.get_m00())> cropped.rows()/2) {
                 return BLUE_RED;
+            } else {
+                return NON_NON;
             }
 
         }

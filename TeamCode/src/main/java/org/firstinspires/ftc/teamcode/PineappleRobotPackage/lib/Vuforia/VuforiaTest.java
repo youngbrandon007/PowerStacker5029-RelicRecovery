@@ -63,65 +63,21 @@ public class VuforiaTest extends LinearOpMode {
         VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
         relicTrackables.activate();
         waitForStart();
-        PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration(), telemetry);
-//
-//        Image img = getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565);
-//
-//        OpenGLMatrix pose = track.getRawPose();
-//        Matrix34F rawPose = new Matrix34F();
-//
-//        float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
-//        rawPose.setData(poseData);
-//
-//        Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
-//        bm.copyPixelsFromBuffer(img.getPixels());
-//        PineappleRelicRecoveryVuforia.SaveImage(bm, "orginialImage ");
-//        Mat crop = bitmapToMat(bm, CvType.CV_8UC3);
-//
-//        float[][] corners = new float[4][2];
-//        CameraCalibration camCal = locale.getCameraCalibration();
-//        corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(92, -35, 0)).getData();//UL
-//        corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -35, 0)).getData();//UR
-//        corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -118, 0)).getData();//LR
-//        corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(92, -118, 0)).getData();//LL
-//        float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
-//        float y = Math.min(Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1]));
-//        float width = Math.max(Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0]));
-//        float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
-//
-//
-//        //make sure our bounding box doesn't go outside of the image
-//        //OpenCV doesn't like that...
-//        x = Math.max(x, 0);
-//        y = Math.max(y, 0);
-//        width = (x + width > crop.cols()) ? crop.cols() - x : width;
-//        height = (y + height > crop.rows()) ? crop.rows() - y : height;
-//
-//        //cropping bounding box out of camera image
-//        final Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
-//        PineappleRelicRecoveryVuforia.SaveImage(matToBitmap(cropped), "crop");
-//        Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
-//        Mat mask = new Mat();
-//        Core.inRange(cropped, blueLow, blueHigh, mask);
-//        PineappleRelicRecoveryVuforia.SaveImage(matToBitmap(mask), "mask");
-//        Moments mmnts = Imgproc.moments(mask, true);
-//        Log.i("CentroidX", "" + ((mmnts.get_m10() / mmnts.get_m00())));
-//        Log.i("CentroidY", "" + ((mmnts.get_m01() / mmnts.get_m00())));
-//        if ((mmnts.get_m01()/mmnts.get_m00())< cropped.rows()/2) {
-//            telemetry.addData("Order", "RED BLUE");
-//        } else {
-//            telemetry.addData("Order", "BLUE RED");
-//        }
-        if (state == PineappleEnum.JewelState.NON_NON) {
-            telemetry.addData("Thing ", "NON");
-        } else if (state == PineappleEnum.JewelState.BLUE_RED) {
-            telemetry.addData("Thing ", "BLUERED");
-        } else if (state == PineappleEnum.JewelState.RED_BLUE) {
-            telemetry.addData("Thing ", "REDBLUE");
-        } else {
-            telemetry.addData("Thing ", "UNDI");
+        PineappleEnum.JewelState state;
+        while (opModeIsActive()){
+            state = PineappleRelicRecoveryVuforia.getJewelConfig(getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration(), telemetry);
+            if (state == PineappleEnum.JewelState.NON_NON) {
+                telemetry.addData("Config ", "NON");
+            } else if (state == PineappleEnum.JewelState.BLUE_RED) {
+                telemetry.addData("Config ", "BLUERED");
+            } else if (state == PineappleEnum.JewelState.RED_BLUE) {
+                telemetry.addData("Config ", "REDBLUE");
+            } else {
+                telemetry.addData("Config ", "UNDI");
+            }
+            telemetry.update();
         }
-        telemetry.update();
+
         Thread.sleep(10000);
 
     }
@@ -138,40 +94,4 @@ public class VuforiaTest extends LinearOpMode {
 
         return null;
     }
-
-//    public static String[] hsvToRgb(float[] HSV) {
-//    float hue = HSV[0];
-//    float saturation = HSV[1];
-//    float value = HSV[2];
-//    int h = (int)(hue * 6);
-//    float f = hue * 6 - h;
-//    float p = value * (1 - saturation);
-//    float q = value * (1 - f * saturation);
-//    float t = value * (1 - (1 - f) * saturation);
-//
-//    switch (h) {
-//      case 0: return rgbToString(value, t, p);
-//      case 1: return rgbToString(q, value, p);
-//      case 2: return rgbToString(p, value, t);
-//      case 3: return rgbToString(p, q, value);
-//      case 4: return rgbToString(t, p, value);
-//      case 5: return rgbToString(value, p, q);
-//      default: throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + hue + ", " + saturation + ", " + value);
-//    }
-//}
-//
-//public static String[] rgbToString(float r, float g, float b) {
-//    String rs = Integer.toHexString((int)(r * 256));
-//    String gs = Integer.toHexString((int)(g * 256));
-//    String bs = Integer.toHexString((int)(b * 256));
-//    String[] arr = new String[3];
-//    arr[0] = rs;
-//    arr[2] = rs;
-//    arr[3] = rs;
-//    return arr;
-//}
-//    public static int[] stringArrtoIntArr(String[] sArr){
-//        int[] array = Arrays.asList(sArr).stream().mapToInt(Integer::parseInt).toArray();
-//        return array;
-//    }
 }
