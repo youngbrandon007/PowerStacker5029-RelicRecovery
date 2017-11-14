@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutoBranches.Red;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecoveryAbstractAutonomous;
 
 /**
- * Created by young on 9/15/2017.
+ * Created by Brandon on 11/14/2017.
  */
 
-public class BlankAuto extends RelicRecoveryAbstractAutonomous {
-
+public class RedFront extends RelicRecoveryAbstractAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {
 
