@@ -119,7 +119,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
   {
-  //public DatabaseHelper mydb;
+  public DatabaseHelper mydb;
   public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
 
@@ -238,7 +238,7 @@ public class FtcRobotControllerActivity extends Activity
     RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
     RobotLog.vv(TAG, "onCreate()");
     ThemedActivity.appAppThemeToActivity(getTag(), this); // do this way instead of inherit to help AppInventor
-    //mydb = new DatabaseHelper(this);
+
     Assert.assertTrue(FtcRobotControllerWatchdogService.isFtcRobotControllerActivity(AppUtil.getInstance().getRootActivity()));
     Assert.assertTrue(AppUtil.getInstance().isRobotController());
 
@@ -258,6 +258,8 @@ public class FtcRobotControllerActivity extends Activity
     }
 
     context = this;
+//    mydb = new DatabaseHelper(context);
+//    mydb.insertData(90, "0:00");
     utility = new Utility(this);
     DeviceNameManager.getInstance().start(deviceNameManagerStartResult);
     PreferenceRemoterRC.getInstance().start(prefRemoterStartResult);
@@ -331,6 +333,7 @@ public class FtcRobotControllerActivity extends Activity
       RobotLog.d("OpenCV", "OpenCV library found inside package. Using it!");
       mOpenCVCallBack.onManagerConnected(LoaderCallbackInterface.SUCCESS);
     }//else
+
   }
 
   protected UpdateUI createUpdateUI() {

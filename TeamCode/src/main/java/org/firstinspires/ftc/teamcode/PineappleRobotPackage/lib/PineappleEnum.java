@@ -7,6 +7,9 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 public class PineappleEnum {
 
     //Year specific Enums
+    public enum AllianceColor {
+        RED, BLUE
+    }
     public enum VuMarkLocation {
         UNKNOWN, CENTER, RIGHT, LEFT
     }

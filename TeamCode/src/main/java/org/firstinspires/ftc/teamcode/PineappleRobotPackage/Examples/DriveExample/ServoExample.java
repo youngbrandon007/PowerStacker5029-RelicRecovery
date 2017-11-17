@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.Pineappl
  * Created by young on 8/7/2017.
  */
 @TeleOp(name = "PineEx-ServoCS", group = "Linear Opmode")
-
+@Disabled
 
 public class ServoExample extends LinearOpMode {
     PineappleRobot robot;
@@ -26,7 +26,7 @@ public class ServoExample extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot = new PineappleRobot(this);
-        servo = robot.servoHandler.newContinuousServo("D");
+        servo = robot.servoHandler.newContinuousServo("D", 0.5);
 
         waitForStart();
             while(opModeIsActive()){

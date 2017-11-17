@@ -15,17 +15,21 @@ public class PineappleServo {
 
     public double totalRotation;
 
+    public double initPos;
+
     public Servo servoObject;
 
     public PineappleEnum.ServoType servoType;
 
-    public PineappleServo(PineappleResources r, String name, PineappleEnum.ServoType type, double rotation){
+    public PineappleServo(PineappleResources r, String name, PineappleEnum.ServoType type, double rotation, double init){
         resources = r;
         servoName = name;
         servoType = type;
         totalRotation = rotation;
+        initPos = init;
 
         servoObject  = resources.hardwareMap.servo.get(servoName);
+        servoObject.setPosition(initPos);
     }
 
     public void setPosition(double position){

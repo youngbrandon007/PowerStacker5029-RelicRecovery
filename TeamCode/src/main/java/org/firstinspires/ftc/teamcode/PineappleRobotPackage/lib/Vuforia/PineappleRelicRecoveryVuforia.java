@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.vuforia.CameraCalibration;
@@ -51,15 +52,16 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
  */
 
 public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
-//    public final static Scalar blueLow = new Scalar(108, 0 , 220);
-    public final static Scalar blueLow = new Scalar(3, 43, 186);
-
-    public final static Scalar blueHigh = new Scalar(178, 255 , 255);
+    //    public final static Scalar blueLow = new Scalar(108, 0 , 220);
+//    public final static Scalar blueLow = new Scalar(220, 99, 45);
+//
+//    public final static Scalar blueHigh = new Scalar(192, 84, 100);
+    //    public final static Scalar blueHigh = new Scalar(178, 255 , 255);
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
 
     public PineappleRelicRecoveryVuforia(int maxItemCount, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
-        super( maxItemCount, direction, feedback, vuforiaLicenseKey);
+        super(maxItemCount, direction, feedback, vuforiaLicenseKey);
 
     }
 
@@ -124,39 +126,40 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
         return loc;
     }
 
-//    public static PineappleEnum.JewelState getJewelState(Image img,VuforiaTrackableDefaultListener track, CameraCalibration cameraCalibration) throws InterruptedException {
+    //    public static PineappleEnum.JewelState getJewelState(Image img,VuforiaTrackableDefaultListener track, CameraCalibration cameraCalibration) throws InterruptedException {
 //        return getJewelConfig(getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration());
 //    }
-public static void SaveImage(Bitmap finalBitmap, String name) {
+    public static void SaveImage(Bitmap finalBitmap, String name) {
 
-    String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-    File myDir = new File(root + "/saved_images");
-    myDir.mkdirs();
+        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
 
-    String fname = name+".jpg";
-    File file = new File (myDir, fname);
-    if (file.exists ()) file.delete ();
-    try {
-        FileOutputStream out = new FileOutputStream(file);
-        finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-        out.flush();
-        out.close();
+        String fname = name + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
 
-    } catch (Exception e) {
-        e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
+
     public static PineappleEnum.JewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
         OpenGLMatrix pose = track.getRawPose();
-        if (pose !=null && img != null&&img.getPixels() !=null) {
-            Matrix34F rawPose = new Matrix34F() ;
+        if (pose != null && img != null && img.getPixels() != null) {
+            Matrix34F rawPose = new Matrix34F();
             float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
             rawPose.setData(poseData);
             float[][] corners = new float[4][2];
-            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-35,0)).getData();//UL
-            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-35,0)).getData();//UR
-            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340,-118,0)).getData();//LR
-            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(92,-118,0)).getData();//LL
+            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -35, 0)).getData();//UL
+            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -35, 0)).getData();//UR
+            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -118, 0)).getData();//LR
+            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -118, 0)).getData();//LL
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             ByteBuffer pix = img.getPixels();
             bm.copyPixelsFromBuffer(pix);
@@ -165,46 +168,58 @@ public static void SaveImage(Bitmap finalBitmap, String name) {
             Utils.bitmapToMat(bm, crop);
             float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
             float y = Math.min(Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1]));
-            float width = Math.max(Math.abs(corners[0][0]-corners[2][0]), Math.abs(corners[1][0]-corners[3][0]));
-            float height = Math.max(Math.abs(corners[0][1]-corners[2][1]), Math.abs(corners[1][1]-corners[3][1]));
+            float width = Math.max(Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0]));
+            float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
             x = Math.max(x, 0);
             y = Math.max(y, 0);
-            width = (x+width>crop.cols())?crop.cols() - x:width;
-            height = (x+height>crop.rows())?crop.rows() - x:height;
+            width = (x + width > crop.cols()) ? crop.cols() - x : width;
+            height = (x + height > crop.rows()) ? crop.rows() - x : height;
             Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
             SaveImage(matToBitmap(cropped), "crop");
             Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
             Mat mask = new Mat();
-            Core.inRange(cropped, blueLow, blueHigh, mask);
+            Core.inRange(cropped, new Scalar(40, 10, 0), new Scalar(255, 255, 180), mask);
             SaveImage(matToBitmap(mask), "mask");
             Moments mmnts = Imgproc.moments(mask, true);
-            telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()) );
-            telemetry.addData("Centroid Y", (mmnts.get_m01() / mmnts.get_m00()) );
-            telemetry.update();
+            telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()));
+            telemetry.addData("Centroid Y", (mmnts.get_m01() / mmnts.get_m00()));
 
-            if ((mmnts.get_m01()/mmnts.get_m00())< cropped.rows()/2) {
-                return RED_BLUE;
-            } else if((mmnts.get_m01()/mmnts.get_m00())> cropped.rows()/2) {
+
+            if ((mmnts.get_m10() / mmnts.get_m00()) < cropped.cols() / 2) {
                 return BLUE_RED;
             } else {
-                return NON_NON;
+                return RED_BLUE;
             }
 
         }
         return NON_NON;
     }
-    public static Mat bitmapToMat (Bitmap bit, int cvType) {
+
+    public static Mat bitmapToMat(Bitmap bit, int cvType) {
         Mat newMat = new Mat(bit.getHeight(), bit.getWidth(), cvType);
 
         Utils.bitmapToMat(bit, newMat);
 
         return newMat;
     }
-    public static Bitmap matToBitmap (Mat mat) {
+
+    public static Bitmap matToBitmap(Mat mat) {
         Bitmap newBit = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
 
         Utils.matToBitmap(mat, newBit);
 
         return newBit;
+    }
+    @Nullable
+    public static Image getImageFromFrame(VuforiaLocalizer.CloseableFrame frame, int format) {
+
+        long numImgs = frame.getNumImages();
+        for (int i = 0; i < numImgs; i++) {
+            if (frame.getImage(i).getFormat() == format) {
+                return frame.getImage(i);
+            }//if
+        }//for
+
+        return null;
     }
 }
