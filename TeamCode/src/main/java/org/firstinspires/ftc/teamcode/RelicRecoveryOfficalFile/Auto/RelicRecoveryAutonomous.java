@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.BlankAuto;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Blue.BlueFrontAuto;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutomousBranches.Red.RedFrontAuto;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutoBranches.BlankAuto;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutoBranches.Blue.BlueFront;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutoBranches.Red.RedFront;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
@@ -24,8 +24,19 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
 
 
         double delay = 0;
-        RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
-        RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
+        RelicRecoveryEnums.AutoColor color;
+        if(robotHandler.switchBoard.loadDigital("color")) {
+            color = RelicRecoveryEnums.AutoColor.RED;
+        }else{
+            color = RelicRecoveryEnums.AutoColor.BLUE;
+        }
+        RelicRecoveryEnums.StartingPosition position;
+        if(robotHandler.switchBoard.loadDigital("position")){
+            position = RelicRecoveryEnums.StartingPosition.FRONT;
+        }else{
+            position = RelicRecoveryEnums.StartingPosition.BACK;
+        }
+
         boolean moreGlyph = true;
         boolean gyroEnabled = true;
         boolean pidEnabled = false;
@@ -34,25 +45,21 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
         boolean vuforiaAlign = true;
         boolean colorAlign = false;
 
-        RelicRecoveryAbstractAutonomous auto;
+        RelicRecoveryAbstractAutonomous auto = new BlankAuto();
         switch (position) {
             case FRONT:
                 switch (color) {
                     case RED:
-                        auto = new RedFrontAuto();
+                        auto = new RedFront();
                         break;
                     case BLUE:
-                        auto = new BlueFrontAuto();
+                        auto = new BlueFront();
                         break;
-                    default:
-                        auto = new BlankAuto();
                 }
                 break;
             case BACK:
                 auto = new BlankAuto();
                 break;
-            default:
-                auto = new BlankAuto();
         }
 
         auto.AutoData(delay,moreGlyph,gyroEnabled,pidEnabled,encoderEnabled,jewelsEnabled,vuforiaAlign,colorAlign, this);
@@ -60,33 +67,5 @@ public class RelicRecoveryAutonomous extends RelicRecoveryConfig {
         auto.runOpMode();
 
 
-//         /*while (opModeIsActive()) {
-////            switch(vuforia.getJewelState()){
-////
-////                case BLUE_RED:
-////                    telemetry.addData("Order", "BLUE_RED");
-////                    break;
-////                case RED_BLUE:
-////                    telemetry.addData("Order", "RED_BLUE");
-////                    break;
-////                case NON_NON:
-////                    telemetry.addData("Order", "NON_NON");
-////                    break;
-////                default:
-////                    telemetry.addData("Order", "adfadfa");
-////                    break;
-////            }
-//             if (vuforia.getJewelState() == PineappleEnum.JewelState.NON_NON) {
-//                 telemetry.addData("Thing ", "NON");
-//             }
-//             if (vuforia.getJewelState() == PineappleEnum.JewelState.BLUE_RED) {
-//                 telemetry.addData("Thing ", "BLUERED");
-//             }
-//             if (vuforia.getJewelState() == PineappleEnum.JewelState.RED_BLUE) {
-//                 telemetry.addData("Thing ", "REDBLUE");
-//             }
-//             telemetry.update();
-//
-//        }*/
     }
 }

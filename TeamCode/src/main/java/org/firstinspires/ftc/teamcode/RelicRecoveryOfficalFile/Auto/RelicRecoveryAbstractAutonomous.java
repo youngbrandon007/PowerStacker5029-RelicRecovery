@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 
 /**
  * Created by young on 9/15/2017.
  */
 
-abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfig {
+abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfigV2 {
     public double time;
     public boolean moreGlyph = true;
     public boolean gyroEnabled = true;
