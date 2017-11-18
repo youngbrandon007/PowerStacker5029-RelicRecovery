@@ -33,8 +33,8 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
     public final int NAVX_DIM_I2C_PORT = 0;
     public AHRS navx_device;
     public final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
-
-    public PineappleEnum.AllianceColor allianceColor = ((robotHandler.switchBoard.loadDigital("AC") == true) ? PineappleEnum.AllianceColor.RED : PineappleEnum.AllianceColor.BLUE);
+    public PineappleEnum.AllianceColor allianceColor = PineappleEnum.AllianceColor.BLUE;
+//    public PineappleEnum.AllianceColor allianceColor = ((robotHandler.switchBoard.loadDigital("AC") == true) ? PineappleEnum.AllianceColor.RED : PineappleEnum.AllianceColor.BLUE);
     @Override
     public void config(LinearOpMode linearOpMode) {
         robotHandler = new PineappleRobot(linearOpMode);
@@ -67,6 +67,7 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
             calibration_complete = !navx_device.isCalibrating();
             if (!calibration_complete) {
                 telemetry.addData("navX-Micro", "Startup Calibration in Progress");
+                telemetry.update();
             }
         }
         navx_device.zeroYaw();
@@ -74,7 +75,7 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
     public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
         jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELDOWN);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         switch (jewelState) {
             case BLUE_RED:
                 if (allianceColor == PineappleEnum.AllianceColor.BLUE){
@@ -111,10 +112,10 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
                 }
                 break;
         }
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELUP);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
-        Thread.sleep(2000);
+        Thread.sleep(3000);
     }
 
 }

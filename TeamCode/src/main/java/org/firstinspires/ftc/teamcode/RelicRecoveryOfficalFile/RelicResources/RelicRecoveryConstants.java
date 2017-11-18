@@ -5,8 +5,8 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources;
  */
 
 public class RelicRecoveryConstants {
-    public static final double JEWELUP = 1;
-    public static final double JEWELDOWN = 0.5;
+    public static final double JEWELUP = 0;
+    public static final double JEWELDOWN = 0.47;
     public static final double JEWELLEFTTURNLEFT = 0;
     public static final double JEWELLEFTTURNRIGHT = 1;
     public static final double JEWELLEFTTURNMIDDLE = 0.5;

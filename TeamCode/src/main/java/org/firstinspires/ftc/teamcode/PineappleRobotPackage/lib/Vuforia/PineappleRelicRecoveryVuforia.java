@@ -158,8 +158,8 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             float[][] corners = new float[4][2];
             corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -35, 0)).getData();//UL
             corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -35, 0)).getData();//UR
-            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -118, 0)).getData();//LR
-            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -118, 0)).getData();//LL
+            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -140, 0)).getData();//LR
+            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -140, 0)).getData();//LL
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             ByteBuffer pix = img.getPixels();
             bm.copyPixelsFromBuffer(pix);
@@ -178,7 +178,7 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
             SaveImage(matToBitmap(cropped), "crop");
             Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
             Mat mask = new Mat();
-            Core.inRange(cropped, new Scalar(40, 10, 0), new Scalar(255, 255, 180), mask);
+            Core.inRange(cropped, new Scalar(40, 10, 0), new Scalar(255, 255, 50), mask);
             SaveImage(matToBitmap(mask), "mask");
             Moments mmnts = Imgproc.moments(mask, true);
             telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()));

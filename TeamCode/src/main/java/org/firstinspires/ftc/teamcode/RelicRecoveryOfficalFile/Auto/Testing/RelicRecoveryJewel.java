@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.Testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
 /**
  * Created by ftcpi on 11/16/2017.
  */
-
+@Autonomous(name = "Jewel")
 public class RelicRecoveryJewel extends RelicRecoveryConfigV2 {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,6 +33,9 @@ public class RelicRecoveryJewel extends RelicRecoveryConfigV2 {
         relicTrackables = locale.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
         relicTrackables.activate();
+        while (track.getPose()==null){
+            Thread.sleep(1000);
+        }
         PineappleEnum.JewelState lastState = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration(), telemetry);
         PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration(), telemetry);
 
@@ -45,16 +49,17 @@ public class RelicRecoveryJewel extends RelicRecoveryConfigV2 {
             if (lastState == state) {
                 hasJewelConfig = true;
             }
-            if (state == PineappleEnum.JewelState.NON_NON) {
-                telemetry.addData("Config ", "NON");
-            } else if (state == PineappleEnum.JewelState.BLUE_RED) {
-                telemetry.addData("Config ", "BLUE RED");
-            } else if (state == PineappleEnum.JewelState.RED_BLUE) {
-                telemetry.addData("Config ", "RED BLUE");
-            }
-            telemetry.update();
+
             Thread.sleep(500);
         }
+        if (state == PineappleEnum.JewelState.NON_NON) {
+            telemetry.addData("Config ", "NON");
+        } else if (state == PineappleEnum.JewelState.BLUE_RED) {
+            telemetry.addData("Config ", "BLUE RED");
+        } else if (state == PineappleEnum.JewelState.RED_BLUE) {
+            telemetry.addData("Config ", "RED BLUE");
+        }
+        telemetry.update();
 
         waitForStart();
         hitJewels(state);
