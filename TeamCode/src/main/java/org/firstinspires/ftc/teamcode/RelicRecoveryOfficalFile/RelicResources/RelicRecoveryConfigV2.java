@@ -34,7 +34,6 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
     public AHRS navx_device;
     public final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
     public PineappleEnum.AllianceColor allianceColor = PineappleEnum.AllianceColor.BLUE;
-//    public PineappleEnum.AllianceColor allianceColor = ((robotHandler.switchBoard.loadDigital("AC") == true) ? PineappleEnum.AllianceColor.RED : PineappleEnum.AllianceColor.BLUE);
     @Override
     public void config(LinearOpMode linearOpMode) {
         robotHandler = new PineappleRobot(linearOpMode);
@@ -47,7 +46,7 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
         conveyLeft = robotHandler.motorHandler.newDriveMotor("CL", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
         conveyRight = robotHandler.motorHandler.newDriveMotor("CR", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
 
-        phoneTurnLeft = robotHandler.servoHandler.newLimitServo("PTL", 1, 0.5);
+        phoneTurnLeft = robotHandler.servoHandler.newLimitServo("PTL", 1, 0);
         jewelRotationLeft = robotHandler.servoHandler.newLimitServo("JRL", 1, RelicRecoveryConstants.JEWELLEFTTURNLEFT);
         jewelLeverLeft = robotHandler.servoHandler.newLimitServo("JLL", 1, RelicRecoveryConstants.JEWELUP);
         collector = robotHandler.servoHandler.newContinuousServo("C", 0.5);
@@ -58,7 +57,7 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
                 NAVX_DEVICE_UPDATE_RATE_HZ);
 
         boolean calibration_complete = false;
-        while ( !calibration_complete ) {
+        while ( !calibration_complete) {
             /* navX-Micro Calibration completes automatically ~15 seconds after it is
             powered on, as long as the device is still.  To handle the case where the
             navX-Micro has not been able to calibrate successfully, hold off using
@@ -70,8 +69,11 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
                 telemetry.update();
             }
         }
+        telemetry.addData("navX-Micro", "Calibration Finished");
+        telemetry.update();
         navx_device.zeroYaw();
     }
+
     public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
         jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELDOWN);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);

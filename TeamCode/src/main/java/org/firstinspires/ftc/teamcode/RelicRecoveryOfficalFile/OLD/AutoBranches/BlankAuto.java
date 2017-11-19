@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutoBranches.Blue;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.OLD.AutoBranches;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecoveryAbstractAutonomous;
 
@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecover
  * Created by Brandon on 11/14/2017.
  */
 
-public class BlueFront extends RelicRecoveryAbstractAutonomous {
+public class BlankAuto extends RelicRecoveryAbstractAutonomous{
     @Override
     public void runOpMode() throws InterruptedException {
 

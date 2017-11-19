@@ -109,13 +109,13 @@ public class RelicRecoveryVuforia {
         robotHandler.drive.stop();
     }
 
-    private static double getRobotAngle(VuforiaTrackableDefaultListener listener){
+    public static double getRobotAngle(VuforiaTrackableDefaultListener listener){
         VectorF angles = anglesFromTarget(listener);
         double robotAngle = Math.toDegrees(angles.get(0)) + 180;
         return robotAngle;
     }
 
-    private static double getDistance(VuforiaTrackableDefaultListener listener, VectorF vector){
+    public static double getDistance(VuforiaTrackableDefaultListener listener, VectorF vector){
         VectorF angles = anglesFromTarget(listener);
 
         VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)), vector);
@@ -123,7 +123,7 @@ public class RelicRecoveryVuforia {
         return Math.sqrt(Math.pow(tran.get(0), 2) + Math.pow(tran.get(2), 2));
     }
 
-    private static double getMoveAngle(VuforiaTrackableDefaultListener listener, VectorF vector){
+    public static double getMoveAngle(VuforiaTrackableDefaultListener listener, VectorF vector){
         VectorF angles = anglesFromTarget(listener);
 
         VectorF tran = navOffWall(listener.getPose().getTranslation(), Math.toDegrees(angles.get(0)), vector);
@@ -131,7 +131,7 @@ public class RelicRecoveryVuforia {
         return Math.atan2(tran.get(0), tran.get(2)) - Math.PI / 2;
     }
 
-    private static VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall){
+    public static VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall){
         return new VectorF((float) (trans.get(0) - offWall.get(0) * Math.sin(Math.toRadians(robotAngle)) - offWall.get(2) * Math.cos(Math.toRadians(robotAngle))), trans.get(1), (float) (trans.get(2) + offWall.get(0) * Math.cos(Math.toRadians(robotAngle)) - offWall.get(2) * Math.sin(Math.toRadians(robotAngle))));
     }
 

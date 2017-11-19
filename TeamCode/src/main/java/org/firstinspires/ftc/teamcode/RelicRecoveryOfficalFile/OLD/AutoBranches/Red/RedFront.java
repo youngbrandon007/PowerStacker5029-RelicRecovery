@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.AutoBranches.Red;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.OLD.AutoBranches.Red;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecoveryAbstractAutonomous;
 
@@ -9,6 +9,9 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecover
 public class RedFront extends RelicRecoveryAbstractAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry.addData("OpMode", "Red");
+        telemetry.update();
+        waitForStart();
 
     }
 }
