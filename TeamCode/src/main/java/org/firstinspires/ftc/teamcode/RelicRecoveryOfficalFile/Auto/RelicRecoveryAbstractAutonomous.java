@@ -1,95 +1,104 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryVuforia;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
  * Created by young on 9/15/2017.
  */
 
 abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfigV2 {
-    public double time;
-    public boolean moreGlyph = true;
+    public double delay = 0;
+    public RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
+    public RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
+    public boolean moreGlyph = false;
     public boolean gyroEnabled = true;
     public boolean pidEnabled = false;
-    public boolean encoderEnabled = true;
+    public boolean encoderEnabled = false;
     public boolean jewelsEnabled = true;
     public boolean vuforiaAlign = true;
     public boolean colorAlign = false;
 
-    public LinearOpMode linearOpMode;
 
-    public void AutoData(double time, boolean moreGlyph, boolean gyroEnabled, boolean pidEnabled, boolean encoderEnabled, boolean jewelsEnabled, boolean vuforiaAlign, boolean colorAlign, RelicRecoveryConfigV2 config) {
-        this.time = time;
-        this.moreGlyph = moreGlyph;
-        this.gyroEnabled = gyroEnabled;
-        this.pidEnabled = pidEnabled;
-        this.encoderEnabled = encoderEnabled;
-        this.jewelsEnabled = jewelsEnabled;
-        this.vuforiaAlign = vuforiaAlign;
-        this.colorAlign = colorAlign;
-        this.linearOpMode = config;
-        this.telemetry = linearOpMode.telemetry;
-        this.hardwareMap = linearOpMode.hardwareMap;
-
-    }
-
-    public void alignToCrypto(VuforiaTrackableDefaultListener listener, VectorF vector) throws InterruptedException {
-
-        boolean go = true;
-
-        while (go && opModeIsActive()) {
-
-            double gyroAngle = navx_device.getYaw();
-
-            telemetry.addData("Gyro Angle", gyroAngle);
-            telemetry.update();
-            double rotation;
-
-            if (gyroAngle > 1 && gyroAngle < 180) {
-                //Put Gyro here
-                rotation = .1;
-                robotHandler.drive.tank.setPower(rotation, rotation);
-            } else if (gyroAngle < 359 && gyroAngle > 179) {
-                //and here
-                rotation = -.1;
-                robotHandler.drive.tank.setPower(rotation, rotation);
-                Thread.sleep(100);
-                robotHandler.drive.stop();
-                Thread.sleep(50);
-
-            } else {
-
-                if (null != listener.getPose()) {
-
-                    double robotAngle = RelicRecoveryVuforia.getRobotAngle(listener) - 45;
-                    robotAngle += (robotAngle < 0) ? 360 : 0;
-
-                    double distance = RelicRecoveryVuforia.getDistance(listener, vector);
-                    double moveAngle = RelicRecoveryVuforia.getMoveAngle(listener, vector) + 90;
-                    moveAngle -= (moveAngle > 360) ? 360 : 0;
-
-
-                    robotHandler.sayFeedBack("Angle°", robotAngle);
-                    robotHandler.sayFeedBack("Distance", distance);
-                    robotHandler.sayFeedBack("Drive°", moveAngle);
-                    robotHandler.sayFeedBack("Gyro Angle", gyroAngle);
-                    robotHandler.updateFeedBack();
-                    //Robot Rotation First
-
-                }
-            }
+    public void alignToCrypto(VuforiaTrackableDefaultListener listener, VectorF vector) {
+        while((alignWithGyro()) ? !alignToCryptoboxVuforia(listener, vector): true && opModeIsActive()){
         }
-        robotHandler.drive.stop();
-
     }
+
+
+    //Vuforia Functions
+    private boolean alignToCryptoboxVuforia(VuforiaTrackableDefaultListener listener, VectorF vector) {
+        if (null != listener.getPose()) {
+            VectorF trans = listener.getPose().getTranslation();
+            // Extract the X, Y, and Z components of the offset of the target relative to the robot
+            double[] robot = {trans.get(1), trans.get(2)};
+
+            double[] target = {robot[0] - vector.get(1), robot[1] - vector.get(2)};//Delta change till target
+
+
+            telemetry.addData("x", robot[0]); // X
+            telemetry.addData("y", robot[1]); // Y
+            telemetry.addData("-x", target[0]);
+            telemetry.addData("-y", target[1]);
+
+
+            double dis = getDistance(target);
+            double ang = getAngle(target) - 45;
+            ang += 90;
+            telemetry.addData("Distance", dis);
+            telemetry.addData("Angle", ang);
+
+            robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), .3, 0, 1);
+
+            telemetry.update();
+            if(dis < RelicRecoveryConstants.VUFORIAALIGNRANGE) return true;
+        }
+        return false;
+    }
+
+    private double getDistance(double[] target) {
+        return Math.sqrt(Math.pow(target[0], 2) + Math.pow(target[1], 2));
+    }
+
+    private double getAngle(double[] target) {
+        double angle = (float) Math.toDegrees(Math.atan2(target[1], target[0]));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return angle;
+    }
+
+
+    //aling with gyro
+    public boolean alignWithGyro() {
+        double gyroAngle = this.navx_device.getYaw();
+        if (gyroAngle < 0) {
+            gyroAngle += 360;
+        }
+        telemetry.addData("Gyro Angle", gyroAngle);
+        telemetry.update();
+        double rotation;
+        if (gyroAngle > 1 && gyroAngle < 180) {
+            //Put Gyro here
+            rotation = -.1;
+            robotHandler.drive.tank.setPower(rotation, rotation);
+        } else if (gyroAngle < 359 && gyroAngle > 179) {
+            //and here
+            rotation = .1;
+            robotHandler.drive.tank.setPower(rotation, rotation);
+
+        } else {
+            robotHandler.drive.stop();
+            return true;
+        }
+        return false;
+    }
+
 }
 
 

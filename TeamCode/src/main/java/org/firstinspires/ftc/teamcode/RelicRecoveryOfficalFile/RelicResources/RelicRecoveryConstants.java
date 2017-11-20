@@ -21,4 +21,5 @@ public class RelicRecoveryConstants {
     public static final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
     public static final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
 
+    public static final double VUFORIAALIGNRANGE = 10.0;
 }
