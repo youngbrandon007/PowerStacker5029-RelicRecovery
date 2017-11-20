@@ -24,10 +24,9 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
 
     public void alignToCrypto(VuforiaTrackableDefaultListener listener, VectorF vector) {
-        while((alignWithGyro()) ? !alignToCryptoboxVuforia(listener, vector): true && opModeIsActive()){
+        while ((alignWithGyro()) ? !alignToCryptoboxVuforia(listener, vector) : true && opModeIsActive()) {
         }
     }
-
 
     //Vuforia Functions
     private boolean alignToCryptoboxVuforia(VuforiaTrackableDefaultListener listener, VectorF vector) {
@@ -51,10 +50,18 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
             telemetry.addData("Distance", dis);
             telemetry.addData("Angle", ang);
 
-            robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), .3, 0, 1);
+            //Check for stop before motors are set again
+            if (dis < RelicRecoveryConstants.VUFORIAALIGNRANGE) {
+                robotHandler.drive.stop();
+                return true;
+            }
+
+            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? .5 : (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? .4 : .3;
+
+            robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), speed, 0, 1);
 
             telemetry.update();
-            if(dis < RelicRecoveryConstants.VUFORIAALIGNRANGE) return true;
+
         }
         return false;
     }
@@ -66,9 +73,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     private double getAngle(double[] target) {
         double angle = (float) Math.toDegrees(Math.atan2(target[1], target[0]));
 
-        if (angle < 0) {
-            angle += 360;
-        }
+        angle += (angle < 0) ? 360 : 0;
 
         return angle;
     }
@@ -82,20 +87,17 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         }
         telemetry.addData("Gyro Angle", gyroAngle);
         telemetry.update();
-        double rotation;
-        if (gyroAngle > 1 && gyroAngle < 180) {
-            //Put Gyro here
-            rotation = -.1;
-            robotHandler.drive.tank.setPower(rotation, rotation);
-        } else if (gyroAngle < 359 && gyroAngle > 179) {
-            //and here
-            rotation = .1;
-            robotHandler.drive.tank.setPower(rotation, rotation);
+        double rotation =  (gyroAngle > 1 && gyroAngle < 180) ? -.1 : (gyroAngle < 359 && gyroAngle > 179) ? .1 : 0;
 
-        } else {
+
+        if(rotation == 0){
             robotHandler.drive.stop();
             return true;
         }
+
+
+        robotHandler.drive.tank.setPower(rotation, rotation);
+
         return false;
     }
 

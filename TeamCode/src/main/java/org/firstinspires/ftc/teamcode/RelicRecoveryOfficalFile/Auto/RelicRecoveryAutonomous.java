@@ -58,14 +58,11 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                         //Drive forward
 
                         //turn
-                        
+
                         phoneTurnLeft.setPosition(.23);
                         RelicRecoveryVuMark placement = RelicRecoveryVuMark.UNKNOWN;
                         while (opModeIsActive() && placement == RelicRecoveryVuMark.UNKNOWN) {
-                            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-                                placement = vuMark;
-                            }
+                            placement = RelicRecoveryVuMark.from(relicTemplate);
                         }
                         VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? new VectorF(0, 0, -900) : (placement == RelicRecoveryVuMark.CENTER) ? new VectorF(0, 0, -900) : new VectorF(0, 0, -900);
                         alignToCrypto(listener, vector);
