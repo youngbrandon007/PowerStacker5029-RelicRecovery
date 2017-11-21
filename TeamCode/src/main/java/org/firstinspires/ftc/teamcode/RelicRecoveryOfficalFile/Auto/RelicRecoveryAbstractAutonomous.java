@@ -25,8 +25,8 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
     private boolean usingGyro = false;
 
-    public void alignToCrypto(VuforiaTrackableDefaultListener listener, VectorF vector) {
-        while ((alignWithGyro()) ? !alignToCryptoboxVuforia(listener, vector) : true && opModeIsActive()) {
+    public void alignToCrypto(double angle, VuforiaTrackableDefaultListener listener, VectorF vector) {
+        while ((alignWithGyro(angle)) ? !alignToCryptoboxVuforia(listener, vector) : true && opModeIsActive()) {
         }
     }
 
@@ -82,23 +82,30 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
 
     //aling with gyro
-    public boolean alignWithGyro() {
+    public boolean alignWithGyro(double angle) {
         double gyroAngle = this.navx_device.getYaw();
-        if (gyroAngle < 0) {
-            gyroAngle += 360;
-        }
+
         telemetry.addData("Gyro Angle", gyroAngle);
+        telemetry.addData("Target Angle", angle);
         telemetry.update();
-        double rotation =  (gyroAngle > 1 && gyroAngle < 180) ? -.1 : (gyroAngle < 359 && gyroAngle > 179) ? .1 : 0;
+
+        //make  the range between 0-360
+        gyroAngle += (gyroAngle < 0) ? 360 : 0;
+
+        //offset to the input angle - positive is clockwise
+        gyroAngle -= angle;
+        gyroAngle += (gyroAngle < 0) ? 360 : (gyroAngle > 360) ? -360 : 0;
+
+        double rotation = (gyroAngle > 1 && gyroAngle < 180) ? -.1 : (gyroAngle < 359 && gyroAngle > 179) ? .1 : 0;
 
 
-        if(rotation == 0){
-            if(usingGyro){
+        if (rotation == 0) {
+            if (usingGyro) {
                 robotHandler.drive.stop();
                 usingGyro = false;
             }
             return true;
-        }else usingGyro = true;
+        } else usingGyro = true;
 
 
         robotHandler.drive.tank.setPower(rotation, rotation);
@@ -112,36 +119,36 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         Thread.sleep(1000);
         switch (jewelState) {
             case BLUE_RED:
-                if (allianceColor == PineappleEnum.AllianceColor.BLUE){
+                if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
                 } else {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
                 }
                 break;
             case RED_BLUE:
-                if (allianceColor == PineappleEnum.AllianceColor.RED){
+                if (allianceColor == PineappleEnum.AllianceColor.RED) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
                 } else {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
                 }
                 break;
             case NON_BLUE:
-                if (allianceColor == PineappleEnum.AllianceColor.RED){
+                if (allianceColor == PineappleEnum.AllianceColor.RED) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
                 }
                 break;
             case NON_RED:
-                if (allianceColor == PineappleEnum.AllianceColor.BLUE){
+                if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
                 }
                 break;
             case BLUE_NON:
-                if (allianceColor == PineappleEnum.AllianceColor.RED){
+                if (allianceColor == PineappleEnum.AllianceColor.RED) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
                 }
                 break;
             case RED_NON:
-                if (allianceColor == PineappleEnum.AllianceColor.BLUE){
+                if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
                 }
                 break;
@@ -151,9 +158,36 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
         Thread.sleep(3000);
     }
-    public void driveOffPlate(){
-        navx_device.getRoll(); //
-        
+
+    public void driveOffPlate(double speed) throws InterruptedException {
+        //
+
+        robotHandler.drive.mecanum.setPower(-speed, speed);
+
+        while (driveTillTilt() && opModeIsActive()) {
+        }
+        while (driveTillFlat() && opModeIsActive()) {
+        }
+
+
+        Thread.sleep(1000);
+
+        robotHandler.drive.stop();
+
+    }
+
+    private boolean driveTillTilt() {
+        double roll = navx_device.getRoll();
+        telemetry.addData("Roll", roll);
+        telemetry.update();
+        return (Math.abs(roll) > 3);
+    }
+
+    private boolean driveTillFlat() {
+        double roll = navx_device.getRoll();
+        telemetry.addData("Roll", roll);
+        telemetry.update();
+        return (Math.abs(roll) < 2);
     }
 }
 

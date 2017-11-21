@@ -22,6 +22,9 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry.addLine("Init-Started");
+        telemetry.addLine("Init-Config");
+        telemetry.update();
         config(this);
 
 
@@ -36,12 +39,17 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
         relicTrackables.activate();
+        telemetry.addLine("Init-Vuforia Initialized");
 
-
+        //function at the bottom of this file
+        //loads the switch board --- color and delay TODO position
         loadSwitchBoard();
 
-
+        telemetry.addLine("Init-Complete");
+        telemetry.update();
         waitForStart();
+
+
         switch (position) {
             case FRONT:
                 switch (color) {
@@ -56,19 +64,24 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 
                         //TODO fix Jewels
 
-                        //TODO Drive forward
+                        //Drive forward
+                        driveOffPlate(.7);
 
                         //turn
+                        alignWithGyro(90);
 
-                        phoneTurnLeft.setPosition(.23);
+                        //turn phone
+                        phoneTurnLeft.setPosition(.23); //Might need to be moved or changed
+
+                        //align to cryptobox
                         RelicRecoveryVuMark placement = RelicRecoveryVuMark.UNKNOWN;
                         while (opModeIsActive() && placement == RelicRecoveryVuMark.UNKNOWN) {
                             placement = RelicRecoveryVuMark.from(relicTemplate);
-                        } // THIS SHOULD OCCUR IN INIT RIGHT?
+                        } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
                         VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-                        alignToCrypto(listener, vector);
+                        alignToCrypto(90, listener, vector);
 
-                        //SPIN out box
+                        //TODO SPIN out box
 
                         break;
                 }
@@ -85,5 +98,8 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
     public void loadSwitchBoard() {
         delay = robotHandler.switchBoard.loadAnalog("delay");
         color = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
+
+        telemetry.addData("Delay", delay);
+        telemetry.addData("Color",color);
     }
 }
