@@ -56,7 +56,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
                 return true;
             }
 
-            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? .5 : (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? .4 : .3;
+            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? 1 : (dis > RelicRecoveryConstants.VUFORIAALIGNSLOW) ? .5 : .3;
 
             robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), speed, 0, 1);
 
@@ -91,7 +91,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
 
         if(rotation == 0){
-            robotHandler.drive.stop();
+//            robotHandler.drive.stop();
             return true;
         }
 
