@@ -23,6 +23,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     public boolean vuforiaAlign = true;
     public boolean colorAlign = false;
 
+    private boolean usingGyro = false;
 
     public void alignToCrypto(VuforiaTrackableDefaultListener listener, VectorF vector) {
         while ((alignWithGyro()) ? !alignToCryptoboxVuforia(listener, vector) : true && opModeIsActive()) {
@@ -94,13 +95,14 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         if(rotation == 0){
 //            robotHandler.drive.stop();
             return true;
-        }
+        }else usingGyro = true;
 
 
         robotHandler.drive.tank.setPower(rotation, rotation);
 
         return false;
     }
+
     public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
         jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELDOWN);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
