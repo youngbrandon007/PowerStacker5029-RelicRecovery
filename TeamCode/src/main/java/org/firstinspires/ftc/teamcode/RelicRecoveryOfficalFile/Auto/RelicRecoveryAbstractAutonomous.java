@@ -93,7 +93,10 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
 
         if(rotation == 0){
-//            robotHandler.drive.stop();
+            if(usingGyro){
+                robotHandler.drive.stop();
+                usingGyro = false;
+            }
             return true;
         }else usingGyro = true;
 
