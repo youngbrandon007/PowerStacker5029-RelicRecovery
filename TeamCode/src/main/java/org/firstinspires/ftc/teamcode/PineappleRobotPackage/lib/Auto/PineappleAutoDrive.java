@@ -172,7 +172,7 @@ public class PineappleAutoDrive {
         return true;
     }
 
-    public void gyroTurnPID(double degrees, double P, double I, double D, AHRS navx_device, Context context) throws InterruptedException {
+    public void gyroTurnPID(double degrees, double P, double I, double D, AHRS navx_device, Context context, double miliPerWrite) throws InterruptedException {
 
         final double TARGET_ANGLE_DEGREES = degrees;
         final double TOLERANCE_DEGREES = 2.0;
@@ -208,11 +208,12 @@ public class PineappleAutoDrive {
         el.reset();
         while (resources.linearOpMode.opModeIsActive() &&
                 !Thread.currentThread().isInterrupted()) {
+            double output = 0;
             if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
                 if (yawPIDResult.isOnTarget()) {
                     resources.telemetry.addData("PIDOutput", df.format(0.00));
                 } else {
-                    double output = yawPIDResult.getOutput();
+                    output = yawPIDResult.getOutput();
                     drive.tank.setPower(output, -output);
 
                     resources.telemetry.addData("PIDOutput", df.format(output) + ", " +
@@ -223,8 +224,8 @@ public class PineappleAutoDrive {
                 Log.w("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
             }
             resources.telemetry.addData("Yaw", df.format(navx_device.getYaw()));
-            if (el.milliseconds()%10==0) {
-                data+= "\n"+navx_device.getYaw();
+            if (el.milliseconds()%miliPerWrite==0) {
+                data+= "\n"+output;
             }
         }
 

@@ -39,7 +39,7 @@ public class RelicRecoveryPIDTuning extends RelicRecoveryConfigV2 {
             D = DPot.getVoltage();
         }
         waitForStart();
-        robotHandler.auto.gyroTurnPID(90, P, I, D, navx_device, MyApplication.getAppContext());
+        robotHandler.auto.gyroTurnPID(90, P, I, D, navx_device, MyApplication.getAppContext(), 10);
 
     }
 }
