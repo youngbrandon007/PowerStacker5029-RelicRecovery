@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
@@ -64,7 +65,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                         while (opModeIsActive() && placement == RelicRecoveryVuMark.UNKNOWN) {
                             placement = RelicRecoveryVuMark.from(relicTemplate);
                         }
-                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? new VectorF(0, 0, -900) : (placement == RelicRecoveryVuMark.CENTER) ? new VectorF(0, 0, -900) : new VectorF(0, 0, -900);
+                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
                         alignToCrypto(listener, vector);
 
                         //SPIN out box
