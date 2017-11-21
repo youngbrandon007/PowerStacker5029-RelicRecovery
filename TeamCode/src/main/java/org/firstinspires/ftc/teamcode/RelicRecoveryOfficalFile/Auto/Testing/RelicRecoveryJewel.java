@@ -62,7 +62,7 @@ public class RelicRecoveryJewel extends RelicRecoveryConfigV2 {
         telemetry.update();
 
         waitForStart();
-        hitJewels(state);
+        //hitJewels(state);
 
     }
 }

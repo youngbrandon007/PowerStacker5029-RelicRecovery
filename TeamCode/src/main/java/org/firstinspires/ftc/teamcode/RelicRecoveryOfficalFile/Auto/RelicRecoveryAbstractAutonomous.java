@@ -146,6 +146,10 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
         Thread.sleep(3000);
     }
+    public void driveOffPlate(){
+        navx_device.getRoll(); //
+        
+    }
 }
 
 
