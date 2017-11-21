@@ -54,9 +54,9 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                     case BLUE:
                         //Blue Front
 
-                        //Jewels
+                        //TODO fix Jewels
 
-                        //Drive forward
+                        //TODO Drive forward
 
                         //turn
 
@@ -64,7 +64,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                         RelicRecoveryVuMark placement = RelicRecoveryVuMark.UNKNOWN;
                         while (opModeIsActive() && placement == RelicRecoveryVuMark.UNKNOWN) {
                             placement = RelicRecoveryVuMark.from(relicTemplate);
-                        }
+                        } // THIS SHOULD OCCUR IN INIT RIGHT?
                         VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
                         alignToCrypto(listener, vector);
 

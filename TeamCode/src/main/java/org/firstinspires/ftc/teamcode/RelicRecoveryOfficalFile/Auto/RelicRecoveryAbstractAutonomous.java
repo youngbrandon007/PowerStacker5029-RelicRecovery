@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
@@ -100,7 +101,51 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
         return false;
     }
-
+    public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
+        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELDOWN);
+        jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
+        Thread.sleep(1000);
+        switch (jewelState) {
+            case BLUE_RED:
+                if (allianceColor == PineappleEnum.AllianceColor.BLUE){
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
+                } else {
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+                }
+                break;
+            case RED_BLUE:
+                if (allianceColor == PineappleEnum.AllianceColor.RED){
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
+                } else {
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+                }
+                break;
+            case NON_BLUE:
+                if (allianceColor == PineappleEnum.AllianceColor.RED){
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
+                }
+                break;
+            case NON_RED:
+                if (allianceColor == PineappleEnum.AllianceColor.BLUE){
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
+                }
+                break;
+            case BLUE_NON:
+                if (allianceColor == PineappleEnum.AllianceColor.RED){
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+                }
+                break;
+            case RED_NON:
+                if (allianceColor == PineappleEnum.AllianceColor.BLUE){
+                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+                }
+                break;
+        }
+        Thread.sleep(1500);
+        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELUP);
+        jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+        Thread.sleep(3000);
+    }
 }
 
 
