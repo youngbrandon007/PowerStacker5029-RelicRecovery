@@ -29,7 +29,11 @@ public class BlueFront extends RelicRecoveryAbstractAutonomous {
 //
 //        relicTrackables.activate();
 
+<<<<<<< HEAD
 //        linearOpMode.waitForStart();
+=======
+        waitForStart();
+>>>>>>> origin/PID_Testing
 
 //        alignToCrypto(listener,new VectorF(-500, 0 ,0));
 
