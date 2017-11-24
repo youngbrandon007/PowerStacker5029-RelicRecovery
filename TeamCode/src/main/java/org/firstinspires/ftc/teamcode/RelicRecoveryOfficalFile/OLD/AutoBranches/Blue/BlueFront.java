@@ -29,12 +29,12 @@ public class BlueFront extends RelicRecoveryAbstractAutonomous {
 //
 //        relicTrackables.activate();
 
-        linearOpMode.waitForStart();
+        waitForStart();
 
 //        alignToCrypto(listener,new VectorF(-500, 0 ,0));
 
 
-        while (linearOpMode.opModeIsActive()&&navx_device.isConnected()) {
+        while (opModeIsActive()&&navx_device.isConnected()) {
 
             double gyroAngle = this.navx_device.getYaw();
             gyroAngle+=180;
