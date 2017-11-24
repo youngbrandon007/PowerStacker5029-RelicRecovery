@@ -76,15 +76,12 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                         RelicRecoveryVuMark placement = RelicRecoveryVuMark.UNKNOWN;
                         while (opModeIsActive() && placement == RelicRecoveryVuMark.UNKNOWN) {
                             placement = RelicRecoveryVuMark.from(relicTemplate);
-<<<<<<< HEAD
                         } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
                         VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
                         alignToCrypto(90, listener, vector);
-=======
-                        }
-                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-                        alignToCrypto(listener, vector);
->>>>>>> origin/PID_Testing
+//                        }
+//                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
+//                        alignToCrypto(listener, vector);
 
                         //TODO SPIN out box
 
