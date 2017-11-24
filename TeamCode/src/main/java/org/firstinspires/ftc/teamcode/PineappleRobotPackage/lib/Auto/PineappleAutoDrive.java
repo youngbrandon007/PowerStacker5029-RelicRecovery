@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleDrive;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
@@ -11,7 +13,16 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResourc
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by young on 8/6/2017.
@@ -161,9 +172,14 @@ public class PineappleAutoDrive {
         return true;
     }
 
-    public void gyroTurnPID(double degrees, double P, double I, double D, AHRS navx_device) throws InterruptedException {
+    public void gyroTurnPID(double degrees, double P, double I, double D, AHRS navx_device, Context context, double miliPerWrite) throws InterruptedException {
+
         final double TARGET_ANGLE_DEGREES = degrees;
         final double TOLERANCE_DEGREES = 2.0;
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+        String name = P + " " + I + " " + D + " " + currentDateTimeString;
+        String data = currentDateTimeString + "\n" + P + " " + I + " " + D + "\n" + TARGET_ANGLE_DEGREES;
+        ElapsedTime el = new ElapsedTime();
 
         double YAW_PID_P = P;
         double YAW_PID_I = I;
@@ -189,14 +205,15 @@ public class PineappleAutoDrive {
         navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
 
         DecimalFormat df = new DecimalFormat("#.##");
-
+        el.reset();
         while (resources.linearOpMode.opModeIsActive() &&
                 !Thread.currentThread().isInterrupted()) {
+            double output = 0;
             if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
                 if (yawPIDResult.isOnTarget()) {
                     resources.telemetry.addData("PIDOutput", df.format(0.00));
                 } else {
-                    double output = yawPIDResult.getOutput();
+                    output = yawPIDResult.getOutput();
                     drive.tank.setPower(output, -output);
 
                     resources.telemetry.addData("PIDOutput", df.format(output) + ", " +
@@ -207,6 +224,21 @@ public class PineappleAutoDrive {
                 Log.w("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
             }
             resources.telemetry.addData("Yaw", df.format(navx_device.getYaw()));
+            if (el.milliseconds()%miliPerWrite==0) {
+                data+= "\n"+output;
+            }
+        }
+
+
+    }
+
+    private void writeToFile(String name, String data, Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("name.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 
