@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 
 /**
- * Created by Brandon on 10/10/2017.
+ * Created by A Pineapple on 10/10/2017.
  */
 @TeleOp(name = "RRmecanumV2", group = "Linear Opmode")
 
@@ -43,3 +43,4 @@ RelicRecoveryMecanumTeleOPV2 extends RelicRecoveryConfigV2 {
 
     }
 }
+
