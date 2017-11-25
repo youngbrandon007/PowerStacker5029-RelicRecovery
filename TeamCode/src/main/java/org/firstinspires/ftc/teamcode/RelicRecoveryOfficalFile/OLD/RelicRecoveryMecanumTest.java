@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
+package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.OLD;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
  * Created by Brandon on 10/10/2017.
  */
 @Autonomous(name = "RRmecanumTest", group = "Linear Opmode")
-
+@Disabled
 public class RelicRecoveryMecanumTest extends RelicRecoveryConfig {
     private ElapsedTime runtime = new ElapsedTime();
 
