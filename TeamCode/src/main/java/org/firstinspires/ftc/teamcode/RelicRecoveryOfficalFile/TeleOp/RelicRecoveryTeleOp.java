@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 
@@ -29,8 +30,47 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
         while (opModeIsActive()) {
 
 
-            // Controller A
+            //Collector
+            float right_trigger1 = gamepad1.right_trigger;
+            float right_trigger2 = gamepad2.right_trigger;
+            float left_trigger1 = gamepad1.left_trigger;
+            float left_trigger2 = gamepad2.left_trigger;
 
+            if (gamepad1.right_bumper || gamepad2.right_bumper) {
+                collector.setPosition(0);
+                conveyRight.setPower(1);
+                conveyLeft.setPower(-1);
+            } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
+                collector.setPosition(1);
+                conveyRight.setPower(-1);
+                conveyLeft.setPower(1);
+            } else if (right_trigger1 > 0.05 && right_trigger1 > right_trigger2) {
+                collector.setPosition((1 - right_trigger1) / 2);
+                conveyRight.setPower(right_trigger1);
+                conveyLeft.setPower(-right_trigger1);
+            } else if (right_trigger2 > 0.05) {
+                collector.setPosition((1 - right_trigger2) / 2);
+                conveyRight.setPower(right_trigger2);
+                conveyLeft.setPower(-right_trigger2);
+            } else if (left_trigger1 > 0.05 && left_trigger1 > left_trigger2) {
+                collector.setPosition((left_trigger1 / 2) + .5);
+                conveyRight.setPower(-left_trigger1);
+                conveyLeft.setPower(left_trigger1);
+            } else if (left_trigger2 > 0.05) {
+                collector.setPosition((left_trigger2 / 2) + .5);
+                conveyRight.setPower(-left_trigger2);
+                conveyLeft.setPower(left_trigger2);
+            } else if (gamepad1.x) {
+                collector.setPosition(0);//just collector
+                conveyRight.setPower(0);
+                conveyLeft.setPower(0);
+            } else {
+                collector.setPosition(.5);
+                conveyRight.setPower(0);
+                conveyLeft.setPower(0);
+            }
+
+            // Controller A
             if (gamepad1.dpad_up) {
                 directionA = 0;
             }
@@ -44,39 +84,8 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
                 directionA = 90;
             }
 
-            // Drive
-            robotHandler.drive.mecanum.updateMecanumDirection(gamepad1, 1, directionA);
-
-            if (gamepad1.left_bumper || gamepad1.left_trigger > .25) {
-                collector.setPosition(1);
-                conveyRight.setPower(-1);
-                conveyLeft.setPower(1);
-            }
-
-            else if (gamepad1.right_bumper || gamepad1.right_trigger > .25) {
-                collector.setPosition(0);
-                conveyRight.setPower(1);
-                conveyLeft.setPower(-1);
-            }
-
-            else {
-                conveyRight.setPower(0);
-                conveyLeft.setPower(0);
-                if(gamepad1.x){
-                    collector.setPosition(0);
-                }else{
-                    collector.setPosition(0.5);
-                }
-
-            }
-
-            // Cardinal Direction Toggle A
-
-
 
             // Controller B
-            if(gamepad2.a)
-
             if (gamepad2.dpad_up) {
                 directionB = 0;
             }
@@ -90,30 +99,9 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
                 directionB = 90;
             }
 
-            robotHandler.drive.mecanum.updateMecanumDirection(gamepad2, .5, directionB);
+            //DRIVE
+            robotHandler.drive.mecanum.updateMecanumMultiGamepad(gamepad1, directionA, gamepad2, directionB, 1, .5);
 
-            // Triggers/Bumpers: Conveyor
-            if (gamepad2.left_bumper || gamepad2.left_trigger > .25) {
-                collector.setPosition(1);
-                conveyRight.setPower(-1);
-                conveyLeft.setPower(1);
-            }
-
-            else if (gamepad2.right_bumper || gamepad2.right_trigger > .25) {
-                collector.setPosition(0);
-                conveyRight.setPower(1);
-                conveyLeft.setPower(-1);
-            }
-
-            else {
-                conveyRight.setPower(0);
-                conveyLeft.setPower(0);
-                if(gamepad2.x){
-                    collector.setPosition(0);
-                }else{
-                    collector.setPosition(0.5);
-                }
-            }
 
         }
 

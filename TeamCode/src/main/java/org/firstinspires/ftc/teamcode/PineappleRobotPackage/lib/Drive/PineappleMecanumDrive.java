@@ -16,7 +16,7 @@ import static java.lang.Math.sqrt;
  * Created by Brandon on 10/21/2017.
  */
 
-public class PineappleMecanumDrive extends PineappleDriveAbstract{
+public class PineappleMecanumDrive extends PineappleDriveAbstract {
 
 
     PineappleMecanumDrive(PineappleResources r) {
@@ -30,23 +30,29 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
         setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, false);
     }
 
-    public  void setPower(double leftPower, double rightPower) {
+    public void setPower(double leftPower, double rightPower) {
         setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftPower, true);
         setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftPower, true);
         setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightPower, true);
         setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, true);
     }
 
-    public void updateMecanumDirection(Gamepad pad, double scale, double angleOffset){
-        double angle = mecDirectionFromJoystick(pad) + Math.toDegrees(angleOffset);
-        double speed = mecSpeedFromJoystick(pad);
-        double rotation = mecSpinFromJoystick(pad);
+    public void updateMecanumMultiGamepad(Gamepad pad1, double offset1, Gamepad pad2, double offset2, double scale1, double scale2) {
+        double angle1 = mecDirectionFromJoystick(pad1) + Math.toDegrees(offset1);
+        double speed1 = mecSpeedFromJoystick(pad1);
+        double rotation1 = mecSpinFromJoystick(pad1);
 
-        if(Math.abs(speed) < 0.05 && Math.abs(rotation) < 0.05){
-            return;
+        double angle2 = mecDirectionFromJoystick(pad2) + Math.toDegrees(offset2);
+        double speed2 = mecSpeedFromJoystick(pad2);
+        double rotation2 = mecSpinFromJoystick(pad2);
+
+        if(Math.abs(speed1) > 0.05 || Math.abs(rotation1) > 0.05){
+            setMecanum(angle1, speed1, rotation1, scale1);
+        }else{
+            setMecanum(angle2, speed2, rotation2, scale2);
         }
 
-        setMecanum(angle, speed, rotation, scale);
+
     }
 
     public void updateMecanum(Gamepad pad, double scale) {
@@ -59,8 +65,8 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
 
     }
 
-    public void setMecanum(double angle, double speed, double rotation, double scale){
-        angle += Math.PI/4;
+    public void setMecanum(double angle, double speed, double rotation, double scale) {
+        angle += Math.PI / 4;
         speed *= Math.sqrt(2);
 
         double sinDir = sin(angle);
@@ -93,13 +99,10 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
     }
 
 
-
-
-
     public void encoderMecanum(double angle, double speed, String dis, double wheelSize, PineappleGyroSensor gyroSensor) throws InterruptedException {
         double defaultDirection = gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING);
 
-        angle = angle*Math.PI/180;
+        angle = angle * Math.PI / 180;
 
         PineappleEnum.MotorValueType type = getUnit(dis);
         double distance = getVal(dis);
@@ -110,10 +113,10 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
 
         double sinDir = sin(angle);
         double cosDir = cos(angle);
-        int LFTarget = (int)(counts * sinDir) ;
-        int RFTarget = (int)(counts * cosDir) ;
-        int LBTarget = (int)(counts * -cosDir);
-        int RBTarget = (int)(counts * -sinDir);
+        int LFTarget = (int) (counts * sinDir);
+        int RFTarget = (int) (counts * cosDir);
+        int LBTarget = (int) (counts * -cosDir);
+        int RBTarget = (int) (counts * -sinDir);
 
 
         resources.feedBack.sayFeedBack("LeftFront Target", LFTarget);
@@ -124,14 +127,14 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
 
         Thread.sleep(4000);
 
-        startEncoderDrive(PineappleEnum.MotorLoc.LEFTFRONT, 0 ,LFTarget);
-        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTFRONT, 0 ,RFTarget);
-        startEncoderDrive(PineappleEnum.MotorLoc.LEFTBACK, 0 ,LBTarget);
-        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTBACK, 0 ,RBTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.LEFTFRONT, 0, LFTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTFRONT, 0, RFTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.LEFTBACK, 0, LBTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTBACK, 0, RBTarget);
 
         setMecanum(angle, speed, rotation, 1);
 
-        while(resources.linearOpMode.opModeIsActive() && isBusy()){
+        while (resources.linearOpMode.opModeIsActive() && isBusy()) {
             //rotation = (gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - defaultDirection)/90;
             setMecanum(angle, speed, rotation, 1);
             resources.telemetry.update();
@@ -140,14 +143,14 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
 
     }
 
-    private double[] getXY(double rad, double counts){
+    private double[] getXY(double rad, double counts) {
 
         double[] xy = new double[2];
         double x = 0;
         double y = 0;
 
-        x = (Math.cos(rad)*counts);
-        y = (Math.sin(rad)*counts);
+        x = (Math.cos(rad) * counts);
+        y = (Math.sin(rad) * counts);
         x = PineappleStaticFunction.round(x, 4);
         y = PineappleStaticFunction.round(y, 4);
         xy[0] = x;
