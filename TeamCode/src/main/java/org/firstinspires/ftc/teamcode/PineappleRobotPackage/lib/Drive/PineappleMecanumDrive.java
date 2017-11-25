@@ -37,6 +37,18 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract{
         setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, true);
     }
 
+    public void updateMecanumDirection(Gamepad pad, double scale, double angleOffset){
+        double angle = mecDirectionFromJoystick(pad) + angleOffset;
+        double speed = mecSpeedFromJoystick(pad);
+        double rotation = mecSpinFromJoystick(pad);
+
+        if(Math.abs(speed) < 0.05 && Math.abs(rotation) < 0.05){
+            return;
+        }
+        
+        setMecanum(angle, speed, rotation, scale);
+    }
+
     public void updateMecanum(Gamepad pad, double scale) {
 
         double angle = mecDirectionFromJoystick(pad);
