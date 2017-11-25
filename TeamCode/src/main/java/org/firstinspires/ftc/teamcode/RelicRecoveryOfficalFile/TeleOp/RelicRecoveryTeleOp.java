@@ -30,6 +30,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
 
 
             // Controller A
+
             if (gamepad1.dpad_up) {
                 directionA = 0;
             }
@@ -59,9 +60,14 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
             }
 
             else {
-                collector.setPosition(0.5);
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
+                if(gamepad1.x){
+                    collector.setPosition(0);
+                }else{
+                    collector.setPosition(0.5);
+                }
+
             }
 
             // Cardinal Direction Toggle A
@@ -69,6 +75,8 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
 
 
             // Controller B
+            if(gamepad2.a)
+
             if (gamepad2.dpad_up) {
                 directionB = 0;
             }
@@ -98,9 +106,13 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
             }
 
             else {
-                collector.setPosition(0.5);
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
+                if(gamepad2.x){
+                    collector.setPosition(0);
+                }else{
+                    collector.setPosition(0.5);
+                }
             }
 
         }
