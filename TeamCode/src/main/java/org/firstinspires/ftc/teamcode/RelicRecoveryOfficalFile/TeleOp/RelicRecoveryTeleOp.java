@@ -23,14 +23,29 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
         waitForStart();
         runtime.reset();
 
+        double directionA = 0;
+        double directionB = 0;
+
 
         while (opModeIsActive()) {
 
 
             // Controller A
+            if (gamepad1.dpad_up) {
+                directionA = 0;
+            }
+            if (gamepad1.dpad_right) {
+                directionA = -90;
+            }
+            if (gamepad1.dpad_down) {
+                directionA = 180;
+            }
+            if (gamepad1.dpad_left) {
+                directionA = 90;
+            }
 
             // Drive
-            robotHandler.drive.mecanum.updateMecanum(gamepad1, 1);
+            robotHandler.drive.mecanum.updateMecanumDirection(gamepad1, 1, directionA);
 
             if (gamepad1.left_bumper || gamepad1.left_trigger > .25) {
                 collector.setPosition(1);
@@ -50,12 +65,25 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
                 conveyLeft.setPower(0);
             }
 
-            // Cardinal Diretion Toggle
+            // Cardinal Direction Toggle A
 
-            
+
+
             // Controller B
+            if (gamepad2.dpad_up) {
+                directionB = 0;
+            }
+            if (gamepad2.dpad_right) {
+                directionB = -90;
+            }
+            if (gamepad2.dpad_down) {
+                directionB = 180;
+            }
+            if (gamepad2.dpad_left) {
+                directionB = 90;
+            }
 
-            robotHandler.drive.mecanum.updateMecanum(gamepad2, .5);
+            robotHandler.drive.mecanum.updateMecanumDirection(gamepad2, .5, directionB);
 
             // Triggers/Bumpers: Conveyor
             if (gamepad2.left_bumper || gamepad2.left_trigger > .25) {
@@ -75,9 +103,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
             }
-
-
-
 
         }
 
