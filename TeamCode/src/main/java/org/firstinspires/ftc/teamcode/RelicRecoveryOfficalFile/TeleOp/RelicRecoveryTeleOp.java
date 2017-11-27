@@ -60,7 +60,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
                 collector.setPosition((left_trigger2 / 2) + .5);
                 conveyRight.setPower(-left_trigger2);
                 conveyLeft.setPower(left_trigger2);
-            } else if (gamepad1.x) {
+            } else if (gamepad1.x || gamepad2.x) {
                 collector.setPosition(0);//just collector
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);

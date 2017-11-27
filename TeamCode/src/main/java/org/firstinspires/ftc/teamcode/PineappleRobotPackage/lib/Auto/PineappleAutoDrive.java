@@ -241,9 +241,6 @@ public class PineappleAutoDrive {
                 resources.telemetry.update();
 
             }
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-
         } finally {
             navx_device.close();
             resources.telemetry.addData("LinearOp", "Complete");

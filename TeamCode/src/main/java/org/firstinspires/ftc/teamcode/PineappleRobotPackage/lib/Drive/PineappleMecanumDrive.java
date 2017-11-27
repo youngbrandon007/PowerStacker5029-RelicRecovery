@@ -38,11 +38,11 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
     }
 
     public void updateMecanumMultiGamepad(Gamepad pad1, double offset1, Gamepad pad2, double offset2, double scale1, double scale2) {
-        double angle1 = mecDirectionFromJoystick(pad1) + Math.toDegrees(offset1);
+        double angle1 = mecDirectionFromJoystick(pad1) + Math.toRadians(offset1);
         double speed1 = mecSpeedFromJoystick(pad1);
         double rotation1 = mecSpinFromJoystick(pad1);
 
-        double angle2 = mecDirectionFromJoystick(pad2) + Math.toDegrees(offset2);
+        double angle2 = mecDirectionFromJoystick(pad2) + Math.toRadians(offset2);
         double speed2 = mecSpeedFromJoystick(pad2);
         double rotation2 = mecSpinFromJoystick(pad2);
 

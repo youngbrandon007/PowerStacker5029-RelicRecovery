@@ -67,10 +67,10 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                         driveOffPlate(.7);
 
                         //turn
+                        yawPIDController = makePIDController(90);
                         alignWithGyro(90);
-
                         //turn phone
-                        phoneTurnLeft.setPosition(.23); //Might need to be moved or changed
+                        phoneTurnLeft.setPosition(.23); //Might need to be moved or changed //TODO gyro phone turn
 
                         //align to cryptobox
                         RelicRecoveryVuMark placement = RelicRecoveryVuMark.UNKNOWN;

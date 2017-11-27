@@ -1,11 +1,19 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
+import com.kauailabs.navx.ftc.AHRS;
+import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
+
+import java.text.DecimalFormat;
+import java.util.Calendar;
+
 
 /**
  * Created by young on 9/15/2017.
@@ -26,12 +34,64 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     private boolean usingGyro = false;
 
     public void alignToCrypto(double angle, VuforiaTrackableDefaultListener listener, VectorF vector) {
-        while ((alignWithGyro(angle)) ? !alignToCryptoboxVuforia(listener, vector) : true && opModeIsActive()) {
+        try {
+            yawPIDController.enable(true);
+
+            int DEVICE_TIMEOUT_MS = 1000;
+            navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
+
+            DecimalFormat df = new DecimalFormat("#.###");
+            boolean done = false;
+            while (opModeIsActive() && !Thread.currentThread().isInterrupted() && !done) {
+
+                double output = 0;
+                if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
+                    if (yawPIDResult.isOnTarget()) {
+                        telemetry.addData("PIDOutput", df.format(0.00));
+                    } else {
+                        output = yawPIDResult.getOutput();
+                        telemetry.addData("PIDOutput", df.format(output) + ", " +
+                                df.format(-output));
+                    }
+                } else {
+                /* A timeout occurred */
+                    telemetry.addData("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
+                }
+                telemetry.addData("Yaw", df.format(navx_device.getYaw()));
+                telemetry.update();
+
+
+                done = alignToCryptoboxVuforia(listener, vector, output);
+            }
+
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+
         }
     }
 
+    public navXPIDController makePIDController(double degrees) {
+
+        final double TARGET_ANGLE_DEGREES = degrees;
+        final double TOLERANCE_DEGREES = 2.0;
+
+        double YAW_PID_P = RelicRecoveryConstants.ROBOTTURNP;
+        double YAW_PID_I = RelicRecoveryConstants.ROBOTTURNI;
+        double YAW_PID_D = RelicRecoveryConstants.ROBOTTURND;
+        navXPIDController yawPIDController = new navXPIDController(navx_device,
+                navXPIDController.navXTimestampedDataSource.YAW);
+
+        /* Configure the PID controller */
+        yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
+        yawPIDController.setContinuous(true);
+        yawPIDController.setOutputRange(RelicRecoveryConstants.MIN_MOTOR_OUTPUT_VALUE, RelicRecoveryConstants.MAX_MOTOR_OUTPUT_VALUE);
+        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+        return yawPIDController;
+    }
+
     //Vuforia Functions
-    private boolean alignToCryptoboxVuforia(VuforiaTrackableDefaultListener listener, VectorF vector) {
+    private boolean alignToCryptoboxVuforia(VuforiaTrackableDefaultListener listener, VectorF vector, double rotation) {
         if (null != listener.getPose()) {
             VectorF trans = listener.getPose().getTranslation();
             // Extract the X, Y, and Z components of the offset of the target relative to the robot
@@ -53,19 +113,24 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
             telemetry.addData("Angle", ang);
 
             //Check for stop before motors are set again
-            if (dis < RelicRecoveryConstants.VUFORIAALIGNRANGE) {
+            double gyroAngle = navx_device.getYaw();
+            gyroAngle += (gyroAngle < 0) ? 360 : 0;
+
+            if (dis < RelicRecoveryConstants.VUFORIAALIGNRANGE && inRange(gyroAngle, 2, 358)) {
                 robotHandler.drive.stop();
                 return true;
             }
 
             double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? 1 : (dis > RelicRecoveryConstants.VUFORIAALIGNSLOW) ? .5 : .3;
 
-            robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), speed, 0, 1);
+            robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), speed, rotation, 1);
 
-            telemetry.update();
 
         }
         return false;
+    }
+    private boolean inRange(double value, double lowerLimit, double upperLimit) {
+        return value > lowerLimit && value < upperLimit;
     }
 
     private double getDistance(double[] target) {
