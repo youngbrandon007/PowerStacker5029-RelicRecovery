@@ -7,13 +7,15 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
  */
 
 public class RelicRecoveryConstants {
-    public static final double JEWELUP = 0;
-    public static final double JEWELDOWN = 0.47;
-    public static final double JEWELLEFTTURNLEFT = 0;
+    public static final double JEWELLEFTUP = 0;
+    public static final double JEWELLEFTDOWN = 0.47;
+    public static final double JEWELRIGHTUP = 1;
+    public static final double JEWELRIGHTDOWN = 0.47;
+    public static final double JEWELLEFTTURNLEFT = 0.2;
     public static final double JEWELLEFTTURNRIGHT = 1;
     public static final double JEWELLEFTTURNMIDDLE = 0.5;
-    public static final double JEWELRIGHTTURNLEFT = 1;
-    public static final double JEWELRIGHTTURNRIGHT = 0;
+    public static final double JEWELRIGHTTURNLEFT = .1;
+    public static final double JEWELRIGHTTURNRIGHT = 0.8;
     public static final double JEWELRIGHTTURNMIDDLE = 0.5;
     public static final double PHONELEFTMIDDLE = 0.5;
     public static final double PHONELEFTANGLED= 0;

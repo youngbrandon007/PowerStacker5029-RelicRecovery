@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -9,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
@@ -34,10 +38,14 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
         parameters.vuforiaLicenseKey = "AdB8VB7/////AAAAGcfBp9I80URFkfBQFUyM+ptmQXBAMGx0svJKz7QE2nm20mBc/zI5sZNHfuP/ziIm+sYnO7fvPqUbFs8QWjRyXVEDmW4mMj+S+l+yaYRkpGZ/pmHyXiDb4aemHx0m70BulMNIce4+NVaCW5S/5BWNNev/AU0P+uWnHYuKNWzD2dPaRuprC4R6b/DgD1zeio1xlssYb9in9mfzn76gChOrE5B0ql6Q9FiHC5cTdacq2lKjm5nlkTiXz1e2jhVK3SddGoqM4FQ3mFks7/A88hFzlPfIIk45K2Lh7GvcVjuIiqNj5mTLaZJVqlsKdTQnKS4trJcc1YV9sjdbmh1agtn1UePy91fDj9uWSBdXvpIowv4B";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        vuforia.setFrameQueueCapacity(1);
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
         VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
+        VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
+
         relicTrackables.activate();
         telemetry.addLine("Init-Vuforia Initialized");
 
@@ -47,6 +55,41 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 
         telemetry.addLine("Init-Complete");
         telemetry.update();
+        int val = 1;
+        while (listener.getPose()==null){
+            if (val == 5) {
+                val = 1;
+            }
+            String dots = "";
+            for (int i = 0; i<val; i++) {
+                dots+=".";
+            }
+            telemetry.addLine("Finding image"+dots);
+            telemetry.update();
+            Thread.sleep(300);
+            val++;
+        }
+        PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
+        int i = 1;
+        while (!opModeIsActive()&& !isStopRequested()){
+            state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
+
+
+            switch (state) {
+                case NON_NON:
+                    telemetry.addData("Config " + i + ": ", "NON NON");
+                    break;
+                case BLUE_RED:
+                    telemetry.addData("Config " + i + ": ", "BLUE RED");
+                    break;
+                case RED_BLUE:
+                    telemetry.addData("Config " + i + ": ", "RED BLUE");
+                    break;
+            }
+            telemetry.update();
+            Thread.sleep(500);
+        }
+
         waitForStart();
 
 
@@ -55,33 +98,34 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                 switch (color) {
                     case RED:
                         //Red Front
+                        gyroTurnPID(90);
 
 
                         break;
                     case BLUE:
                         //Blue Front
+                        hitJewels(state);
 
-                        //TODO fix Jewels
 
                         //Drive forward
-                        driveOffPlate(.7);
+                        driveOffPlate(.7, 4000);
+//
+//                        //turn
+                        gyroTurnPID(90);
 
-                        //turn
-                        yawPIDController = makePIDController(90);
-                        alignWithGyro(90);
-                        //turn phone
-                        phoneTurnLeft.setPosition(.23); //Might need to be moved or changed //TODO gyro phone turn
-
-                        //align to cryptobox
-                        RelicRecoveryVuMark placement = RelicRecoveryVuMark.UNKNOWN;
-                        while (opModeIsActive() && placement == RelicRecoveryVuMark.UNKNOWN) {
-                            placement = RelicRecoveryVuMark.from(relicTemplate);
-                        } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
-                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-                        alignToCrypto(90, listener, vector);
-//                        }
-//                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-//                        alignToCrypto(listener, vector);
+//                        //turn phone
+//                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
+//
+//                        //align to cryptobox
+//                        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
+//                        while (opModeIsActive() && keyColumn == RelicRecoveryVuMark.UNKNOWN) {
+//                            keyColumn = RelicRecoveryVuMark.from(relicTemplate);
+//                        } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
+//                        VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
+//                        alignToCrypto(90, listener, vector);
+////                        }
+////                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
+////                        alignToCrypto(listener, vector);
 
                         //TODO SPIN out box
 
@@ -97,11 +141,6 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
     }
 
 
-    public void loadSwitchBoard() {
-        delay = robotHandler.switchBoard.loadAnalog("delay");
-        color = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
 
-        telemetry.addData("Delay", delay);
-        telemetry.addData("Color",color);
-    }
+
 }

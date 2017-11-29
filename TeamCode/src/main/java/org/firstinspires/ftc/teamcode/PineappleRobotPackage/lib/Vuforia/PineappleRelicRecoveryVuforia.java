@@ -150,50 +150,82 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
     }
 
     public static PineappleEnum.JewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
-        OpenGLMatrix pose = track.getRawPose();
-        if (pose != null && img != null && img.getPixels() != null) {
-            Matrix34F rawPose = new Matrix34F();
-            float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
-            rawPose.setData(poseData);
-            float[][] corners = new float[4][2];
-            corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -35, 0)).getData();//UL
-            corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -35, 0)).getData();//UR
-            corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -140, 0)).getData();//LR
-            corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -140, 0)).getData();//LL
-            Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
-            ByteBuffer pix = img.getPixels();
-            bm.copyPixelsFromBuffer(pix);
-            SaveImage(bm, "orginialImage ");
-            Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
-            Utils.bitmapToMat(bm, crop);
-            float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
-            float y = Math.min(Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1]));
-            float width = Math.max(Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0]));
-            float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
-            x = Math.max(x, 0);
-            y = Math.max(y, 0);
-            width = (x + width > crop.cols()) ? crop.cols() - x : width;
-            height = (x + height > crop.rows()) ? crop.rows() - x : height;
-            Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
-            SaveImage(matToBitmap(cropped), "crop");
-            Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
-            Mat mask = new Mat();
-            Core.inRange(cropped, new Scalar(40, 10, 0), new Scalar(255, 255, 50), mask);
-            SaveImage(matToBitmap(mask), "mask");
-            Moments mmnts = Imgproc.moments(mask, true);
-            telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()));
-            telemetry.addData("Centroid Y", (mmnts.get_m01() / mmnts.get_m00()));
+        try {
+            OpenGLMatrix pose = track.getRawPose();
+            if (pose != null && img != null && img.getPixels() != null) {
+                Matrix34F rawPose = new Matrix34F();
+                float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
+                rawPose.setData(poseData);
+                float[][] corners = new float[4][2];
+                corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -80, 0)).getData();//UL
+                corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -80, 0)).getData();//UR
+                corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -450, 0)).getData();//LR
+                corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -450, 0)).getData();//LL
+                Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
+                ByteBuffer pix = img.getPixels();
+                bm.copyPixelsFromBuffer(pix);
+                SaveImage(bm, "orginialImage ");
+                Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
+                Utils.bitmapToMat(bm, crop);
+                float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
+                float y = Math.min(Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1]));
+                float width = Math.max(Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0]));
+                float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
+                x = Math.max(x, 0);
+                y = Math.max(y, 0);
+                width = (x + width > crop.cols()) ? crop.cols() - x : width;
+                height = (x + height > crop.rows()) ? crop.rows() - x : height;
+                Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
+                SaveImage(matToBitmap(cropped), "crop");
+                Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
+                Mat mask = new Mat();
+                Core.inRange(cropped, new Scalar(40, 20, 70), new Scalar(255, 255, 150), mask);
+                SaveImage(matToBitmap(mask), "mask");
+                Moments mmnts = Imgproc.moments(mask, true);
+                telemetry.addData("Centroid X", (mmnts.get_m10() / mmnts.get_m00()));
+                telemetry.addData("Centroid Y", (mmnts.get_m01() / mmnts.get_m00()));
 
 
-            if ((mmnts.get_m10() / mmnts.get_m00()) < cropped.cols() / 2) {
-                return BLUE_RED;
-            } else {
-                return RED_BLUE;
+                if ((mmnts.get_m10() / mmnts.get_m00()) < cropped.cols() / 2) {
+                    return BLUE_RED;
+                } else {
+                    return RED_BLUE;
+                }
+
             }
+            return NON_NON;
+        } catch (Exception e)
 
+        {
+            return NON_NON;
         }
-        return NON_NON;
     }
+
+    public static void isPictureInFrame(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
+
+            OpenGLMatrix pose = track.getRawPose();
+            if (pose != null) {
+                if (pose != null && img != null && img.getPixels() != null) {
+                    Matrix34F rawPose = new Matrix34F();
+                    float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
+                    rawPose.setData(poseData);
+                    float[] picture;
+                    picture = Tool.projectPoint(camCal, rawPose, new Vec3F(0, 0, 0)).getData();
+                    if (20<picture[0]&&picture[0]<(img.getWidth()-20)) {
+                        telemetry.addLine("DETECTS INSIDE WIDTH");
+                    }
+                    if (20<picture[1]&&picture[1]<(img.getHeight()-20)) {
+                        telemetry.addLine("DETECTS INSIDE Heigth");
+                    }
+                    telemetry.addData("PointX", picture[0]);
+                    telemetry.addData("PointY", picture[1]);
+                    telemetry.update();
+
+                }
+
+            }
+        }
+
 
     public static Mat bitmapToMat(Bitmap bit, int cvType) {
         Mat newMat = new Mat(bit.getHeight(), bit.getWidth(), cvType);
@@ -210,6 +242,7 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
 
         return newBit;
     }
+
     @Nullable
     public static Image getImageFromFrame(VuforiaLocalizer.CloseableFrame frame, int format) {
 

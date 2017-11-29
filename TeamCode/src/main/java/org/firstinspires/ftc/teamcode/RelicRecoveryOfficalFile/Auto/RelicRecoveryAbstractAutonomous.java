@@ -73,7 +73,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     public navXPIDController makePIDController(double degrees) {
 
         final double TARGET_ANGLE_DEGREES = degrees;
-        final double TOLERANCE_DEGREES = 2.0;
+        final double TOLERANCE_DEGREES = 1.0;
 
         double YAW_PID_P = RelicRecoveryConstants.ROBOTTURNP;
         double YAW_PID_I = RelicRecoveryConstants.ROBOTTURNI;
@@ -129,6 +129,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         }
         return false;
     }
+
     private boolean inRange(double value, double lowerLimit, double upperLimit) {
         return value > lowerLimit && value < upperLimit;
     }
@@ -147,7 +148,9 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
 
     //aling with gyro
-    public boolean alignWithGyro(double angle) {
+    public boolean alignWithGyro(double angle, double power) throws InterruptedException {
+        phoneTurnLeft.setPosition(        phoneTurnLeft.servoObject.getPosition()-0.005);
+        Thread.sleep(10);
         double gyroAngle = this.navx_device.getYaw();
 
         telemetry.addData("Gyro Angle", gyroAngle);
@@ -161,7 +164,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         gyroAngle -= angle;
         gyroAngle += (gyroAngle < 0) ? 360 : (gyroAngle > 360) ? -360 : 0;
 
-        double rotation = (gyroAngle > 1 && gyroAngle < 180) ? -.1 : (gyroAngle < 359 && gyroAngle > 179) ? .1 : 0;
+        double rotation = (gyroAngle > 1 && gyroAngle < 180) ? -power : (gyroAngle < 359 && gyroAngle > 179) ? power : 0;
 
 
         if (rotation == 0) {
@@ -178,65 +181,113 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         return false;
     }
 
+
+    public void gyroTurnPID(double degrees) throws InterruptedException {
+
+        final double TARGET_ANGLE_DEGREES = degrees;
+        final double TOLERANCE_DEGREES = 1.0;
+
+        double YAW_PID_P = RelicRecoveryConstants.ROBOTTURNP;
+        double YAW_PID_I = RelicRecoveryConstants.ROBOTTURNI;
+        double YAW_PID_D = RelicRecoveryConstants.ROBOTTURND;
+        navXPIDController xpidController = new navXPIDController(navx_device,
+                navXPIDController.navXTimestampedDataSource.YAW);
+
+        /* Configure the PID controller */
+        xpidController.setSetpoint(TARGET_ANGLE_DEGREES);
+        xpidController.setContinuous(true);
+        xpidController.setOutputRange(RelicRecoveryConstants.MIN_MOTOR_OUTPUT_VALUE, RelicRecoveryConstants.MAX_MOTOR_OUTPUT_VALUE);
+        xpidController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        xpidController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+        try {
+            xpidController.enable(true);
+
+        int DEVICE_TIMEOUT_MS = 1000;
+            navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
+
+            DecimalFormat df = new DecimalFormat("#.###");
+            boolean done = false;
+            while (opModeIsActive() &&
+                    !Thread.currentThread().isInterrupted()&&!done) {
+                double output = 0;
+                if (xpidController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
+                    if (yawPIDResult.isOnTarget()) {
+                        telemetry.addData("PIDOutput", df.format(0.00));
+                    } else {
+                        output = yawPIDResult.getOutput();
+                        robotHandler.drive.tank.setPower(output, output);
+
+                        telemetry.addData("PIDOutput", df.format(output) + ", " +
+                                df.format(-output));
+                    }
+                } else {
+                /* A timeout occurred */
+                    telemetry.addData("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
+                }
+
+                if (navx_device.getYaw()>degrees-1&&navx_device.getYaw()<degrees+1) {
+                    done = true;
+                }
+                telemetry.addData("Yaw", df.format(navx_device.getYaw()));
+                telemetry.update();
+
+            }
+        } catch (Exception e) {
+        }
+
+
+    }
+
+
     public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
-        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELDOWN);
+        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTDOWN);
+        jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTDOWN);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
-        Thread.sleep(1000);
+        jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNMIDDLE);
+        Thread.sleep(700);
         switch (jewelState) {
             case BLUE_RED:
                 if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
                 } else {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+                    jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNLEFT);
                 }
                 break;
             case RED_BLUE:
                 if (allianceColor == PineappleEnum.AllianceColor.RED) {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
+                    jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNRIGHT);
                 } else {
                     jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
                 }
                 break;
-            case NON_BLUE:
-                if (allianceColor == PineappleEnum.AllianceColor.RED) {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
-                }
-                break;
-            case NON_RED:
-                if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
-                }
-                break;
-            case BLUE_NON:
-                if (allianceColor == PineappleEnum.AllianceColor.RED) {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
-                }
-                break;
-            case RED_NON:
-                if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
-                }
-                break;
         }
-        Thread.sleep(1500);
-        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELUP);
+        Thread.sleep(700);
+        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTUP);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
-        Thread.sleep(3000);
+        jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTUP);
+        jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNLEFT);
+        Thread.sleep(500);
     }
 
-    public void driveOffPlate(double speed) throws InterruptedException {
+    public void driveOffPlate(double speed, double timeout) throws InterruptedException {
         //
 
         robotHandler.drive.mecanum.setPower(-speed, speed);
-
-        while (driveTillTilt() && opModeIsActive()) {
+        ElapsedTime el = new ElapsedTime();
+        el.reset();
+//        double position = phoneTurnLeft.servoObject.getPosition();
+        while (driveTillTilt() && opModeIsActive() && !(el.milliseconds() < timeout)) {
+                        Thread.sleep(10);
         }
-        while (driveTillFlat() && opModeIsActive()) {
+        while (driveTillFlat() && opModeIsActive() && !(el.milliseconds() < timeout)) {
+//            position-=0.004;
+//            phoneTurnLeft.setPosition(position);
+            Thread.sleep(10);
         }
 
-
-        Thread.sleep(1000);
-
+        if ((el.milliseconds() < timeout)) {
+            Thread.sleep(1500);
+        }
         robotHandler.drive.stop();
 
     }
@@ -245,14 +296,52 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         double roll = navx_device.getRoll();
         telemetry.addData("Roll", roll);
         telemetry.update();
-        return (Math.abs(roll) > 3);
+        return (Math.abs(roll) < 5);
     }
 
     private boolean driveTillFlat() {
         double roll = navx_device.getRoll();
         telemetry.addData("Roll", roll);
         telemetry.update();
-        return (Math.abs(roll) < 2);
+        return (Math.abs(roll) > 1);
+    }
+
+    public static double roundToHalf(double d) {
+        return Math.round(d * 2) / 2.0;
+    }
+
+    public void loadSwitchBoard() {
+        delay = robotHandler.switchBoard.loadAnalog("delay") * 2;
+        color = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
+        position = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
+        delay = roundToHalf(delay);
+        telemetry.addData("Delay", delay);
+        telemetry.addData("Color", color);
+        telemetry.addData("Position", position);
+    }
+
+    public void loadSwitchBoardLoop() throws InterruptedException {
+        while (opModeIsActive()) {
+            loadSwitchBoard();
+            telemetry.update();
+            Thread.sleep(100);
+        }
+    }
+
+    public void phoneTurnGyro(double angle, double tolerance) {
+        if (PineappleEnum.AllianceColor.BLUE == allianceColor) {
+            double position = phoneTurnLeft.servoObject.getPosition();
+            while (opModeIsActive() && inRange(phoneGyroLeft.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING), angle - tolerance, angle + tolerance)) {
+                phoneTurnLeft.setPosition(position);
+                position += 0.03;
+            }
+        } else {
+            double position = phoneTurnRight.servoObject.getPosition();
+            while (opModeIsActive() && inRange(phoneGyroRight.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING), angle - tolerance, angle + tolerance)) {
+                phoneTurnRight.setPosition(position);
+                position += 0.03;
+            }
+        }
     }
 }
 

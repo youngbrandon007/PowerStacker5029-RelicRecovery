@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 
 
@@ -37,35 +35,49 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
             float left_trigger2 = gamepad2.left_trigger;
 
             if (gamepad1.right_bumper || gamepad2.right_bumper) {
-                collector.setPosition(0);
+                collectorLeft.setPosition(0);
+                collectorRight.setPosition(0);
+
                 conveyRight.setPower(1);
                 conveyLeft.setPower(-1);
             } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
-                collector.setPosition(1);
+                collectorLeft.setPosition(1);
+                collectorRight.setPosition(1);
+
                 conveyRight.setPower(-1);
                 conveyLeft.setPower(1);
             } else if (right_trigger1 > 0.05 && right_trigger1 > right_trigger2) {
-                collector.setPosition((1 - right_trigger1) / 2);
+                collectorLeft.setPosition((1 - right_trigger1) / 2);
+                collectorRight.setPosition((1 - right_trigger1) / 2);
                 conveyRight.setPower(right_trigger1);
                 conveyLeft.setPower(-right_trigger1);
             } else if (right_trigger2 > 0.05) {
-                collector.setPosition((1 - right_trigger2) / 2);
+                collectorLeft.setPosition((1 - right_trigger2) / 2);
+                collectorRight.setPosition((1 - right_trigger2) / 2);
+
                 conveyRight.setPower(right_trigger2);
                 conveyLeft.setPower(-right_trigger2);
             } else if (left_trigger1 > 0.05 && left_trigger1 > left_trigger2) {
-                collector.setPosition((left_trigger1 / 2) + .5);
+                collectorLeft.setPosition((left_trigger1 / 2) + .5);
+                collectorRight.setPosition((left_trigger1 / 2) + .5);
+
                 conveyRight.setPower(-left_trigger1);
                 conveyLeft.setPower(left_trigger1);
             } else if (left_trigger2 > 0.05) {
-                collector.setPosition((left_trigger2 / 2) + .5);
+                collectorLeft.setPosition((left_trigger2 / 2) + .5);
+                collectorRight.setPosition((left_trigger2 / 2) + .5);
                 conveyRight.setPower(-left_trigger2);
                 conveyLeft.setPower(left_trigger2);
             } else if (gamepad1.x || gamepad2.x) {
-                collector.setPosition(0);//just collector
+                collectorLeft.setPosition(0);//just collectorLeft
+                collectorRight.setPosition(0);//just collectorLeft
+
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
             } else {
-                collector.setPosition(.5);
+                collectorLeft.setPosition(.5);
+                collectorRight.setPosition(.5);
+
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
             }

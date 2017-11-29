@@ -36,8 +36,8 @@ public class RelicRecoveryVuforiaTracker extends RelicRecoveryConfigV2 {
         relicTrackables.activate();
 
 
-        start();
-
+        waitForStart();
+        phoneTurnLeft.setPosition(1);
         while (opModeIsActive()) {
             if (listener.getPose() != null) {
                 VectorF trans = listener.getPose().getTranslation();

@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 
 /**
@@ -26,15 +25,15 @@ RelicRecoveryMecanumTeleOPV2 extends RelicRecoveryConfigV2 {
         while (opModeIsActive()) {
             robotHandler.drive.mecanum.updateMecanum(gamepad1, 1);
             if (gamepad1.left_bumper) {
-                collector.setPosition(1);
+                collectorLeft.setPosition(1);
                 conveyRight.setPower(-1);
                 conveyLeft.setPower(1);
             } else if (gamepad1.right_bumper) {
-                collector.setPosition(0);
+                collectorLeft.setPosition(0);
                 conveyRight.setPower(1);
                 conveyLeft.setPower(-1);
             } else {
-                collector.setPosition(0.5);
+                collectorLeft.setPosition(0.5);
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
             }
