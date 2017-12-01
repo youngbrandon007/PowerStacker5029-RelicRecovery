@@ -164,7 +164,6 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
     //aling with gyro
     public boolean alignWithGyro(double angle, double power) throws InterruptedException {
-//        phoneTurnLeft.setPosition(        phoneTurnLeft.servoObject.getPosition()-0.005);
         Thread.sleep(10);
         double gyroAngle = this.navx_device.getYaw();
 

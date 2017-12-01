@@ -26,9 +26,9 @@ public class RelicRecoveryConstants {
     public static final double ROBOTTURND = 0.01197458;
     //BLUE Crypto Pos
     //TODO NEED TO FIND ALL POS
-    public static final VectorF BLUESIDELEFT = new VectorF(0,-77,-840);
-    public static final VectorF BLUESIDECENTER = new VectorF(0,16,-990);
-    public static final VectorF BLUESIDERIGHT = new VectorF(0,78,-1160);
+    public static final VectorF BLUESIDELEFT = new VectorF(0,-236,-860);
+    public static final VectorF BLUESIDECENTER = new VectorF(0,-50,-1030);
+    public static final VectorF BLUESIDERIGHT = new VectorF(0,-145,-1200);
 
     public static final VectorF BLUEBACKLEFT = new VectorF(0,0,-900);
     public static final VectorF BLUEBACKCENTER = new VectorF(0,0,-900);

@@ -142,11 +142,14 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 //                            Thread.sleep(1500);
 //                        }
                         robotHandler.drive.stop();
+                        while (!alignWithGyro(270, 0.1)&&opModeIsActive()) {
+                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
 
+                        }
 //                        //turn
-                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
+//                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
 
-                        gyroTurnPID(-90);
+//                        gyroTurnPID(-90);
 
 //                        //turn phone
 //                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
