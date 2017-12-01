@@ -3,15 +3,28 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraCalibration;
+import com.vuforia.Image;
+import com.vuforia.Matrix34F;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Tool;
+import com.vuforia.Vec3F;
+import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 
 
@@ -33,9 +46,30 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
     private boolean usingGyro = false;
 
+    public double lastPosition = .75;
+
+    public void updateServoVuforia(VuforiaTrackableDefaultListener listener, PineappleServo servo) {
+
+    }
+
     public void alignToCrypto(double angle, VuforiaTrackableDefaultListener listener, VectorF vector) {
+        final double TARGET_ANGLE_DEGREES = angle;
+        final double TOLERANCE_DEGREES = 2.0;
+
+        double YAW_PID_P = RelicRecoveryConstants.ROBOTTURNP;
+        double YAW_PID_I = RelicRecoveryConstants.ROBOTTURNI;
+        double YAW_PID_D = RelicRecoveryConstants.ROBOTTURND;
+        navXPIDController xpidController = new navXPIDController(navx_device,
+                navXPIDController.navXTimestampedDataSource.YAW);
+
+        /* Configure the PID controller */
+        xpidController.setSetpoint(TARGET_ANGLE_DEGREES);
+        xpidController.setContinuous(true);
+        xpidController.setOutputRange(RelicRecoveryConstants.MIN_MOTOR_OUTPUT_VALUE, RelicRecoveryConstants.MAX_MOTOR_OUTPUT_VALUE);
+        xpidController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        xpidController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
         try {
-            yawPIDController.enable(true);
+            xpidController.enable(true);
 
             int DEVICE_TIMEOUT_MS = 1000;
             navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
@@ -45,7 +79,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
             while (opModeIsActive() && !Thread.currentThread().isInterrupted() && !done) {
 
                 double output = 0;
-                if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
+                if (xpidController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
                     if (yawPIDResult.isOnTarget()) {
                         telemetry.addData("PIDOutput", df.format(0.00));
                     } else {
@@ -70,25 +104,6 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         }
     }
 
-    public navXPIDController makePIDController(double degrees) {
-
-        final double TARGET_ANGLE_DEGREES = degrees;
-        final double TOLERANCE_DEGREES = 1.0;
-
-        double YAW_PID_P = RelicRecoveryConstants.ROBOTTURNP;
-        double YAW_PID_I = RelicRecoveryConstants.ROBOTTURNI;
-        double YAW_PID_D = RelicRecoveryConstants.ROBOTTURND;
-        navXPIDController yawPIDController = new navXPIDController(navx_device,
-                navXPIDController.navXTimestampedDataSource.YAW);
-
-        /* Configure the PID controller */
-        yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
-        yawPIDController.setContinuous(true);
-        yawPIDController.setOutputRange(RelicRecoveryConstants.MIN_MOTOR_OUTPUT_VALUE, RelicRecoveryConstants.MAX_MOTOR_OUTPUT_VALUE);
-        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
-        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
-        return yawPIDController;
-    }
 
     //Vuforia Functions
     private boolean alignToCryptoboxVuforia(VuforiaTrackableDefaultListener listener, VectorF vector, double rotation) {
@@ -121,7 +136,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
                 return true;
             }
 
-            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? 1 : (dis > RelicRecoveryConstants.VUFORIAALIGNSLOW) ? .5 : .3;
+            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? 0.7 : (dis > RelicRecoveryConstants.VUFORIAALIGNSLOW) ? .3 : .1;
 
             robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), speed, rotation, 1);
 
@@ -149,7 +164,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
     //aling with gyro
     public boolean alignWithGyro(double angle, double power) throws InterruptedException {
-        phoneTurnLeft.setPosition(        phoneTurnLeft.servoObject.getPosition()-0.005);
+//        phoneTurnLeft.setPosition(        phoneTurnLeft.servoObject.getPosition()-0.005);
         Thread.sleep(10);
         double gyroAngle = this.navx_device.getYaw();
 
@@ -202,13 +217,14 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         try {
             xpidController.enable(true);
 
-        int DEVICE_TIMEOUT_MS = 1000;
+            int DEVICE_TIMEOUT_MS = 1000;
             navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
 
             DecimalFormat df = new DecimalFormat("#.###");
             boolean done = false;
             while (opModeIsActive() &&
-                    !Thread.currentThread().isInterrupted()&&!done) {
+                    !Thread.currentThread().isInterrupted() && !done) {
+//                servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry);
                 double output = 0;
                 if (xpidController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
                     if (yawPIDResult.isOnTarget()) {
@@ -225,7 +241,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
                     telemetry.addData("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
                 }
 
-                if (navx_device.getYaw()>degrees-1&&navx_device.getYaw()<degrees+1) {
+                if (navx_device.getYaw() > degrees - 1 && navx_device.getYaw() < degrees + 1) {
                     done = true;
                 }
                 telemetry.addData("Yaw", df.format(navx_device.getYaw()));
@@ -233,18 +249,42 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
             }
         } catch (Exception e) {
+            Thread.currentThread().interrupt();
         }
 
 
     }
 
+    public static void servoCorrectForPicture(PineappleServo servo, Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry, double pos) {
+        double servoStart = servo.servoObject.getPosition();
+
+        OpenGLMatrix pose = track.getRawPose();
+        if (pose != null) {
+            if (pose != null && img != null && img.getPixels() != null) {
+                Matrix34F rawPose = new Matrix34F();
+                float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
+                rawPose.setData(poseData);
+                float[] picture;
+                picture = Tool.projectPoint(camCal, rawPose, new Vec3F(0, 0, 0)).getData();
+
+
+                int middle = img.getWidth() / 2;
+                telemetry.addData("Width", img.getWidth());
+                telemetry.addData("X, Y", picture[0]+", "+picture[1]);
+                servoStart += (picture[0] > middle + 300) ? pos : (picture[0] < middle - 300) ? -pos : 0;
+                servo.setPosition(servoStart);
+
+            }
+
+        }
+    }
 
     public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
         jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTDOWN);
         jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTDOWN);
         jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
         jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNMIDDLE);
-        Thread.sleep(700);
+        Thread.sleep(1000);
         switch (jewelState) {
             case BLUE_RED:
                 if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
@@ -269,7 +309,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         Thread.sleep(500);
     }
 
-    public void driveOffPlate(double speed, double timeout) throws InterruptedException {
+    public void driveOffPlate(double speed, double timeout, Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal) throws InterruptedException {
         //
 
         robotHandler.drive.mecanum.setPower(-speed, speed);
@@ -277,11 +317,15 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         el.reset();
 //        double position = phoneTurnLeft.servoObject.getPosition();
         while (driveTillTilt() && opModeIsActive() && !(el.milliseconds() < timeout)) {
-                        Thread.sleep(10);
+            Thread.sleep(10);
+//            RelicRecoveryAbstractAutonomous.servoCorrectForPicture(phoneTurnLeft, img, track, camCal, telemetry);
+
         }
         while (driveTillFlat() && opModeIsActive() && !(el.milliseconds() < timeout)) {
 //            position-=0.004;
 //            phoneTurnLeft.setPosition(position);
+//            RelicRecoveryAbstractAutonomous.servoCorrectForPicture(phoneTurnLeft, img, track, camCal, telemetry);
+
             Thread.sleep(10);
         }
 
@@ -292,17 +336,17 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
     }
 
-    private boolean driveTillTilt() {
+    public boolean driveTillTilt() {
         double roll = navx_device.getRoll();
         telemetry.addData("Roll", roll);
-        telemetry.update();
+//        telemetry.update();
         return (Math.abs(roll) < 5);
     }
 
-    private boolean driveTillFlat() {
+    public boolean driveTillFlat() {
         double roll = navx_device.getRoll();
         telemetry.addData("Roll", roll);
-        telemetry.update();
+//        telemetry.update();
         return (Math.abs(roll) > 1);
     }
 

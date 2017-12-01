@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
+import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
@@ -15,6 +17,8 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by young on 9/14/2017.
@@ -56,23 +60,24 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
         telemetry.addLine("Init-Complete");
         telemetry.update();
         int val = 1;
-        while (listener.getPose()==null){
+        while (listener.getPose() == null) {
             if (val == 5) {
                 val = 1;
             }
             String dots = "";
-            for (int i = 0; i<val; i++) {
-                dots+=".";
+            for (int i = 0; i < val; i++) {
+                dots += ".";
             }
-            telemetry.addLine("Finding image"+dots);
+            telemetry.addLine("Finding image" + dots);
             telemetry.update();
             Thread.sleep(300);
             val++;
         }
-        PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
+        phoneTurnLeft.setPosition(0.85);
+        PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry);
         int i = 1;
-        while (!opModeIsActive()&& !isStopRequested()){
-            state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
+        while (!opModeIsActive() && !isStopRequested()) {
+            state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry);
 
 
             switch (state) {
@@ -96,9 +101,10 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
         switch (position) {
             case FRONT:
                 switch (color) {
+
                     case RED:
                         //Red Front
-                        gyroTurnPID(90);
+//                        gyroTurnPID(90);
 
 
                         break;
@@ -107,29 +113,57 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                         hitJewels(state);
 
 
-                        //Drive forward
-                        driveOffPlate(.7, 4000);
+                        ElapsedTime el = new ElapsedTime();
+                        el.reset();                        //Drive forward
+                        robotHandler.drive.mecanum.setPower(-.1, .1);
+                        while (el.milliseconds() < 5000) {
+                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
+                            telemetry.update();
+                        }
+
+//                        ElapsedTime el = new ElapsedTime();
+//                        el.reset();
+////        double position = phoneTurnLeft.servoObject.getPosition();
+//                        while (driveTillTilt() && opModeIsActive() && !(el.milliseconds() < 4000)) {
 //
+//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
+//
+//                            robotHandler.drive.mecanum.setPower(-.7, .7);
+//                        }
+//                        while (driveTillFlat() && opModeIsActive() && !(el.milliseconds() < 4000)) {
+////            position-=0.004;
+////            phoneTurnLeft.setPosition(position);
+//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
+//
+//                            Thread.sleep(10);
+//                        }
+
+//                        if ((el.milliseconds() < 4000)) {
+//                            Thread.sleep(1500);
+//                        }
+                        robotHandler.drive.stop();
+
 //                        //turn
-                        gyroTurnPID(90);
+                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
+
+                        gyroTurnPID(-90);
 
 //                        //turn phone
 //                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
-//
-//                        //align to cryptobox
-//                        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-//                        while (opModeIsActive() && keyColumn == RelicRecoveryVuMark.UNKNOWN) {
-//                            keyColumn = RelicRecoveryVuMark.from(relicTemplate);
-//                        } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
-//                        VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-//                        alignToCrypto(90, listener, vector);
-////                        }
-////                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-////                        alignToCrypto(listener, vector);
 
-                        //TODO SPIN out box
-
+                        //align to cryptobox
+                        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
+                        while (opModeIsActive() && keyColumn == RelicRecoveryVuMark.UNKNOWN) {
+                            keyColumn = RelicRecoveryVuMark.from(relicTemplate);
+                        } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
+                        VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
+                        alignToCrypto(-90, listener, vector);
+//                        }
+//                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
+//                        alignToCrypto(listener, vector);
                         break;
+
+                    //TODO SPIN out box
                 }
                 break;
             case BACK:
@@ -139,8 +173,6 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 
 
     }
-
-
 
 
 }
