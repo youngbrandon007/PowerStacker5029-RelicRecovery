@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
  * Created by ftcpi on 11/16/2017.
  */
 @Autonomous(name = "Jewel")
+@Disabled
 public class RelicRecoveryJewel extends RelicRecoveryConfigV2 {
     @Override
     public void runOpMode() throws InterruptedException {

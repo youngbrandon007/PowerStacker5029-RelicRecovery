@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
@@ -40,7 +41,7 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
  * Created by ftcpi on 9/16/2017.
  */
 @Autonomous(name = "VuforiaTestJewel", group = "Linear Opmode")
-
+@Disabled
 public class VuforiaTest extends LinearOpMode {
 //    public static float[] blueLowHSV = {240,90,34};
 //    public static  float[] blueHighHSV= {186,33,95};

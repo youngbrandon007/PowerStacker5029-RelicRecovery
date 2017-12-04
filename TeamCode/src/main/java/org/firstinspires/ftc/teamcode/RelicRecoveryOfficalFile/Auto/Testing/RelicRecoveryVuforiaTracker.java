@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.RelicRecoveryAbstractAutonomous;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 
 /**
  * Created by Brandon on 11/28/2017.
@@ -38,7 +39,8 @@ public class RelicRecoveryVuforiaTracker extends RelicRecoveryConfigV2 {
 
 
         waitForStart();
-        phoneTurnLeft.setPosition(1);
+        phoneTurnLeft.setPosition(RelicRecoveryConstants.PHONELEFTANGLEDSIDE);
+        phoneTurnRight.setPosition(RelicRecoveryConstants.PHONERIGHTANGLEDSIDE);
         while (opModeIsActive()) {
             if (listener.getPose() != null) {
                 VectorF trans = listener.getPose().getTranslation();

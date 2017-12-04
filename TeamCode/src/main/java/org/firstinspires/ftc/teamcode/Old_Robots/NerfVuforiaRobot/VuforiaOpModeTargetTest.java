@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.Old_Robots.NerfVuforiaRobot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,7 +25,7 @@ import org.firstinspires.ftc.teamcode.R;
  */
 
 @TeleOp(name = "VuforiaTarget", group = "Linear Opmode")
-
+@Disabled
 public class VuforiaOpModeTargetTest extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 

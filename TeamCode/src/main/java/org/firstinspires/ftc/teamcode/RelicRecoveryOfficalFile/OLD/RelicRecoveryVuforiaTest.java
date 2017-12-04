@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.OLD;
  * Created by Brandon on 10/15/2017.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 
 @TeleOp(name="KrishnaVuforiaTest", group ="Concept")
-
+@Disabled
 public class RelicRecoveryVuforiaTest extends RelicRecoveryConfig {
 
     public static final String TAG = "Vuforia VuMark Sample";

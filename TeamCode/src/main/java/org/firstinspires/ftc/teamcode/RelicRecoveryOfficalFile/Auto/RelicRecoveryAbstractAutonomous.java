@@ -38,6 +38,8 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     public RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
     public boolean moreGlyph = false;
     public boolean gyroEnabled = true;
+    public boolean glyphsEnabled = true;
+    public boolean delayEnabled = true;
     public boolean pidEnabled = false;
     public boolean encoderEnabled = false;
     public boolean jewelsEnabled = true;
@@ -136,7 +138,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
                 return true;
             }
 
-            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? 0.7 : (dis > RelicRecoveryConstants.VUFORIAALIGNSLOW) ? .3 : .1;
+            double speed = (dis > RelicRecoveryConstants.VUFORIAALIGNMEDIUM) ? 0.7 : (dis > RelicRecoveryConstants.VUFORIAALIGNSLOW) ? .4: .2;
 
             robotHandler.drive.mecanum.setMecanum(Math.toRadians(ang), speed, rotation, 1);
 
@@ -269,7 +271,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
 
                 int middle = img.getWidth() / 2;
                 telemetry.addData("Width", img.getWidth());
-                telemetry.addData("X, Y", picture[0]+", "+picture[1]);
+                telemetry.addData("X, Y", picture[0] + ", " + picture[1]);
                 servoStart += (picture[0] > middle + 300) ? pos : (picture[0] < middle - 300) ? -pos : 0;
                 servo.setPosition(servoStart);
 
@@ -279,33 +281,35 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     }
 
     public void hitJewels(PineappleEnum.JewelState jewelState) throws InterruptedException {
-        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTDOWN);
-        jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTDOWN);
-        jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
-        jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNMIDDLE);
-        Thread.sleep(1000);
-        switch (jewelState) {
-            case BLUE_RED:
-                if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
-                } else {
-                    jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNLEFT);
-                }
-                break;
-            case RED_BLUE:
-                if (allianceColor == PineappleEnum.AllianceColor.RED) {
-                    jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNRIGHT);
-                } else {
-                    jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
-                }
-                break;
+        if (jewelState != PineappleEnum.JewelState.NON_NON && jewelsEnabled) {
+            jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTDOWN);
+            jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTDOWN);
+            jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNMIDDLE);
+            jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNMIDDLE);
+            Thread.sleep(1000);
+            switch (jewelState) {
+                case BLUE_RED:
+                    if (allianceColor == PineappleEnum.AllianceColor.BLUE) {
+                        jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNRIGHT);
+                    } else {
+                        jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNLEFT);
+                    }
+                    break;
+                case RED_BLUE:
+                    if (allianceColor == PineappleEnum.AllianceColor.RED) {
+                        jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNRIGHT);
+                    } else {
+                        jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+                    }
+                    break;
+            }
+            Thread.sleep(700);
+            jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTUP);
+            jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
+            jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTUP);
+            jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNRIGHT);
+            Thread.sleep(500);
         }
-        Thread.sleep(700);
-        jewelLeverLeft.setPosition(RelicRecoveryConstants.JEWELLEFTUP);
-        jewelRotationLeft.setPosition(RelicRecoveryConstants.JEWELLEFTTURNLEFT);
-        jewelLeverRight.setPosition(RelicRecoveryConstants.JEWELRIGHTUP);
-        jewelRotationRight.setPosition(RelicRecoveryConstants.JEWELRIGHTTURNLEFT);
-        Thread.sleep(500);
     }
 
     public void driveOffPlate(double speed, double timeout, Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal) throws InterruptedException {
@@ -357,9 +361,17 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         delay = robotHandler.switchBoard.loadAnalog("delay") * 2;
         color = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
         position = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
+        jewelsEnabled = robotHandler.switchBoard.loadDigital("jewel");
+        pidEnabled = robotHandler.switchBoard.loadDigital("pid");
+        glyphsEnabled = robotHandler.switchBoard.loadDigital("glyph");
+        delayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
         delay = roundToHalf(delay);
         telemetry.addData("Delay", delay);
+        telemetry.addData("DelayEnabled", delayEnabled);
         telemetry.addData("Color", color);
+        telemetry.addData("Jewel", jewelsEnabled);
+        telemetry.addData("PID", pidEnabled);
+        telemetry.addData("Glyphs", glyphsEnabled);
         telemetry.addData("Position", position);
     }
 
@@ -371,20 +383,19 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         }
     }
 
-    public void phoneTurnGyro(double angle, double tolerance) {
-        if (PineappleEnum.AllianceColor.BLUE == allianceColor) {
-            double position = phoneTurnLeft.servoObject.getPosition();
-            while (opModeIsActive() && inRange(phoneGyroLeft.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING), angle - tolerance, angle + tolerance)) {
-                phoneTurnLeft.setPosition(position);
-                position += 0.03;
-            }
-        } else {
-            double position = phoneTurnRight.servoObject.getPosition();
-            while (opModeIsActive() && inRange(phoneGyroRight.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING), angle - tolerance, angle + tolerance)) {
-                phoneTurnRight.setPosition(position);
-                position += 0.03;
-            }
+    public void beginningDelay() throws InterruptedException {
+        if (delayEnabled) {
+            Thread.sleep((long) delay * 1000);
         }
+    }
+
+    public void flipTopOut() throws InterruptedException {
+        conveyorFlipLeft.setPosition(RelicRecoveryConstants.FLIPOUTLEFT);
+        conveyorFlipRight.setPosition(RelicRecoveryConstants.FLIPOUTRIGHT);
+        Thread.sleep(1000);
+        conveyorFlipLeft.setPosition(RelicRecoveryConstants.FLIPINLEFT);
+        conveyorFlipRight.setPosition(RelicRecoveryConstants.FLIPINRIGHT);
+
     }
 }
 

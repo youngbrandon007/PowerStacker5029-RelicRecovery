@@ -33,9 +33,9 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
     public PineappleServo jewelRotationRight;
     public PineappleServo jewelLeverRight;
     public PineappleServo collectorRight;
+    public PineappleServo conveyorFlipRight;
+    public PineappleServo conveyorFlipLeft;
 
-    public PineappleGyroSensor phoneGyroRight;
-    public PineappleGyroSensor phoneGyroLeft;
     public final int NAVX_DIM_I2C_PORT = 0;
     public AHRS navx_device;
     public final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
@@ -53,19 +53,18 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
         conveyLeft = robotHandler.motorHandler.newDriveMotor("ConL", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
         conveyRight = robotHandler.motorHandler.newDriveMotor("ConR", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
 
-        phoneTurnLeft = robotHandler.servoHandler.newLimitServo("PTL", 1, 0.75);
+        phoneTurnLeft = robotHandler.servoHandler.newLimitServo("PTL", 1, RelicRecoveryConstants.PHONELEFTFLAT);
         jewelRotationLeft = robotHandler.servoHandler.newLimitServo("JRL", 1, RelicRecoveryConstants.JEWELLEFTTURNLEFT);
         jewelLeverLeft = robotHandler.servoHandler.newLimitServo("JLL", 1, RelicRecoveryConstants.JEWELLEFTUP);
         collectorLeft = robotHandler.servoHandler.newContinuousServo("CL", 0.5);
 
-        phoneTurnRight = robotHandler.servoHandler.newLimitServo("PTR", 1, .5);
+        phoneTurnRight = robotHandler.servoHandler.newLimitServo("PTR", 1, RelicRecoveryConstants.PHONERIGHTFLAT);
         jewelRotationRight = robotHandler.servoHandler.newLimitServo("JRR", 1, RelicRecoveryConstants.JEWELRIGHTTURNRIGHT);
         jewelLeverRight = robotHandler.servoHandler.newLimitServo("JLR", 1, RelicRecoveryConstants.JEWELRIGHTUP);
         collectorRight = robotHandler.servoHandler.newContinuousServo("CR", 0.5);
 
-        phoneGyroLeft = robotHandler.sensorHandler.newGyroSensor("PGL");
-        phoneGyroRight = robotHandler.sensorHandler.newGyroSensor("PGR");
-
+        conveyorFlipLeft = robotHandler.servoHandler.newLimitServo("CFL", 1, RelicRecoveryConstants.FLIPINLEFT);
+        conveyorFlipRight = robotHandler.servoHandler.newLimitServo("CFR", 1, RelicRecoveryConstants.FLIPINRIGHT);
         navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
                 NAVX_DIM_I2C_PORT,
                 AHRS.DeviceDataType.kProcessedData,

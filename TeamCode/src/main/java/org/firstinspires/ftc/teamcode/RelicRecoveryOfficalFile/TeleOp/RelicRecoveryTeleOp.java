@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigV2;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 
 
 /**
@@ -46,6 +48,9 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
 
                 conveyRight.setPower(-1);
                 conveyLeft.setPower(1);
+            } else if (gamepad1.y || gamepad2.y) {
+                conveyorFlipLeft.setPosition(RelicRecoveryConstants.FLIPOUTLEFT);
+                conveyorFlipRight.setPosition(RelicRecoveryConstants.FLIPOUTRIGHT);
             } else if (right_trigger1 > 0.05 && right_trigger1 > right_trigger2) {
                 collectorLeft.setPosition((1 - right_trigger1) / 2);
                 collectorRight.setPosition((1 - right_trigger1) / 2);
@@ -80,6 +85,8 @@ public class RelicRecoveryTeleOp extends RelicRecoveryConfigV2 {
 
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
+                conveyorFlipRight.setPosition(RelicRecoveryConstants.FLIPINRIGHT);
+                conveyorFlipLeft.setPosition(RelicRecoveryConstants.FLIPINLEFT);
             }
 
             // Controller A

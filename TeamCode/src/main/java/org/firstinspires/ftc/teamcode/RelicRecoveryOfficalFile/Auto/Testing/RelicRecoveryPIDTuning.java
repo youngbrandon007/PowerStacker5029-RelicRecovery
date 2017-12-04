@@ -17,7 +17,7 @@ import java.util.Calendar;
  * Created by ftcpi on 11/16/2017.
  */
 @Autonomous(name = "PID", group = "TUning")
-//@Disabled
+@Disabled
 public class RelicRecoveryPIDTuning extends RelicRecoveryConfigV2 {
     @Override
     public void runOpMode() throws InterruptedException {

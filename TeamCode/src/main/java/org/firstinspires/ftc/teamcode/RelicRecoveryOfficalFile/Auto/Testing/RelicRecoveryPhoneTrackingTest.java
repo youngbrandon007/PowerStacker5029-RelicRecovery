@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
  * Created by ftcpi on 11/16/2017.
  */
 @Autonomous(name = "tracking")
+@Disabled
 public class RelicRecoveryPhoneTrackingTest extends RelicRecoveryConfigV2 {
     @Override
     public void runOpMode() throws InterruptedException {

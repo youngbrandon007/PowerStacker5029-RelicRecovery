@@ -53,14 +53,13 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
         relicTrackables.activate();
         telemetry.addLine("Init-Vuforia Initialized");
 
-        //function at the bottom of this file
-        //loads the switch board --- color and delay TODO position
+
         loadSwitchBoard();
 
         telemetry.addLine("Init-Complete");
         telemetry.update();
         int val = 1;
-        while (listener.getPose() == null) {
+        while (listener.getPose() == null && !opModeIsActive() && !isStopRequested()) {
             if (val == 5) {
                 val = 1;
             }
@@ -73,7 +72,24 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
             Thread.sleep(300);
             val++;
         }
-        phoneTurnLeft.setPosition(0.85);
+        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
+        while (!opModeIsActive() && !isStopRequested() && keyColumn == RelicRecoveryVuMark.UNKNOWN) {
+            keyColumn = RelicRecoveryVuMark.from(relicTemplate);
+            if (val == 5) {
+                val = 1;
+            }
+            String dots = "";
+            for (int i = 0; i < val; i++) {
+                dots += ".";
+            }
+            telemetry.addLine("Finding Key Column" + dots);
+            telemetry.update();
+            Thread.sleep(300);
+            val++;
+        }
+
+        phoneTurnLeft.setPosition(RelicRecoveryConstants.PHONELEFTJEWELS);
+        phoneTurnRight.setPosition(RelicRecoveryConstants.PHONERIGHTJEWELS);
         PineappleEnum.JewelState state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry);
         int i = 1;
         while (!opModeIsActive() && !isStopRequested()) {
@@ -91,86 +107,141 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                     telemetry.addData("Config " + i + ": ", "RED BLUE");
                     break;
             }
+            if (!jewelsEnabled) {
+                telemetry.addLine("JEWELS DISABLED");
+            }
             telemetry.update();
             Thread.sleep(500);
         }
-
+        //////////////////
+        //WAIT FOR START//
+        //////////////////
         waitForStart();
 
+        flipTopOut();
 
+        beginningDelay();
+        hitJewels(state);
+        ElapsedTime elapsedTime = new ElapsedTime();
         switch (position) {
             case FRONT:
                 switch (color) {
 
                     case RED:
                         //Red Front
-//                        gyroTurnPID(90);
-
+//                        elapsedTime.reset();                        //Drive forward
+//                        robotHandler.drive.mecanum.setPower(-.3, .3);
+//                        while (elapsedTime.milliseconds() < 2000) {
+////                            servoCorrectForPicture(phoneTurnRight, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.07);
+////                            telemetry.update();
+//                        }
+//                        robotHandler.drive.stop();
+//                        while (!alignWithGyro(90, 0.2) && opModeIsActive()) {
+//                            servoCorrectForPicture(phoneTurnRight, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.04);
+//
+//                        }
+//                        phoneTurnRight.setPosition(RelicRecoveryConstants.PHONERIGHTANGLEDSIDE);
+//                        Thread.sleep(500);
+//                        //align to cryptobox
+//                        if (glyphsEnabled) {
+//                            VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.REDSIDELEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.REDSIDECENTER : RelicRecoveryConstants.REDSIDERIGHT;
+//                            alignToCrypto(90, listener, vector);
+//                            conveyRight.setPower(1);
+//                            conveyLeft.setPower(-1);
+//                            Thread.sleep(4000);
+//                            conveyRight.setPower(0);
+//                            conveyLeft.setPower(0);
+//                        }
 
                         break;
                     case BLUE:
                         //Blue Front
-                        hitJewels(state);
 
 
-                        ElapsedTime el = new ElapsedTime();
-                        el.reset();                        //Drive forward
-                        robotHandler.drive.mecanum.setPower(-.1, .1);
-                        while (el.milliseconds() < 5000) {
-                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
-                            telemetry.update();
+                        elapsedTime.reset();                        //Drive forward
+                        robotHandler.drive.mecanum.setPower(-.3, .3);
+                        while (elapsedTime.milliseconds() < 2000) {
+//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
+//                            telemetry.update();
                         }
-
-//                        ElapsedTime el = new ElapsedTime();
-//                        el.reset();
-////        double position = phoneTurnLeft.servoObject.getPosition();
-//                        while (driveTillTilt() && opModeIsActive() && !(el.milliseconds() < 4000)) {
-//
-//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
-//
-//                            robotHandler.drive.mecanum.setPower(-.7, .7);
-//                        }
-//                        while (driveTillFlat() && opModeIsActive() && !(el.milliseconds() < 4000)) {
-////            position-=0.004;
-////            phoneTurnLeft.setPosition(position);
-//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, vuforia.getCameraCalibration(), telemetry);
-//
-//                            Thread.sleep(10);
-//                        }
-
-//                        if ((el.milliseconds() < 4000)) {
-//                            Thread.sleep(1500);
-//                        }
                         robotHandler.drive.stop();
-                        while (!alignWithGyro(270, 0.1)&&opModeIsActive()) {
-                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
-
-                        }
-//                        //turn
-//                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
-
-//                        gyroTurnPID(-90);
-
-//                        //turn phone
-//                        phoneTurnLeft.setPosition(1); //Might need to be moved or changed //TODO gyro phone turn
-
-                        //align to cryptobox
-                        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-                        while (opModeIsActive() && keyColumn == RelicRecoveryVuMark.UNKNOWN) {
-                            keyColumn = RelicRecoveryVuMark.from(relicTemplate);
-                        } // THIS SHOULD OCCUR IN INIT RIGHT? -yes, move it when we add the jewels part
-                        VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-                        alignToCrypto(-90, listener, vector);
+//                        while (!alignWithGyro(270, 0.1) && opModeIsActive()) {
+//
 //                        }
-//                        VectorF vector = (placement == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (placement == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
-//                        alignToCrypto(listener, vector);
+//                        phoneTurnLeft.setPosition(RelicRecoveryConstants.PHONELEFTANGLEDSIDE);
+//                        Thread.sleep(500);
+//                        //align to cryptobox
+//                        if (glyphsEnabled) {
+//                            VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUESIDELEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUESIDECENTER : RelicRecoveryConstants.BLUESIDERIGHT;
+//                            alignToCrypto(-90, listener, vector);
+//                            conveyRight.setPower(1);
+//                            conveyLeft.setPower(-1);
+//                            Thread.sleep(4000);
+//                            conveyRight.setPower(0);
+//                            conveyLeft.setPower(0);
+//                        }
                         break;
 
                     //TODO SPIN out box
                 }
                 break;
             case BACK:
+                switch (color) {
 
+                    case RED:
+                        //Red Front
+                        elapsedTime.reset();                        //Drive forward
+                        robotHandler.drive.mecanum.setMecanum(135,0.2,0,1);
+                        while (elapsedTime.milliseconds() < 3000) {
+//                            servoCorrectForPicture(phoneTurnRight, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
+//                            telemetry.update();
+                        }
+                        robotHandler.drive.stop();
+//                        phoneTurnRight.setPosition(RelicRecoveryConstants.PHONERIGHTANGLEDBACK);
+//                        Thread.sleep(500);
+//                        //align to cryptobox
+//                        if (glyphsEnabled) {
+//                            VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.REDBACKLEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.REDBACKCENTER : RelicRecoveryConstants.REDBACKRIGHT;
+//                            alignToCrypto(90, listener, vector);
+//                            conveyRight.setPower(1);
+//                            conveyLeft.setPower(-1);
+//                            Thread.sleep(4000);
+//                            conveyRight.setPower(0);
+//                            conveyLeft.setPower(0);
+//                        }
+
+                        break;
+                    case BLUE:
+                        //Blue Front
+
+
+                        elapsedTime.reset();                        //Drive forward
+                        robotHandler.drive.mecanum.setMecanum(45,0.2,0,1);
+                        while (elapsedTime.milliseconds() < 3000) {
+//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
+//                            telemetry.update();
+                        }
+                        robotHandler.drive.stop();
+//                        while (!alignWithGyro(270, 0.1) && opModeIsActive()) {
+//                            servoCorrectForPicture(phoneTurnLeft, PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), track, vuforia.getCameraCalibration(), telemetry, 0.02);
+//
+//                        }
+//                        phoneTurnLeft.setPosition(RelicRecoveryConstants.PHONELEFTANGLEDBACK);
+//                        Thread.sleep(500);
+//                        //align to cryptobox
+//                        if (glyphsEnabled) {
+//                            VectorF vector = (keyColumn == RelicRecoveryVuMark.LEFT) ? RelicRecoveryConstants.BLUEBACKLEFT : (keyColumn == RelicRecoveryVuMark.CENTER) ? RelicRecoveryConstants.BLUEBACKCENTER : RelicRecoveryConstants.BLUEBACKRIGHT;
+//                            alignToCrypto(-90, listener, vector);
+//                            conveyRight.setPower(1);
+//                            conveyLeft.setPower(-1);
+//                            Thread.sleep(4000);
+//                            conveyRight.setPower(0);
+//                            conveyLeft.setPower(0);
+//                        }
+                        break;
+
+                    //TODO SPIN out box
+                }
                 break;
         }
 
