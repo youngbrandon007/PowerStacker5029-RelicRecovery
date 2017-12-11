@@ -10,27 +10,53 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecov
 
 public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
-    String count = "a";
+
+    autoCount count;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        count = new autoCount(telemetry);
+        count.setCount("a");
+        count.sayCount();
+        telemetry.update();
+        //load robot
         config(this);
         //load everything
         aLoadSwitchBoard();
 
 
-        telemetry.update();
         //wait for start
         waitForStart();
+        count.setCount("b");
 
         while (opModeIsActive()){
             switch (colorPosition){
                 case REDFRONT:
-                    switch (count){
+                    switch (count.getCount()){
                         case "b":
-                            //Jewels
+                            //scan
                             break;
-
+                        case "c":
+                            //jewels
+                            break;
+                        case "d":
+                            //drive off platform
+                            break;
+                        case "e":
+                            //turn
+                            break;
+                        case "f":
+                            //line up to wall
+                            break;
+                        case "g":
+                            //insert glyph
+                            break;
+                        case "h":
+                            //collect glyph
+                            break;
+                        case "i":
+                            //drive back using encoders
+                            break;
                     }
                     break;
                 case REDBACK:
@@ -44,6 +70,7 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                     break;
             }
 
+            count.sayCount();
             telemetry.update();
         }
     }

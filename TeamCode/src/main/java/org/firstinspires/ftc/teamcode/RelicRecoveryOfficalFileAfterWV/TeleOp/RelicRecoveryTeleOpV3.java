@@ -10,5 +10,11 @@ public class RelicRecoveryTeleOpV3 extends RelicRecoveryConfigV3{
     @Override
     public void runOpMode() throws InterruptedException {
         config(this);
+
+        waitForStart();
+
+        while (opModeIsActive()){
+
+        }
     }
 }
