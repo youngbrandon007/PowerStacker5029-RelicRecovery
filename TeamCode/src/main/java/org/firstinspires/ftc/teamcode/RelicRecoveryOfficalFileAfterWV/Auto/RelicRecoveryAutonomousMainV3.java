@@ -63,7 +63,6 @@ class autoCount{
 
     void setCount(String set){
         count = set;
-        sayCount();
     }
 
     void sayCount(){
