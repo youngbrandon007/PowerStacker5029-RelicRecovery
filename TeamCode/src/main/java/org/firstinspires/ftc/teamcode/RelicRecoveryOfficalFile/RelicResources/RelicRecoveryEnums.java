@@ -5,6 +5,11 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources;
  */
 
 public class RelicRecoveryEnums {
+
+    public enum ColorPosition{
+        REDFRONT,REDBACK,BLUEFRONT,BLUEBACK;
+    }
+
     public enum AutoColor{
         RED, BLUE
     }
