@@ -15,16 +15,11 @@ import java.util.HashMap;
 
 public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
-
-    autoCount count;
-
     HashMap<Double, encoderPosition> encoderTracking = new HashMap<>();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        count = new autoCount(telemetry);
-        count.setCount("a");
-        count.sayCount();
+
         telemetry.update();
 
         //load robot
@@ -36,7 +31,7 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         telemetry.addLine("Waiting for Start");
         telemetry.update();
         waitForStart();
-        count.setCount("b");
+
 
 
         ElapsedTime time = new ElapsedTime();
@@ -44,7 +39,7 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         while (opModeIsActive()){
             switch (colorPosition){
                 case REDFRONT:
-                    switch (count.getCount()){
+                    switch ("a"){
                         case "b":
                             //TODO scan
 
@@ -57,7 +52,6 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             //drive off platform
                             //TODO add encoder drive at the end
                             if(driveOffPlatform(.5))
-                                count.setCount("e");
                             break;
                         case "e":
                             //TODO turn
@@ -76,7 +70,6 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             //TODO get ready to collect glyph and track encoders
 
                             time.reset();
-                            count.setCount("i");
                             break;
                         case "i":
                             //TODO drive to glyph and collect two
@@ -88,14 +81,13 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             //only runs once
                             //TODO stop encoders and
 
-                            count.setCount("k");
+
                             break;
                         case "k":
                             //TODO drive back using encoders
 
                             break;
                         default:
-                            telemetry.addData("ERROR NOT LINE LETTER",count.getCount());
                             break;
                     }
                     break;
@@ -109,8 +101,7 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
                     break;
             }
-
-            count.sayCount();
+            
             telemetry.update();
         }
     }
@@ -154,24 +145,3 @@ class encoderPosition{
     }
 }
 
-class autoCount{
-
-    private Telemetry telemetry;
-    private String count = "a";
-
-    autoCount(Telemetry telemetry){
-        this.telemetry = telemetry;
-    }
-
-    void setCount(String set){
-        count = set;
-    }
-
-    void sayCount(){
-        telemetry.addData("Count", count);
-    }
-
-    String getCount(){
-        return count;
-    }
-}
