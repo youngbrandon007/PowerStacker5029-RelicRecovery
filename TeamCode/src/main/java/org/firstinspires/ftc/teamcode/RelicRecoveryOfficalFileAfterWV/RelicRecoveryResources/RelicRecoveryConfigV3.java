@@ -13,6 +13,13 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
  */
 
 public abstract class RelicRecoveryConfigV3 extends PineappleConfigLinearOpMode{
+    /*
+    TODO Add sensors
+    TODO
+    TODO
+    TODO
+     */
+
     //Robot
     PineappleMotor driveFrontRight;
     PineappleMotor driveFrontLeft;
@@ -45,7 +52,7 @@ public abstract class RelicRecoveryConfigV3 extends PineappleConfigLinearOpMode{
 
     }
 
-    public void aLoadSwitchBoard() {
+    public void loadSwitchBoard() {
         delay = robotHandler.switchBoard.loadAnalog("delay") * 2;
         color = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
         position = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
