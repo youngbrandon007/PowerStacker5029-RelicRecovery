@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.Auto;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV3;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Brandon on 12/5/2017.
@@ -15,7 +18,7 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
     autoCount count;
 
-
+    HashMap<Double, encoderPosition> encoderTracking = new HashMap<>();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,14 +26,20 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         count.setCount("a");
         count.sayCount();
         telemetry.update();
+
         //load robot
         config(this);
         //load everything
         aLoadSwitchBoard();
 
         //wait for start
+        telemetry.addLine("Waiting for Start");
+        telemetry.update();
         waitForStart();
         count.setCount("b");
+
+
+        ElapsedTime time = new ElapsedTime();
 
         while (opModeIsActive()){
             switch (colorPosition){
@@ -66,12 +75,14 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             //only runs once
                             //TODO get ready to collect glyph and track encoders
 
-
+                            time.reset();
                             count.setCount("i");
                             break;
                         case "i":
                             //TODO drive to glyph and collect two
-                            encoderTracking.add();
+
+
+                            encoderTracking.put(time.milliseconds(),new encoderPosition(0,0,0,0));
                             break;
                         case "j":
                             //only runs once
@@ -125,6 +136,21 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
     public double getHeading(){
         return 0.0;
+    }
+}
+
+class encoderPosition{
+
+    int FR = 0;
+    int FL = 0;
+    int BR = 0;
+    int BL = 0;
+
+    encoderPosition(int fr, int fl, int br, int bl){
+        FR = fr;
+        FL = fl;
+        BR = br;
+        BL = bl;
     }
 }
 
