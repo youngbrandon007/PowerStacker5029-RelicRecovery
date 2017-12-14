@@ -21,10 +21,10 @@ public abstract class RelicRecoveryConfigV3 extends PineappleConfigLinearOpMode{
      */
 
     //Robot
-    PineappleMotor driveFrontRight;
-    PineappleMotor driveFrontLeft;
-    PineappleMotor driveBackRight;
-    PineappleMotor driveBackLeft;
+    public PineappleMotor driveFrontRight;
+    public PineappleMotor driveFrontLeft;
+    public PineappleMotor driveBackRight;
+    public PineappleMotor driveBackLeft;
 
 
     //switch Board

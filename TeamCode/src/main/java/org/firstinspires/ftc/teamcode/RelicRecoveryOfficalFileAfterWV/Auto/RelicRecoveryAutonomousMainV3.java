@@ -16,11 +16,15 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         SCAN, JEWELS, DRIVEOFFPLATFROM, TURN, LINEUPTOCRYPTO, PUTGLYPH, PREPARECOLLECT,COLLECT,PREPAREDRIVEBACKTOCRYPTO,DRIVEBACKTOCRYPTO
     }
 
+    ElapsedTime time = new ElapsedTime();
+    ElapsedTime encoderTrackingTime = new ElapsedTime();
+
     Auto auto = Auto.SCAN;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        time.reset();
+        encoderTrackingTime.reset();
         telemetry.update();
         //load robot
         config(this);
@@ -29,13 +33,18 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
         //wait for start
         telemetry.addLine("Waiting for Start");
+        telemetry.addData("Time(milliseconds)",time.milliseconds());
         telemetry.update();
         waitForStart();
 
 
-        ElapsedTime time = new ElapsedTime();
+
+        //testing
+        auto = Auto.PREPARECOLLECT;
 
         while (opModeIsActive()) {
+            telemetry.addData("Time(milliseconds)",time.milliseconds());
+            telemetry.addData("Running",auto);
             switch (colorPosition) {
                 case REDFRONT:
                     switch (auto) {
@@ -62,17 +71,19 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             break;
                         case PREPARECOLLECT:
                             //only runs once
-                            //TODO get ready to collect glyph and track encoders
-                            time.reset();
-                            break;
+                            encoderTrackingTime.reset();
+                            auto = Auto.COLLECT;
                         case COLLECT:
                             //TODO drive to glyph and collect two
-                            encoderTracking.put(time.milliseconds(), new encoderPosition(0, 0.0, 0, 0.0, 0 , 0.0, 0, 0.0));
+
+
+                            //speed inputs, encoders are alreading in function
+                            saveValues(0.0,0.0,0.0,0.0);
                             break;
                         case PREPAREDRIVEBACKTOCRYPTO:
                             //only runs once
                             //TODO stop encoders and
-                            break;
+                            auto = Auto.DRIVEBACKTOCRYPTO;
                         case DRIVEBACKTOCRYPTO:
                             //TODO drive back using encoders
                             break;
@@ -110,6 +121,12 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         telemetry.addData("Drive Off", driveOff);
         return false;
     }
+
+    public void saveValues(double fr, double fl, double br, double bl){
+        encoderTracking.put(encoderTrackingTime.milliseconds(), new encoderPosition(driveFrontRight.motorObject.getCurrentPosition(),fr,driveFrontLeft.motorObject.getCurrentPosition(),fl,driveBackRight.motorObject.getCurrentPosition(),br,driveBackLeft.motorObject.getCurrentPosition(),br));
+    }
+
+    //get Sensors
 
     public double getTilt() {
         return 0.0;
