@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.Auto;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV3;
 import java.util.HashMap;
+import java.util.Set;
+
 /**
  * Created by Brandon on 12/5/2017.
  */
@@ -120,6 +122,22 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         }
         telemetry.addData("Drive Off", driveOff);
         return false;
+    }
+
+    //Gets encoder position closest to the inputed time
+    public encoderPosition getValue(double time){
+        Set<Double> keys = encoderTracking.keySet();
+        Double distance = 100000000.0;
+        Double out = 0.0;
+        for (Double each : keys)
+        {
+            double difference = Math.abs(time - each);
+            if (difference < distance){
+                distance = difference;
+                out = each;
+            }
+        }
+        return encoderTracking.get(out);
     }
 
     public void saveValues(double fr, double fl, double br, double bl){
