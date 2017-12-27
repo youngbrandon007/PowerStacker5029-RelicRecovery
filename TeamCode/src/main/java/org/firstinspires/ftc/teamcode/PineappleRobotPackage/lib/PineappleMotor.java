@@ -91,6 +91,15 @@ public class PineappleMotor {
         }
     }
 
+    public double getEncoderDistance(double wheelSize){
+        double rotations = getEncoderPosition()/motorTypeToCPR(motorType);
+        return wheelSize*Math.PI*rotations;
+    }
+
+    public double getEncoderPosition(){
+        return motorObject.getCurrentPosition();
+    }
+
     //Function called by user
 
     public void encoderDrive(double speed, double value, PineappleEnum.MotorValueType motorValueType, double wheelSize) {

@@ -12,21 +12,21 @@ import java.util.Set;
 
 public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
 
-    HashMap<Double, encoderPosition> encoderTracking = new HashMap<>();
-
     public enum Auto{
         SCAN, JEWELS, DRIVEOFFPLATFROM, TURN, LINEUPTOCRYPTO, PUTGLYPH, PREPARECOLLECT,COLLECT,PREPAREDRIVEBACKTOCRYPTO,DRIVEBACKTOCRYPTO
     }
 
     ElapsedTime time = new ElapsedTime();
-    ElapsedTime encoderTrackingTime = new ElapsedTime();
 
     Auto auto = Auto.SCAN;
 
+    double facingCrypto = 0.0;
+
+    Position pos = new Position();
+
     @Override
     public void runOpMode() throws InterruptedException {
-        time.reset();
-        encoderTrackingTime.reset();
+
         telemetry.update();
         //load robot
         config(this);
@@ -39,7 +39,7 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         telemetry.update();
         waitForStart();
 
-
+        time.reset();
 
         //testing
         auto = Auto.PREPARECOLLECT;
@@ -73,14 +73,19 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             break;
                         case PREPARECOLLECT:
                             //only runs once
-                            encoderTrackingTime.reset();
+
+                            facingCrypto = getHeading();
+                            pos.reset();
                             auto = Auto.COLLECT;
                         case COLLECT:
                             //TODO drive to glyph and collect two
 
 
-                            //speed inputs, encoders are alreading in function
-                            saveValues(0.0,0.0,0.0,0.0);
+
+                            //calculate position
+                            double distance = (driveFrontRight.getEncoderDistance(4) + driveFrontLeft.getEncoderDistance(4) + driveBackRight.getEncoderDistance(4) + driveBackLeft.getEncoderDistance(4))/4;
+                            //angle 0 = drinving towards glyphs
+                            pos.move(distance ,getHeading() - facingCrypto);
                             break;
                         case PREPAREDRIVEBACKTOCRYPTO:
                             //only runs once
@@ -124,25 +129,8 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
         return false;
     }
 
-    //Gets encoder position closest to the inputed time
-    public encoderPosition getValue(double time){
-        Set<Double> keys = encoderTracking.keySet();
-        Double distance = 100000000.0;
-        Double out = 0.0;
-        for (Double each : keys)
-        {
-            double difference = Math.abs(time - each);
-            if (difference < distance){
-                distance = difference;
-                out = each;
-            }
-        }
-        return encoderTracking.get(out);
-    }
 
-    public void saveValues(double fr, double fl, double br, double bl){
-        encoderTracking.put(encoderTrackingTime.milliseconds(), new encoderPosition(driveFrontRight.motorObject.getCurrentPosition(),fr,driveFrontLeft.motorObject.getCurrentPosition(),fl,driveBackRight.motorObject.getCurrentPosition(),br,driveBackLeft.motorObject.getCurrentPosition(),br));
-    }
+
 
     //get Sensors
 
@@ -153,31 +141,32 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
     public double getHeading() {
         return 0.0;
     }
-}
 
 
+    class Position{
+        public double x = 0.0;
+        public double y = 0.0;
+
+        public void reset(){
+            x = 0.0;
+            y = 0.0;
+        }
 
 
-class encoderPosition {
+        public void move(double distance, double angle){
+            double deltaX = Math.cos(angle)*distance;
+            double deltaY = Math.sin(angle)*distance;
 
-    int FR = 0;
-    int FL = 0;
-    int BR = 0;
-    int BL = 0;
-    double speedFR = 0.0;
-    double speedFL = 0.0;
-    double speedBR = 0.0;
-    double speedBL = 0.0;
+            change(deltaX,deltaY);
+        }
 
-    encoderPosition(int fr, double speedfr, int fl, double speedfl, int br, double speedbr, int bl, double speedbl) {
-        FR = fr;
-        FL = fl;
-        BR = br;
-        BL = bl;
-        speedFR = speedfr;
-        speedFL = speedfl;
-        speedBR = speedbr;
-        speedBL = speedbl;
+        public void change(double deltaX, double deltaY){
+            x += deltaX;
+            y += deltaY;
+        }
     }
 }
+
+
+
 

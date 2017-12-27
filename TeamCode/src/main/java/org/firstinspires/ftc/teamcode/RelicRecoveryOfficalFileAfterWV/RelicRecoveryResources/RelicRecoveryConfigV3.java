@@ -14,10 +14,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
 
 public abstract class RelicRecoveryConfigV3 extends PineappleConfigLinearOpMode{
     /*
-    TODO Add sensors
-    TODO
-    TODO
-    TODO
+    TODO Add sensors-gyro, lever buttons,
      */
 
     //Robot
