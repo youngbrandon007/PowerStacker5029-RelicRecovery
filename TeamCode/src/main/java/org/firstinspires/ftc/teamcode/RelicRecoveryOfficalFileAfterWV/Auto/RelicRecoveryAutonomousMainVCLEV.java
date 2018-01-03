@@ -47,7 +47,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         //VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
 
 
-
         relicTrackables.activate();
 
         RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
