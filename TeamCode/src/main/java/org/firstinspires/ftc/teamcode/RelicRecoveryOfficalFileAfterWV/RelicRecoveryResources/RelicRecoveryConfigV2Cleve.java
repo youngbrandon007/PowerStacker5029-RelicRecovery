@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources;
 
+import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
@@ -36,6 +37,11 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
     public PineappleServo jewel;
     public PineappleServo alignLeft;
     public PineappleServo alignRight;
+
+    public final int NAVX_DIM_I2C_PORT = 0;
+    public AHRS navx_device;
+    public final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
+
     //switch Board
     public double delay = 0;
     public RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
