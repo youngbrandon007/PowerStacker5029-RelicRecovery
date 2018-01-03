@@ -4,6 +4,7 @@ import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
@@ -41,10 +42,37 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         //This is not needed as it is a repeat from the line above
         //VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
 
+
+
         relicTrackables.activate();
 
-        telemetry.addLine("Wait For Start");
-        telemetry.update();
+        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
+
+        int val = 1;
+        while (!opModeIsActive() && !isStopRequested()) {
+            if(listener.getPose() != null) {
+                keyColumn = RelicRecoveryVuMark.from(relicTemplate);
+            }
+            if (val == 5) {
+                val = 1;
+            }
+            String dots = "";
+            for (int i = 0; i < val; i++) {
+                dots += ".";
+            }
+
+            telemetry.addLine("Waiting for Start");
+            telemetry.addData("Time(milliseconds)",time.milliseconds());
+            if(keyColumn == null){
+                telemetry.addLine("Finding Image" + dots);
+            }else{
+                telemetry.addData("Key Column", keyColumn);
+            }
+            telemetry.update();
+
+            Thread.sleep(200);
+            val++;
+        }
         waitForStart();
 
         auto = Auto.PDRIVEFORWARD;
