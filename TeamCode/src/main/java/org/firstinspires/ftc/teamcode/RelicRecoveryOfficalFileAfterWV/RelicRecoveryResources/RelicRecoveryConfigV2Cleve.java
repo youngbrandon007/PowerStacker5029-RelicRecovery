@@ -6,24 +6,36 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigL
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
  * Created by Brandon on 12/5/2017.
  */
 
-public abstract class RelicRecoveryConfigV3 extends PineappleConfigLinearOpMode{
+public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOpMode{
     /*
     TODO Add sensors-gyro, lever buttons,
      */
 
     //Robot
+    //Motors
     public PineappleMotor driveFrontRight;
     public PineappleMotor driveFrontLeft;
     public PineappleMotor driveBackRight;
     public PineappleMotor driveBackLeft;
-
-
+    public PineappleMotor conveyLeft;
+    public  PineappleMotor conveyRight;
+    //Servos
+    public PineappleServo collectorLeft;
+    public PineappleServo collectorRight;
+    public PineappleServo releaseLeft;
+    public PineappleServo releaseRight;
+    public PineappleServo jewel;
+    public PineappleServo alignLeft;
+    public PineappleServo alignRight;
     //switch Board
     public double delay = 0;
     public RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
@@ -45,8 +57,16 @@ public abstract class RelicRecoveryConfigV3 extends PineappleConfigLinearOpMode{
         driveFrontLeft = robotHandler.motorHandler.newDriveMotor("FL", 1, false, false, PineappleEnum.MotorLoc.LEFTFRONT, PineappleEnum.MotorType.NEV40);
         driveBackRight = robotHandler.motorHandler.newDriveMotor("BR", 1, false, false, PineappleEnum.MotorLoc.RIGHTBACK, PineappleEnum.MotorType.NEV40);
         driveBackLeft = robotHandler.motorHandler.newDriveMotor("BL", 1, false, false, PineappleEnum.MotorLoc.LEFTBACK, PineappleEnum.MotorType.NEV40);
+        conveyLeft = robotHandler.motorHandler.newDriveMotor("ConL", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
+        conveyRight = robotHandler.motorHandler.newDriveMotor("ConR", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
 
-
+        collectorLeft = robotHandler.servoHandler.newContinuousServo("CL", 0.5);
+        collectorRight = robotHandler.servoHandler.newContinuousServo("CR", 0.5);
+        releaseLeft = robotHandler.servoHandler.newLimitServo("CFL", 1, RelicRecoveryConstants.FLIPINLEFT);
+        releaseRight = robotHandler.servoHandler.newLimitServo("CFR", 1, RelicRecoveryConstants.FLIPINRIGHT);
+        jewel = robotHandler.servoHandler.newLimitServo("CFR", 1 , RelicRecoveryConstants.JEWELUP);
+        alignLeft = robotHandler.servoHandler.newLimitServo("AL", 1, RelicRecoveryConstants.ALIGNUPLEFT);
+        alignRight = robotHandler.servoHandler.newLimitServo("AR", 1, RelicRecoveryConstants.ALIGNUPRIGHT);
     }
 
     public void loadSwitchBoard() {

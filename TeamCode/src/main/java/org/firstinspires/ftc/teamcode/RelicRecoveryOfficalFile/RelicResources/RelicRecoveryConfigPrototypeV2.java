@@ -21,8 +21,10 @@ abstract public class RelicRecoveryConfigPrototypeV2 extends PineappleConfigLine
     public PineappleMotor lift;
     public PineappleMotor collector;
     public PineappleServo flip;
+    public PineappleServo compWheelRight;
+    public PineappleServo compWheelLeft;
 
-    public static final double FLIPDOWN = 0.00;
+    public static final double FLIPDOWN = 0.05;
     public static final double FLIPFLAT = 0.20;
     public static final double FLIPUP = 0.60;
 
@@ -36,6 +38,8 @@ abstract public class RelicRecoveryConfigPrototypeV2 extends PineappleConfigLine
         collector = robotHandler.motorHandler.newDriveMotor("C", 1, false, false, PineappleEnum.MotorLoc.RIGHTFRONT, PineappleEnum.MotorType.NEV40);
         lift = robotHandler.motorHandler.newDriveMotor("lift", 1, false, false, PineappleEnum.MotorLoc.LEFTFRONT, PineappleEnum.MotorType.NEV40);
         flip = robotHandler.servoHandler.newLimitServo("flip", 1, 0);
+        compWheelLeft = robotHandler.servoHandler.newContinuousServo("WL", 0.5);
+        compWheelRight = robotHandler.servoHandler.newContinuousServo("WR", 0.5);
         telemetry.update();
 
     }

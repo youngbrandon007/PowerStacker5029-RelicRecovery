@@ -39,7 +39,6 @@ abstract public class RelicRecoveryConfigV2 extends PineappleConfigLinearOpMode 
     public final int NAVX_DIM_I2C_PORT = 0;
     public AHRS navx_device;
     public final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
-    public navXPIDController yawPIDController;
     public PineappleEnum.AllianceColor allianceColor = PineappleEnum.AllianceColor.BLUE;
     @Override
     public void config(LinearOpMode linearOpMode) {

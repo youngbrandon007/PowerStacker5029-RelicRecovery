@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.Auto;
 
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV3;
-import java.util.HashMap;
-import java.util.Set;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV2Cleve;
 
 /**
  * Created by Brandon on 12/5/2017.
  */
 
-public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
+public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV2Cleve {
 
     public enum Auto{
         SCAN, JEWELS, DRIVEOFFPLATFROM, TURN, LINEUPTOCRYPTO, PUTGLYPH, PREPARECOLLECT,COLLECT,PREPAREDRIVEBACKTOCRYPTO,DRIVEBACKTOCRYPTO
