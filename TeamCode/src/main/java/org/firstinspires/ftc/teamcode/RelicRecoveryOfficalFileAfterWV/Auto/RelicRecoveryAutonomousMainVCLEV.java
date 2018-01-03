@@ -17,12 +17,15 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecov
  */
 
 public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve{
-
+    enum Init {
+        CALIBGYRO, FINDIMAGE, FINDKEY, GETJEWELCONFIG
+    }
     enum Auto{
         JEWELDOWN, JEWELTURN, JEWELUP, DRIVEOFFPLAT, PDRIVEFORWARD, DRIVEFORWARD, TURNTOCRYPTO, DRIVEFORWARDTOCRYPTO, ALIGNTOCRYPTO;
     }
 
     Auto auto = Auto.JEWELDOWN;
+    Init init = Init.CALIBGYRO;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,6 +54,20 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
 
         int val = 1;
         while (!opModeIsActive() && !isStopRequested()) {
+            telemetry.addLine("Init");
+            switch (init) {
+
+                case CALIBGYRO:
+
+                    break;
+                case FINDIMAGE:
+                    break;
+                case FINDKEY:
+                    break;
+                case GETJEWELCONFIG:
+                    break;
+            telemetry.update();
+            }
             if(listener.getPose() != null) {
                 keyColumn = RelicRecoveryVuMark.from(relicTemplate);
             }
@@ -72,6 +89,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
 
             Thread.sleep(200);
             val++;
+
         }
         waitForStart();
 
