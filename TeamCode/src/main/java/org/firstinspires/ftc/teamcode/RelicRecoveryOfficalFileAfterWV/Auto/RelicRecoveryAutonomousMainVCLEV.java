@@ -111,10 +111,11 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     robotHandler.drive.mecanum.setPower(.5,-.5);
                     break;
                 case DRIVEFORWARD:
+                    double pos = driveFrontLeft.getEncoderPosition();
+                    double dis = 1000;
+                    double rotation = 4*Math.PI;
+                    double sixInch = 6/rotation*PineappleRobotConstants.NEV40CPR;
                     switch (keyColumn){
-                        double pos = driveFrontLeft.getEncoderPosition();
-                        double dis = 1000;
-                        double rotation = 4*Math.PI;
                         case UNKNOWN:
                             keyColumn = RelicRecoveryVuMark.CENTER;
                             break;
@@ -123,15 +124,14 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                                 auto = Auto.TURNTOCRYPTO;
                             break;
                         case CENTER:
-                            if(pos - startingPos > dis + )
+                            if(pos - startingPos > dis + sixInch);
                                 auto = Auto.TURNTOCRYPTO;
                             break;
                         case RIGHT:
-                            if(pos - startingPos > 400)
+                            if(pos - startingPos > dis + (2 * sixInch))
                                 auto = Auto.TURNTOCRYPTO;
                             break;
                     }
-                    if(driveFrontRight.getEncoderPosition() > )
                     break;
                 case TURNTOCRYPTO:
                     break;
