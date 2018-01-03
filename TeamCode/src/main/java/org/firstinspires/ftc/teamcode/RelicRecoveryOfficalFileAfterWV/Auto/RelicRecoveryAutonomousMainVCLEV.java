@@ -9,8 +9,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV2Cleve;
+
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.BLUE_RED;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.NON_NON;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.RED_BLUE;
 
 /**
  * Created by ftcpi on 1/3/2018.
@@ -44,14 +51,15 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
         //This is not needed as it is a repeat from the line above
-        //VuforiaTrackableDefaultListener track = (VuforiaTrackableDefaultListener) relicTrackables.get(0).getListener();
 
+        PineappleEnum.JewelState state;
 
         relicTrackables.activate();
 
         RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 
         int val = 1;
+        int x = 0;
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addLine("Init");
             switch (init) {
@@ -67,6 +75,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     }
                     break;
                 case FINDIMAGE:
+                    val++;
                     if (val == 5) {
                         val = 1;
                     }
@@ -76,6 +85,8 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     }
                     if (listener.getPose() == null) {
                         telemetry.addLine("Finding image"+dots);
+                    } else {
+                        init = Init.FINDKEY;
                     }
                     Thread.sleep(100);
                     break;
@@ -83,26 +94,28 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     if(listener.getPose() != null) {
                         keyColumn = RelicRecoveryVuMark.from(relicTemplate);
                     }
-                    init  = Init.GETJEWELCONFIG
+                    init  = Init.GETJEWELCONFIG;
                     break;
                 case GETJEWELCONFIG:
+                    state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
+
+                    x++;
+                    switch (state) {
+                        case NON_NON:
+                            telemetry.addData("Config " + x + ": ", "NON NON");
+                            break;
+                        case BLUE_RED:
+                            telemetry.addData("Config " + x + ": ", "BLUE RED");
+                            break;
+                        case RED_BLUE:
+                            telemetry.addData("Config " + x + ": ", "RED BLUE");
+                            break;
+                    }
+
                     break;
-            telemetry.update();
             }
 
-
-
-            telemetry.addLine("Waiting for Start");
-            if(keyColumn == null){
-                telemetry.addLine("Finding Image" + dots);
-            }else{
-                telemetry.addData("Key Column", keyColumn);
-            }
             telemetry.update();
-
-            Thread.sleep(200);
-            val++;
-
         }
         waitForStart();
 
