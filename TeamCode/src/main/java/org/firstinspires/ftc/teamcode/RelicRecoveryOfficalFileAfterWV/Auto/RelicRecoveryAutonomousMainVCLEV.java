@@ -62,7 +62,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
             }
 
             telemetry.addLine("Waiting for Start");
-            telemetry.addData("Time(milliseconds)",time.milliseconds());
             if(keyColumn == null){
                 telemetry.addLine("Finding Image" + dots);
             }else{
