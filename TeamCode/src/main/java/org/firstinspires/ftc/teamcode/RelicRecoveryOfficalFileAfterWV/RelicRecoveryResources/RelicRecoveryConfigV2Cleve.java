@@ -54,6 +54,8 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
     public boolean jewelsEnabled = true;
     private boolean usingGyro = false;
 
+    public boolean calibration_complete = false;
+
 
     @Override
     public void config(LinearOpMode linearOpMode) {
@@ -73,6 +75,10 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
         jewel = robotHandler.servoHandler.newLimitServo("CFR", 1 , RelicRecoveryConstants.JEWELUP);
         alignLeft = robotHandler.servoHandler.newLimitServo("AL", 1, RelicRecoveryConstants.ALIGNUPLEFT);
         alignRight = robotHandler.servoHandler.newLimitServo("AR", 1, RelicRecoveryConstants.ALIGNUPRIGHT);
+        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
+                NAVX_DIM_I2C_PORT,
+                AHRS.DeviceDataType.kProcessedData,
+                NAVX_DEVICE_UPDATE_RATE_HZ);
     }
 
     public void loadSwitchBoard() {

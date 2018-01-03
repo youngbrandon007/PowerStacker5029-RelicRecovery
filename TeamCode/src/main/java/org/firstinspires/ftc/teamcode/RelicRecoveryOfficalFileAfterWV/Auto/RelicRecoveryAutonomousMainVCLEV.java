@@ -56,28 +56,42 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addLine("Init");
             switch (init) {
-
                 case CALIBGYRO:
 
+                    calibration_complete = !navx_device.isCalibrating();
+                    if (!calibration_complete) {
+                        telemetry.addData("navX-Micro", "Startup Calibration in Progress");
+                    } else {
+                        navx_device.zeroYaw();
+                        init = Init.FINDIMAGE;
+                        telemetry.addData("navX-Micro", "Calibration Finished");
+                    }
                     break;
                 case FINDIMAGE:
+                    if (val == 5) {
+                        val = 1;
+                    }
+                    String dots = "";
+                    for (int i = 0; i < val; i++) {
+                        dots += ".";
+                    }
+                    if (listener.getPose() == null) {
+                        telemetry.addLine("Finding image"+dots);
+                    }
+                    Thread.sleep(100);
                     break;
                 case FINDKEY:
+                    if(listener.getPose() != null) {
+                        keyColumn = RelicRecoveryVuMark.from(relicTemplate);
+                    }
+                    init  = Init.GETJEWELCONFIG
                     break;
                 case GETJEWELCONFIG:
                     break;
             telemetry.update();
             }
-            if(listener.getPose() != null) {
-                keyColumn = RelicRecoveryVuMark.from(relicTemplate);
-            }
-            if (val == 5) {
-                val = 1;
-            }
-            String dots = "";
-            for (int i = 0; i < val; i++) {
-                dots += ".";
-            }
+
+
 
             telemetry.addLine("Waiting for Start");
             if(keyColumn == null){
