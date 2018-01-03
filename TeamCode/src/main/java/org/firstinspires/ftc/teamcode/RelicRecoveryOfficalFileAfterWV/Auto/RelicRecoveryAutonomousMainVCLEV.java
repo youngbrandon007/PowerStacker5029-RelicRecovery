@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV2Cleve;
 
 /**
@@ -88,11 +89,31 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                 case DRIVEOFFPLAT:
                     break;
                 case PDRIVEFORWARD:
-                    startingPos = driveFrontRight.getEncoderPosition();
+                    startingPos = driveFrontLeft.getEncoderPosition();
                     robotHandler.drive.mecanum.setPower(.5,-.5);
                     break;
                 case DRIVEFORWARD:
-                    if(driveFrontRight.getEncoderPosition() > 100)
+                    switch (keyColumn){
+                        double pos = driveFrontLeft.getEncoderPosition();
+                        double dis = 1000;
+                        double rotation = 4*Math.PI;
+                        case UNKNOWN:
+                            keyColumn = RelicRecoveryVuMark.CENTER;
+                            break;
+                        case LEFT:
+                            if(pos - startingPos > dis)
+                                auto = Auto.TURNTOCRYPTO;
+                            break;
+                        case CENTER:
+                            if(pos - startingPos > dis + )
+                                auto = Auto.TURNTOCRYPTO;
+                            break;
+                        case RIGHT:
+                            if(pos - startingPos > 400)
+                                auto = Auto.TURNTOCRYPTO;
+                            break;
+                    }
+                    if(driveFrontRight.getEncoderPosition() > )
                     break;
                 case TURNTOCRYPTO:
                     break;
