@@ -67,6 +67,8 @@ public class RelicRecoveryAutonomousMainV3 extends RelicRecoveryConfigV3 {
                             break;
                         case LINEUPTOCRYPTO:
                             //TODO line up to wall
+
+
                             break;
                         case PUTGLYPH:
                             //TODO insert glyph

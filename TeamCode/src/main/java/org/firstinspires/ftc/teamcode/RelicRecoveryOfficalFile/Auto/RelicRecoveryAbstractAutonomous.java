@@ -36,6 +36,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     public double delay = 0;
     public RelicRecoveryEnums.AutoColor color = RelicRecoveryEnums.AutoColor.BLUE;
     public RelicRecoveryEnums.StartingPosition position = RelicRecoveryEnums.StartingPosition.FRONT;
+    public RelicRecoveryEnums.ColorPosition colorPosition = RelicRecoveryEnums.ColorPosition.BLUEFRONT;
     public boolean moreGlyph = false;
     public boolean gyroEnabled = true;
     public boolean glyphsEnabled = true;
@@ -49,6 +50,7 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
     private boolean usingGyro = false;
 
     public double lastPosition = .75;
+
 
     public void updateServoVuforia(VuforiaTrackableDefaultListener listener, PineappleServo servo) {
 
@@ -366,6 +368,32 @@ abstract public class RelicRecoveryAbstractAutonomous extends RelicRecoveryConfi
         glyphsEnabled = robotHandler.switchBoard.loadDigital("glyph");
         delayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
         delay = roundToHalf(delay);
+        switch (color){
+
+            case RED:
+                switch (position){
+
+                    case FRONT:
+                        colorPosition = RelicRecoveryEnums.ColorPosition.REDFRONT;
+                        break;
+                    case BACK:
+                        colorPosition = RelicRecoveryEnums.ColorPosition.REDBACK;
+                        break;
+                }
+                break;
+            case BLUE:
+                switch (position){
+
+                    case FRONT:
+                        colorPosition = RelicRecoveryEnums.ColorPosition.BLUEFRONT;
+                        break;
+                    case BACK:
+                        colorPosition = RelicRecoveryEnums.ColorPosition.BLUEBACK;
+                        break;
+                }
+                break;
+        }
+
         telemetry.addData("Delay", delay);
         telemetry.addData("DelayEnabled", delayEnabled);
         telemetry.addData("Color", color);
