@@ -147,6 +147,8 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     }
                     break;
                 case TURNTOCRYPTO:
+                    //robotHandler.drive.mecanum.setPower(.3,.3);
+
                     break;
                 case DRIVEFORWARDTOCRYPTO:
                     break;
@@ -154,5 +156,15 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
             }
         }
+    }
+
+    public boolean turnTo(double angle){
+
+
+        return false;
+    }
+
+    public double getHeading(){
+        return navx_device.getYaw() + 180;
     }
 }
