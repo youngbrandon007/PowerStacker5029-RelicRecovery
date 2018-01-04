@@ -10,9 +10,9 @@ public class RelicRecoveryConstants {
     //V2Cleveland
     public static final double ALIGNDOWNRIGHT = 0;
     public static final double ALIGNUPRIGHT = 0;
-    public static final double ALIGNDOWNLEFT = 0;
-    public static final double ALIGNUPLEFT = 0;
-    public static final double JEWELDOWN = 0.47;
+    public static final double ALIGNDOWNLEFT = .4;
+    public static final double ALIGNUPLEFT = 1.0;
+    public static final double JEWELDOWN = 0.55;
     public static final double JEWELUP = 0;
 
     //V2

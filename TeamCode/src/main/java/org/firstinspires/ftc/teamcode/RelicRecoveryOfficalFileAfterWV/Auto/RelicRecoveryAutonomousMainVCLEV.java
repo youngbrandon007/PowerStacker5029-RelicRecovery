@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleTouchSensor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
+import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecoveryResources.RelicRecoveryConfigV2Cleve;
 
@@ -31,7 +33,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     }
 
     enum Auto {
-        JEWELDOWN, JEWELTURN, JEWELUP, DRIVEOFFPLAT, PDRIVEFORWARD, DRIVEFORWARD, TURNTOCRYPTO, DRIVEFORWARDTOCRYPTO, ALIGNTOCRYPTO;
+        JEWELDOWN, JEWELTURN, JEWELUP, DRIVEOFFPLAT, DRIVEOFFPLAT2, PDRIVEFORWARD, DRIVEFORWARD, TURNTOCRYPTO, PDRIVEFORWARDTOCRYPTO, DRIVEFORWARDTOCRYPTO, ALIGNTOCRYPTO, DRIVEAWAYFROMCRYPT, PLACEGLYPH, PLACEBACK, PLACEFORWARD, BACKAGAIN;
     }
 
     Auto auto = Auto.JEWELDOWN;
@@ -55,7 +57,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         VuforiaTrackableDefaultListener listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
         //This is not needed as it is a repeat from the line above
 
-        PineappleEnum.JewelState state;
 
         relicTrackables.activate();
 
@@ -108,10 +109,12 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                             telemetry.addData("Config " + x + ": ", "NON NON");
                             break;
                         case BLUE_RED:
-                            telemetry.addData("Config " + x + ": ", "BLUE RED");
+                            state = RED_BLUE;
+                            telemetry.addData("Config " + x + ": ", "RED BLUE");
                             break;
                         case RED_BLUE:
-                            telemetry.addData("Config " + x + ": ", "RED BLUE");
+                            telemetry.addData("Config " + x + ": ", "BLUE RED");
+                            state = BLUE_RED;
                             break;
                     }
 
@@ -122,65 +125,287 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         }
         waitForStart();
 
-        auto = Auto.PDRIVEFORWARD;
+        auto = Auto.JEWELDOWN;
 
         double startingPos = 0;
         while (opModeIsActive()) {
-            telemetry.addData("Gyro", getHeading());
-            switch (auto) {
-                case JEWELDOWN:
-                    break;
-                case JEWELTURN:
-                    break;
-                case JEWELUP:
-                    break;
-                case DRIVEOFFPLAT:
-                    break;
-                case PDRIVEFORWARD:
-                    startingPos = getEncoder();
+            telemetry.addData("wait", wait.milliseconds());
+            telemetry.addData("STATE", auto);
+            telemetry.addData("GYRO_YAW", getHeading());
+            switch (colorPosition) {
+                case REDFRONT:
 
-                    robotHandler.drive.mecanum.setPower(.2, -.2);
-                    auto = Auto.DRIVEFORWARD;
-                    break;
-                case DRIVEFORWARD:
-                    double pos = getEncoder();
-                    double dis = 0;
+                    switch (auto) {
+                        case JEWELDOWN:
+                            if (jewelDown()) {
+                                auto = Auto.JEWELTURN;
+                                wait.reset();
+                            }
+                            break;
+                        case JEWELTURN:
+                            if (jewelTurn(300, 0.2)) {
+                                robotHandler.drive.stop();
+                                auto = Auto.JEWELUP;
+                            }
+                            break;
+                        case JEWELUP:
+                            if (jewelUp()) {
+                                auto = Auto.DRIVEOFFPLAT;
+                            }
+                            break;
+                        case DRIVEOFFPLAT:
+                            robotHandler.drive.mecanum.setPower(.2, -.2);
+                            if(getRoll() < -4){
+                                auto = Auto.DRIVEOFFPLAT2;
+                            }
+                            break;
+                        case DRIVEOFFPLAT2:
+                            if(getRoll() > -2){
+                                robotHandler.drive.stop();
+                                auto = Auto.PDRIVEFORWARD;
+                            }
+                            break;
+                        case PDRIVEFORWARD:
+                            startingPos = getEncoder();
 
-                    double cir = 4 * Math.PI;
-                    double goSixInch = 6 / cir * PineappleRobotConstants.NEV40CPR;
-                    goSixInch *= (2.0 / 3.0);
+                            robotHandler.drive.mecanum.setPower(.2, -.2);
+                            auto = Auto.DRIVEFORWARD;
+                            break;
+                        case DRIVEFORWARD:
+                            double pos = getEncoder();
+                            double dis = 500;
 
-                    switch (keyColumn) {
-                        case UNKNOWN:
-                            keyColumn = RelicRecoveryVuMark.CENTER;
+                            double cir = 4 * Math.PI;
+                            double goSixInch = 7.63 / cir * PineappleRobotConstants.NEV40CPR;
+                            goSixInch *= (2.0 / 3.0);
+
+                            switch (keyColumn) {
+                                case UNKNOWN:
+                                    keyColumn = RelicRecoveryVuMark.CENTER;
+                                    break;
+                                case LEFT:
+                                    if (Math.abs(pos - startingPos) > dis + (2 * goSixInch))
+                                        auto = Auto.TURNTOCRYPTO;
+                                    break;
+                                case CENTER:
+                                    if (Math.abs(pos - startingPos) > dis + goSixInch)
+                                        auto = Auto.TURNTOCRYPTO;
+                                    break;
+                                case RIGHT:
+                                    if (Math.abs(pos - startingPos) > dis)
+                                        auto = Auto.TURNTOCRYPTO;
+                                    break;
+                            }
                             break;
-                        case LEFT:
-                            if (Math.abs(pos - startingPos) > dis)
-                                auto = Auto.TURNTOCRYPTO;
+                        case TURNTOCRYPTO:
+                            alignLeft.setPosition(RelicRecoveryConstants.ALIGNDOWNLEFT);
+                            if (turnTo(270, -.3)) {
+                                startingPos = getEncoder();
+                                auto = Auto.DRIVEFORWARDTOCRYPTO;
+                            }
                             break;
-                        case CENTER:
-                            if (Math.abs(pos - startingPos) > dis + goSixInch)
-                                auto = Auto.TURNTOCRYPTO;
+                        case PDRIVEFORWARDTOCRYPTO:
+                            startingPos = getEncoder();
+
                             break;
-                        case RIGHT:
-                            if (Math.abs(pos - startingPos) > dis + (2 * goSixInch))
-                                auto = Auto.TURNTOCRYPTO;
+                        case DRIVEFORWARDTOCRYPTO:
+                            robotHandler.drive.mecanum.setPower(-.2,.2);
+                            if(Math.abs(getEncoder()-startingPos) > 1300) {
+                                robotHandler.drive.stop();
+                                auto = Auto.ALIGNTOCRYPTO;
+                            }
+                            break;
+                        case ALIGNTOCRYPTO:
+                            if (alignCrypto()) {
+                                robotHandler.drive.stop();
+                                startingPos = getEncoder();
+                                auto = Auto.DRIVEAWAYFROMCRYPT;
+                            }
+                            break;
+                        case DRIVEAWAYFROMCRYPT:
+                            robotHandler.drive.mecanum.setPower(.2, -.2);
+                            if(Math.abs(getEncoder() - startingPos) > 150){
+                                robotHandler.drive.stop();
+                                alignLeft.setPosition(RelicRecoveryConstants.ALIGNUPLEFT);
+                                wait.reset();
+                                auto = Auto.PLACEGLYPH;
+                            }
+                            break;
+                        case PLACEGLYPH:
+                            conveyRight.setPower(1);
+                            conveyLeft.setPower(-1);
+                            telemetry.addData("WAITING", wait.milliseconds());
+                            if(wait.milliseconds() > 3000){
+                                auto = Auto.PLACEFORWARD;
+                                startingPos = getEncoder();
+                            }
+                            break;
+                        case PLACEFORWARD:
+                            robotHandler.drive.mecanum.setPower(.2,-.2);
+                            if(Math.abs(getEncoder() - startingPos) > 200){
+                                auto = Auto.PLACEBACK;
+                                startingPos = getEncoder();
+                            }
+                            break;
+                        case PLACEBACK:
+                            robotHandler.drive.mecanum.setPower(-.2, .2);
+                            if(Math.abs(getEncoder() - startingPos) > 200){
+                                robotHandler.drive.stop();
+                                auto = Auto.BACKAGAIN;
+                                startingPos = getEncoder();
+                            }
+                            break;
+
+
+                        case BACKAGAIN:
+                            robotHandler.drive.mecanum.setPower(.2,-.2);
+                            if(Math.abs(getEncoder() - startingPos) > 200){
+                                robotHandler.drive.stop();
+                                conveyRight.setPower(0);
+                                conveyLeft.setPower(0);
+                                stop();
+                            }
                             break;
                     }
                     break;
-                case TURNTOCRYPTO:
-                    if (turnTo(270, -.3)) {
-                        startingPos = getEncoder();
-                        auto = Auto.DRIVEFORWARDTOCRYPTO;
+                case REDBACK:
+                    break;
+                case BLUEFRONT:
+
+                    switch (auto) {
+                        case JEWELDOWN:
+                            if (jewelDown()) {
+                                auto = Auto.JEWELTURN;
+                                wait.reset();
+                            }
+                            break;
+                        case JEWELTURN:
+                            if (jewelTurn(300, 0.2)) {
+                                robotHandler.drive.stop();
+                                auto = Auto.JEWELUP;
+                            }
+                            break;
+                        case JEWELUP:
+                            if (jewelUp()) {
+                                auto = Auto.DRIVEOFFPLAT;
+                            }
+                            break;
+                        case DRIVEOFFPLAT:
+                            robotHandler.drive.mecanum.setPower(-.2, .2);
+                            if(getRoll() > 4){
+                                auto = Auto.DRIVEOFFPLAT2;
+                            }
+                            break;
+                        case DRIVEOFFPLAT2:
+                            if(getRoll() < 2){
+                                robotHandler.drive.stop();
+                                auto = Auto.PDRIVEFORWARD;
+                            }
+                            break;
+                        case PDRIVEFORWARD:
+                            startingPos = getEncoder();
+
+                            robotHandler.drive.mecanum.setPower(-.2, .2);
+                            auto = Auto.DRIVEFORWARD;
+                            break;
+                        case DRIVEFORWARD:
+                            double pos = getEncoder();
+                            double dis = 500;
+
+                            double cir = 4 * Math.PI;
+                            double goSixInch = 7.63 / cir * PineappleRobotConstants.NEV40CPR;
+                            goSixInch *= (2.0 / 3.0);
+
+                            switch (keyColumn) {
+                                case UNKNOWN:
+                                    keyColumn = RelicRecoveryVuMark.CENTER;
+                                    break;
+                                case LEFT:
+                                    if (Math.abs(pos - startingPos) > dis + (2 * goSixInch))
+                                        auto = Auto.TURNTOCRYPTO;
+                                    break;
+                                case CENTER:
+                                    if (Math.abs(pos - startingPos) > dis + goSixInch)
+                                        auto = Auto.TURNTOCRYPTO;
+                                    break;
+                                case RIGHT:
+                                    if (Math.abs(pos - startingPos) > dis)
+                                        auto = Auto.TURNTOCRYPTO;
+                                    break;
+                            }
+                            break;
+                        case TURNTOCRYPTO:
+                            alignLeft.setPosition(RelicRecoveryConstants.ALIGNDOWNLEFT);
+                            if (turnTo(90, .3)) {
+                                startingPos = getEncoder();
+                                auto = Auto.DRIVEFORWARDTOCRYPTO;
+                            }
+                            break;
+                        case PDRIVEFORWARDTOCRYPTO:
+                            startingPos = getEncoder();
+
+                            break;
+                        case DRIVEFORWARDTOCRYPTO:
+                            robotHandler.drive.mecanum.setPower(-.2,.2);
+                            if(Math.abs(getEncoder()-startingPos) > 1300) {
+                                robotHandler.drive.stop();
+                                auto = Auto.ALIGNTOCRYPTO;
+                            }
+                            break;
+                        case ALIGNTOCRYPTO:
+                            if (alignCrypto()) {
+                                robotHandler.drive.stop();
+                                startingPos = getEncoder();
+                                auto = Auto.DRIVEAWAYFROMCRYPT;
+                            }
+                            break;
+                        case DRIVEAWAYFROMCRYPT:
+                            robotHandler.drive.mecanum.setPower(.2, -.2);
+                            if(Math.abs(getEncoder() - startingPos) > 150){
+                                robotHandler.drive.stop();
+                                alignLeft.setPosition(RelicRecoveryConstants.ALIGNUPLEFT);
+                                wait.reset();
+                                auto = Auto.PLACEGLYPH;
+                            }
+                            break;
+                        case PLACEGLYPH:
+                            conveyRight.setPower(1);
+                            conveyLeft.setPower(-1);
+                            telemetry.addData("WAITING", wait.milliseconds());
+                            if(wait.milliseconds() > 3000){
+                                auto = Auto.PLACEFORWARD;
+                                startingPos = getEncoder();
+                            }
+                            break;
+                        case PLACEFORWARD:
+                            robotHandler.drive.mecanum.setPower(.2,-.2);
+                            if(Math.abs(getEncoder() - startingPos) > 200){
+                                auto = Auto.PLACEBACK;
+                                startingPos = getEncoder();
+                            }
+                            break;
+                        case PLACEBACK:
+                            robotHandler.drive.mecanum.setPower(-.2, .2);
+                            if(Math.abs(getEncoder() - startingPos) > 200){
+                                robotHandler.drive.stop();
+                                auto = Auto.BACKAGAIN;
+                                startingPos = getEncoder();
+                            }
+                            break;
+
+
+                        case BACKAGAIN:
+                            robotHandler.drive.mecanum.setPower(.2,-.2);
+                            if(Math.abs(getEncoder() - startingPos) > 200){
+                                robotHandler.drive.stop();
+                                conveyRight.setPower(0);
+                                conveyLeft.setPower(0);
+                                stop();
+                            }
+                            break;
                     }
                     break;
-                case DRIVEFORWARDTOCRYPTO:
-                        auto = Auto.ALIGNTOCRYPTO;
-                    break;
-                case ALIGNTOCRYPTO:
-                    if (alignCrypto()){
-                        robotHandler.drive.stop();
-                    }
+                case BLUEBACK:
                     break;
             }
             telemetry.update();
@@ -199,9 +424,9 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         if (target < 182 && target > 178) {
             robotHandler.drive.stop();
             return true;
-        }else if(target < 200 && target > 160 ){
-            robotHandler.drive.mecanum.setPower(speed/2, speed/2);
-        }else{
+        } else if (target < 220 && target > 140) {
+            robotHandler.drive.mecanum.setPower(speed / 2, speed / 2);
+        } else {
             robotHandler.drive.mecanum.setPower(speed, speed);
         }
         return false;
@@ -212,12 +437,64 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     }
 
 
-    public double getHeading(){
+    public double getHeading() {
         return navx_device.getYaw() + 180;
     }
 
+    public double getRoll(){
+        return navx_device.getRoll();
+    }
+
     public boolean alignCrypto() {
-        robotHandler.drive.mecanum.setMecanum(270, 0.5, 0, 1);
+        robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), 0.6, 0, 1);
         return cryptoTouchSensor.getValue(PineappleEnum.PineappleSensorEnum.TOUCH) == 1;
+    }
+
+    public boolean jewelDown() {
+        jewel.setPosition(jewel.servoObject.getPosition() + 0.01);
+        return jewel.servoObject.getPosition() > RelicRecoveryConstants.JEWELDOWN;
+    }
+
+    public boolean jewelUp() {
+        jewel.setPosition(jewel.servoObject.getPosition() - 0.01);
+        return jewel.servoObject.getPosition() <= RelicRecoveryConstants.JEWELUP;
+    }
+
+    public boolean jewelTurn(double turnAmount, double power) {
+        double rotation = 0;
+
+
+        if (color == RelicRecoveryEnums.AutoColor.RED) {
+            switch (state) {
+                case BLUE_RED:
+                    rotation = power;
+                    break;
+                case RED_BLUE:
+                    rotation = -power;
+                    break;
+                case NON_NON:
+            }
+        } else {
+            switch (state) {
+                case BLUE_RED:
+                    rotation = -power;
+                    break;
+                case RED_BLUE:
+                    rotation = power;
+                    break;
+                case NON_NON:
+            }
+        }
+        if (wait.milliseconds() > turnAmount) {
+            rotation *= -1;
+            if (wait.milliseconds() > (turnAmount) * 2) {
+                return true;
+            }
+        }
+
+        robotHandler.drive.mecanum.setPower(rotation, rotation);
+        turnCount++;
+        return false;
+
     }
 }

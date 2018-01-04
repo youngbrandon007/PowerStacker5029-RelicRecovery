@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicReco
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
@@ -55,8 +56,11 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
     public boolean pidEnabled = false;
     public boolean jewelsEnabled = true;
     private boolean usingGyro = false;
+    public ElapsedTime wait = new ElapsedTime();
 
     public boolean calibration_complete = false;
+    public PineappleEnum.JewelState state;
+    public double turnCount = 0;
 
 
     @Override
