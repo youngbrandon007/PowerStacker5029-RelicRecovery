@@ -135,7 +135,8 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case PDRIVEFORWARD:
                     startingPos = getEncoder();
-                    robotHandler.drive.mecanum.setPower(.2,-.2);
+
+                    //robotHandler.drive.mecanum.setPower(.2,-.2);
                     auto = Auto.DRIVEFORWARD;
                     break;
                 case DRIVEFORWARD:
@@ -153,15 +154,15 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                             break;
                         case LEFT:
                             if(pos - startingPos > dis)
-                                auto = Auto.TURNTOCRYPTO;
+                                //auto = Auto.TURNTOCRYPTO;
                             break;
                         case CENTER:
                             if(pos - startingPos > dis + sixInch);
-                                auto = Auto.TURNTOCRYPTO;
+                                //auto = Auto.TURNTOCRYPTO;
                             break;
                         case RIGHT:
                             if(pos - startingPos > dis + (2 * sixInch))
-                                auto = Auto.TURNTOCRYPTO;
+                                //auto = Auto.TURNTOCRYPTO;
                             break;
                     }
                     break;
