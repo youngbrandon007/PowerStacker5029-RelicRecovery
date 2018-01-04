@@ -176,6 +176,9 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     
                     break;
                 case ALIGNTOCRYPTO:
+//                    if (alignCrypto()){
+//                        robotHandler.drive.stop();
+//                    }
                     break;
             }
             telemetry.update();
@@ -205,7 +208,8 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     public double getHeading(){
         return navx_device.getYaw();
     }
-//    public double alignCrypto() {
-//        robotHandler.auto.driveUntilMechnum();
-//    }
+    public boolean alignCrypto() {
+        robotHandler.drive.mecanum.setMecanum(270, 0.1, 0 , 1);
+        return cryptoTouchSensor.getValue(PineappleEnum.PineappleSensorEnum.TOUCH)==1;
+    }
 }
