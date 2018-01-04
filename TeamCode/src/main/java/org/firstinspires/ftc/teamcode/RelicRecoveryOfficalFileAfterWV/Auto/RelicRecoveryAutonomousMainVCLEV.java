@@ -183,8 +183,8 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
 
     public boolean turnTo(double angle, double speed){
         double heading = getHeading();
-        double target = heading + angle;
-        target -= (target >= 360) ? 360 : 0;
+        double target = heading - angle;
+        target += (target < 0) ? 360 : 0;
         robotHandler.drive.mecanum.setPower(speed, speed);
 
         telemetry.addData("Head",heading);
