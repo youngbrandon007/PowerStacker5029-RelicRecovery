@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleTouchSensor;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfig;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
@@ -37,6 +38,7 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
     public PineappleServo jewel;
     public PineappleServo alignLeft;
     public PineappleServo alignRight;
+    public PineappleTouchSensor cryptoTouchSensor;
 
     public final int NAVX_DIM_I2C_PORT = 0;
     public AHRS navx_device;
@@ -68,6 +70,7 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
         conveyLeft = robotHandler.motorHandler.newDriveMotor("ConL", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
         conveyRight = robotHandler.motorHandler.newDriveMotor("ConR", 1, false, false, PineappleEnum.MotorLoc.NONE, PineappleEnum.MotorType.NEV40);
 
+        cryptoTouchSensor = robotHandler.sensorHandler.newTouchSensor("crypto");
         collectorLeft = robotHandler.servoHandler.newContinuousServo("CL", 0.5);
         collectorRight = robotHandler.servoHandler.newContinuousServo("CR", 0.5);
         releaseLeft = robotHandler.servoHandler.newLimitServo("CFL", 1, RelicRecoveryConstants.FLIPINLEFT);
