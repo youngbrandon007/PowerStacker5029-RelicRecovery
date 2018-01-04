@@ -143,8 +143,9 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     double pos = getEncoder();
                     double dis = 0;
                     double rotation = 4*Math.PI;
-                    double sixInch = (6/rotation)*PineappleRobotConstants.NEV40CPR;
-                    sixInch *= (2 / 3);
+                    double go = 6/rotation;
+                    double sixInch = go*PineappleRobotConstants.NEV40CPR;
+                    double travel = (sixInch*2)/3;
                     telemetry.addData("drive forward", pos);
                     telemetry.addData("going to", sixInch);
 
