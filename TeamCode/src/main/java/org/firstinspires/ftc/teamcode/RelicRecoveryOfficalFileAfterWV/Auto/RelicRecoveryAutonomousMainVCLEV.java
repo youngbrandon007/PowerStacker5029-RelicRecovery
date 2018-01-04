@@ -135,14 +135,16 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case PDRIVEFORWARD:
                     startingPos = getEncoder();
-                    //robotHandler.drive.mecanum.setPower(.3,-.3);
+
+                    //robotHandler.drive.mecanum.setPower(.2,-.2);
+                    auto = Auto.DRIVEFORWARD;
                     break;
                 case DRIVEFORWARD:
                     double pos = getEncoder();
                     double dis = 0;
                     double rotation = 4*Math.PI;
                     double sixInch = 6/rotation*PineappleRobotConstants.NEV40CPR;
-                    sixInch = sixInch * (2/3);
+                    sixInch *= (2 / 3);
                     telemetry.addData("drive forward", pos);
                     telemetry.addData("going to", sixInch);
 
@@ -176,6 +178,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                 case ALIGNTOCRYPTO:
                     break;
             }
+            telemetry.update();
         }
     }
 
