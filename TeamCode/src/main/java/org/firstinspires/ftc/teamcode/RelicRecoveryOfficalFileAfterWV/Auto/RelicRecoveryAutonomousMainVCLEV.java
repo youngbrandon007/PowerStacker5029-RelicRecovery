@@ -198,7 +198,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
             robotHandler.drive.stop();
             return true;
         }else if(target < 200 && target > 160 ){
-            robotHandler.drive.mecanum.setPower(speed/3, speed/3);
+            robotHandler.drive.mecanum.setPower(speed/2, speed/2);
         }else{
             robotHandler.drive.mecanum.setPower(speed, speed);
         }
