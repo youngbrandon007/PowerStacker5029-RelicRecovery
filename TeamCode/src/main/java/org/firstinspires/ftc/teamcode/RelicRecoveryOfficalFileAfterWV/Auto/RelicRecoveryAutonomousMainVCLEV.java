@@ -206,7 +206,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     }
 
     public double getHeading(){
-        return navx_device.getYaw();
+        return navx_device.getYaw() + 180;
     }
     public boolean alignCrypto() {
         robotHandler.drive.mecanum.setMecanum(270, 0.1, 0 , 1);
