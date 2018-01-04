@@ -169,7 +169,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     }
                     break;
                 case TURNTOCRYPTO:
-                    if (turnTo(90, -.2)) {
+                    if (turnTo(270, -.2)) {
                         startingPos = getEncoder();
                         auto = Auto.DRIVEFORWARDTOCRYPTO;
                     }
