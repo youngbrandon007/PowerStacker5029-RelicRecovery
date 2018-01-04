@@ -124,6 +124,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
 
         double startingPos = 0;
         while (opModeIsActive()){
+            telemetry.addData("Gyro", getHeading());
             switch (auto){
                 case JEWELDOWN:
                     break;
@@ -166,7 +167,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     }
                     break;
                 case TURNTOCRYPTO:
-                    //robotHandler.drive.mecanum.setPower(.3,.3);
                     if(turnTo(90, -.3))
                         startingPos = getEncoder();
                         auto = Auto.DRIVEFORWARDTOCRYPTO;
@@ -189,7 +189,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
 
         telemetry.addData("Head",heading);
         telemetry.addData("Traveling", target);
-        
+
         if(target < 182 && target > 178){
             robotHandler.drive.stop();
             return true;
@@ -202,6 +202,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     }
 
     public double getHeading(){
-        return navx_device.getYaw() + 180;
+        return navx_device.getYaw();
     }
 }
