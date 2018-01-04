@@ -167,7 +167,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case TURNTOCRYPTO:
                     //robotHandler.drive.mecanum.setPower(.3,.3);
-                    if(turnTo(270, .3))
+                    if(turnTo(90, .3))
                         startingPos = getEncoder();
                         auto = Auto.DRIVEFORWARDTOCRYPTO;
                     break;
