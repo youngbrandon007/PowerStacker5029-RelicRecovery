@@ -147,7 +147,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     double sixInch = go*PineappleRobotConstants.NEV40CPR;
                     double travel = (sixInch*2)/3;
                     telemetry.addData("drive forward", pos);
-                    telemetry.addData("going to", sixInch);
+                    telemetry.addData("going to", travel);
 
                     switch (keyColumn){
                         case UNKNOWN:
