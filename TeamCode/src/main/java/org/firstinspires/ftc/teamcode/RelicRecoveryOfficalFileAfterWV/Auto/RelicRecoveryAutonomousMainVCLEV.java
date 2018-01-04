@@ -169,13 +169,13 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     }
                     break;
                 case TURNTOCRYPTO:
-                    if (turnTo(270, -.2)) {
+                    if (turnTo(270, -.3)) {
                         startingPos = getEncoder();
                         auto = Auto.DRIVEFORWARDTOCRYPTO;
                     }
                     break;
                 case DRIVEFORWARDTOCRYPTO:
-
+                        auto = Auto.ALIGNTOCRYPTO;
                     break;
                 case ALIGNTOCRYPTO:
                     if (alignCrypto()){
@@ -217,7 +217,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     }
 
     public boolean alignCrypto() {
-        robotHandler.drive.mecanum.setMecanum(270, 0.2, 0, 1);
+        robotHandler.drive.mecanum.setMecanum(270, 0.5, 0, 1);
         return cryptoTouchSensor.getValue(PineappleEnum.PineappleSensorEnum.TOUCH) == 1;
     }
 }
