@@ -153,15 +153,15 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                             keyColumn = RelicRecoveryVuMark.CENTER;
                             break;
                         case LEFT:
-                            if(pos - startingPos > dis)
+                            if(Math.abs(pos - startingPos) > dis)
                                 //auto = Auto.TURNTOCRYPTO;
                             break;
                         case CENTER:
-                            if(pos - startingPos > dis + sixInch);
+                            if(Math.abs(pos - startingPos) > dis + sixInch);
                                 //auto = Auto.TURNTOCRYPTO;
                             break;
                         case RIGHT:
-                            if(pos - startingPos > dis + (2 * sixInch))
+                            if(Math.abs(pos - startingPos) > dis + (2 * sixInch))
                                 //auto = Auto.TURNTOCRYPTO;
                             break;
                     }
