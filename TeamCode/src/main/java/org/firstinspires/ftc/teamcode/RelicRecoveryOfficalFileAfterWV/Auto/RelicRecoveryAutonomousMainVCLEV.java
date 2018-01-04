@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.Auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
@@ -22,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
 /**
  * Created by ftcpi on 1/3/2018.
  */
-
+@Autonomous(name = "Auto Clev")
 public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve{
     enum Init {
         CALIBGYRO, FINDIMAGE, FINDKEY, GETJEWELCONFIG

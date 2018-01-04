@@ -72,7 +72,7 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
         collectorRight = robotHandler.servoHandler.newContinuousServo("CR", 0.5);
         releaseLeft = robotHandler.servoHandler.newLimitServo("CFL", 1, RelicRecoveryConstants.FLIPINLEFT);
         releaseRight = robotHandler.servoHandler.newLimitServo("CFR", 1, RelicRecoveryConstants.FLIPINRIGHT);
-        jewel = robotHandler.servoHandler.newLimitServo("CFR", 1 , RelicRecoveryConstants.JEWELUP);
+        jewel = robotHandler.servoHandler.newLimitServo("J", 1 , RelicRecoveryConstants.JEWELUP);
         alignLeft = robotHandler.servoHandler.newLimitServo("AL", 1, RelicRecoveryConstants.ALIGNUPLEFT);
         alignRight = robotHandler.servoHandler.newLimitServo("AR", 1, RelicRecoveryConstants.ALIGNUPRIGHT);
         navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
