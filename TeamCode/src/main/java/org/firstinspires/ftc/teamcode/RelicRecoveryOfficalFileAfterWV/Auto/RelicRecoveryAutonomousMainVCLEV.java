@@ -153,15 +153,15 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                             break;
                         case LEFT:
                             if(Math.abs(pos - startingPos) > dis)
-                                //auto = Auto.TURNTOCRYPTO;
+                                auto = Auto.TURNTOCRYPTO;
                             break;
                         case CENTER:
-                            if(Math.abs(pos - startingPos) > dis + goSixInch);
-                                //auto = Auto.TURNTOCRYPTO;
+                            if(Math.abs(pos - startingPos) > dis + goSixInch)
+                                auto = Auto.TURNTOCRYPTO;
                             break;
                         case RIGHT:
                             if(Math.abs(pos - startingPos) > dis + (2 * goSixInch))
-                                //auto = Auto.TURNTOCRYPTO;
+                                auto = Auto.TURNTOCRYPTO;
                             break;
                     }
                     break;
