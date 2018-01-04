@@ -135,7 +135,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case PDRIVEFORWARD:
                     startingPos = getEncoder();
-                    robotHandler.drive.mecanum.setPower(.5,-.5);
+                    robotHandler.drive.mecanum.setPower(.3,-.3);
                     break;
                 case DRIVEFORWARD:
                     double pos = getEncoder();
