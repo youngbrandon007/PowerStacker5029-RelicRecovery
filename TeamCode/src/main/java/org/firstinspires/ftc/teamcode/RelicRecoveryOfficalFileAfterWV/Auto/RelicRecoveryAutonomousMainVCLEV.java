@@ -25,11 +25,12 @@ import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Pineapple
  * Created by ftcpi on 1/3/2018.
  */
 @Autonomous(name = "Auto Clev")
-public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve{
+public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve {
     enum Init {
         CALIBGYRO, FINDIMAGE, FINDKEY, GETJEWELCONFIG
     }
-    enum Auto{
+
+    enum Auto {
         JEWELDOWN, JEWELTURN, JEWELUP, DRIVEOFFPLAT, PDRIVEFORWARD, DRIVEFORWARD, TURNTOCRYPTO, DRIVEFORWARDTOCRYPTO, ALIGNTOCRYPTO;
     }
 
@@ -86,17 +87,17 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                         dots += ".";
                     }
                     if (listener.getPose() == null) {
-                        telemetry.addLine("Finding image"+dots);
+                        telemetry.addLine("Finding image" + dots);
                     } else {
                         init = Init.FINDKEY;
                     }
                     Thread.sleep(100);
                     break;
                 case FINDKEY:
-                    if(listener.getPose() != null) {
+                    if (listener.getPose() != null) {
                         keyColumn = RelicRecoveryVuMark.from(relicTemplate);
                     }
-                    init  = Init.GETJEWELCONFIG;
+                    init = Init.GETJEWELCONFIG;
                     break;
                 case GETJEWELCONFIG:
                     state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
@@ -124,9 +125,9 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         auto = Auto.PDRIVEFORWARD;
 
         double startingPos = 0;
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             telemetry.addData("Gyro", getHeading());
-            switch (auto){
+            switch (auto) {
                 case JEWELDOWN:
                     break;
                 case JEWELTURN:
@@ -138,78 +139,80 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                 case PDRIVEFORWARD:
                     startingPos = getEncoder();
 
-                    robotHandler.drive.mecanum.setPower(.2,-.2);
+                    robotHandler.drive.mecanum.setPower(.2, -.2);
                     auto = Auto.DRIVEFORWARD;
                     break;
                 case DRIVEFORWARD:
                     double pos = getEncoder();
                     double dis = 0;
 
-                    double cir = 4*Math.PI;
-                    double goSixInch = 6/cir *PineappleRobotConstants.NEV40CPR;
-                    goSixInch *= (2.0/3.0);
+                    double cir = 4 * Math.PI;
+                    double goSixInch = 6 / cir * PineappleRobotConstants.NEV40CPR;
+                    goSixInch *= (2.0 / 3.0);
 
-                    switch (keyColumn){
+                    switch (keyColumn) {
                         case UNKNOWN:
                             keyColumn = RelicRecoveryVuMark.CENTER;
                             break;
                         case LEFT:
-                            if(Math.abs(pos - startingPos) > dis)
+                            if (Math.abs(pos - startingPos) > dis)
                                 auto = Auto.TURNTOCRYPTO;
                             break;
                         case CENTER:
-                            if(Math.abs(pos - startingPos) > dis + goSixInch)
+                            if (Math.abs(pos - startingPos) > dis + goSixInch)
                                 auto = Auto.TURNTOCRYPTO;
                             break;
                         case RIGHT:
-                            if(Math.abs(pos - startingPos) > dis + (2 * goSixInch))
+                            if (Math.abs(pos - startingPos) > dis + (2 * goSixInch))
                                 auto = Auto.TURNTOCRYPTO;
                             break;
                     }
                     break;
                 case TURNTOCRYPTO:
-                    if(turnTo(90, -.3))
+                    if (turnTo(90, -.2)) {
                         startingPos = getEncoder();
                         auto = Auto.DRIVEFORWARDTOCRYPTO;
+                    }
                     break;
                 case DRIVEFORWARDTOCRYPTO:
-                    
+
                     break;
                 case ALIGNTOCRYPTO:
-//                    if (alignCrypto()){
-//                        robotHandler.drive.stop();
-//                    }
+                    if (alignCrypto()){
+                        robotHandler.drive.stop();
+                    }
                     break;
             }
             telemetry.update();
         }
     }
 
-    public boolean turnTo(double angle, double speed){
+    public boolean turnTo(double angle, double speed) {
         double heading = getHeading();
         double target = heading - angle;
         target += (target < 0) ? 360 : 0;
         robotHandler.drive.mecanum.setPower(speed, speed);
 
-        telemetry.addData("Head",heading);
+        telemetry.addData("Head", heading);
         telemetry.addData("Traveling", target);
 
-        if(target < 182 && target > 178){
+        if (target < 182 && target > 178) {
             robotHandler.drive.stop();
             return true;
         }
         return false;
     }
 
-    public int getEncoder(){
+    public int getEncoder() {
         return (int) driveFrontLeft.getEncoderPosition();
     }
 
-    public double getHeading(){
+    public double getHeading() {
         return navx_device.getYaw();
     }
+
     public boolean alignCrypto() {
-        robotHandler.drive.mecanum.setMecanum(270, 0.1, 0 , 1);
-        return cryptoTouchSensor.getValue(PineappleEnum.PineappleSensorEnum.TOUCH)==1;
+        robotHandler.drive.mecanum.setMecanum(270, 0.2, 0, 1);
+        return cryptoTouchSensor.getValue(PineappleEnum.PineappleSensorEnum.TOUCH) == 1;
     }
 }
