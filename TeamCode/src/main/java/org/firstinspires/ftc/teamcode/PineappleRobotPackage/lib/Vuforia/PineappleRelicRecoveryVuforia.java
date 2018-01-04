@@ -157,10 +157,10 @@ public class PineappleRelicRecoveryVuforia extends PineappleVuforia {
                 float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
                 rawPose.setData(poseData);
                 float[][] corners = new float[4][2];
-                corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -80, 0)).getData();//UL
-                corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -80, 0)).getData();//UR
-                corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -600, 0)).getData();//LR
-                corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(100, -600, 0)).getData();//LL
+                corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -55, 50)).getData();//UL
+                corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -55, 50)).getData();//UR
+                corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -300, 50)).getData();//LR
+                corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -300, 50)).getData();//LL
                 Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
                 ByteBuffer pix = img.getPixels();
                 bm.copyPixelsFromBuffer(pix);
