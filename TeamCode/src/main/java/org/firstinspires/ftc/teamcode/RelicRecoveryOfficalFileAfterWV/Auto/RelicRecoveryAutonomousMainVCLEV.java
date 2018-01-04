@@ -142,6 +142,9 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     double rotation = 4*Math.PI;
                     double sixInch = 6/rotation*PineappleRobotConstants.NEV40CPR;
                     sixInch = sixInch * (2/3);
+                    telemetry.addData("drive forward", pos);
+                    telemetry.addData("going to", sixInch);
+
                     switch (keyColumn){
                         case UNKNOWN:
                             keyColumn = RelicRecoveryVuMark.CENTER;
