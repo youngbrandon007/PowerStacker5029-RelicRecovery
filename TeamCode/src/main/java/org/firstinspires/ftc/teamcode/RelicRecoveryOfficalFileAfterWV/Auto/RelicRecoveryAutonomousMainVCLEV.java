@@ -133,11 +133,11 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                 case DRIVEOFFPLAT:
                     break;
                 case PDRIVEFORWARD:
-                    startingPos = driveFrontLeft.getEncoderPosition();
+                    startingPos = getEncoder();
                     robotHandler.drive.mecanum.setPower(.5,-.5);
                     break;
                 case DRIVEFORWARD:
-                    double pos = driveFrontLeft.getEncoderPosition();
+                    double pos = getEncoder();
                     double dis = 1000;
                     double rotation = 4*Math.PI;
                     double sixInch = 6/rotation*PineappleRobotConstants.NEV40CPR;
@@ -161,9 +161,12 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case TURNTOCRYPTO:
                     //robotHandler.drive.mecanum.setPower(.3,.3);
-
+                    if(turnTo(270, .3))
+                        startingPos = getEncoder();
+                        auto = Auto.DRIVEFORWARDTOCRYPTO;
                     break;
                 case DRIVEFORWARDTOCRYPTO:
+                    
                     break;
                 case ALIGNTOCRYPTO:
                     break;
@@ -171,10 +174,20 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         }
     }
 
-    public boolean turnTo(double angle){
+    public boolean turnTo(double angle, double speed){
+        double target = getHeading() + angle;
+        target -= (target >= 360) ? 360 : 0;
+        robotHandler.drive.mecanum.setPower(speed, speed);
 
-
+        if(target < 182 && target > 178){
+            robotHandler.drive.stop();
+            return true;
+        }
         return false;
+    }
+
+    public int getEncoder(){
+        return (int) driveFrontLeft.getEncoderPosition();
     }
 
     public double getHeading(){
