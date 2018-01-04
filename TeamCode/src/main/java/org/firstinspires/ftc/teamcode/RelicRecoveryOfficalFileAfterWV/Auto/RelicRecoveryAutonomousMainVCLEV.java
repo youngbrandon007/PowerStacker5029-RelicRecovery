@@ -189,7 +189,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         double heading = getHeading();
         double target = heading - angle;
         target += (target < 0) ? 360 : 0;
-        robotHandler.drive.mecanum.setPower(speed, speed);
+
 
         telemetry.addData("Head",heading);
         telemetry.addData("Traveling", target);
@@ -197,6 +197,10 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
         if(target < 182 && target > 178){
             robotHandler.drive.stop();
             return true;
+        }else if(target < 200 && target > 160 ){
+            robotHandler.drive.mecanum.setPower(speed/3, speed/3);
+        }else{
+            robotHandler.drive.mecanum.setPower(speed, speed);
         }
         return false;
     }
