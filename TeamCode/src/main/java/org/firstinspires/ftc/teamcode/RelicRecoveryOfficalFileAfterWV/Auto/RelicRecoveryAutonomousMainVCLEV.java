@@ -139,9 +139,10 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case DRIVEFORWARD:
                     double pos = getEncoder();
-                    double dis = 1000;
+                    double dis = 0;
                     double rotation = 4*Math.PI;
                     double sixInch = 6/rotation*PineappleRobotConstants.NEV40CPR;
+                    sixInch = sixInch * (2/3);
                     switch (keyColumn){
                         case UNKNOWN:
                             keyColumn = RelicRecoveryVuMark.CENTER;
