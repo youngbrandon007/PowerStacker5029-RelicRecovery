@@ -146,8 +146,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     double cir = 4*Math.PI;
                     double goSixInch = 6/cir *PineappleRobotConstants.NEV40CPR;
                     goSixInch *= (2.0/3.0);
-                    telemetry.addData("drive forward", pos);
-                    telemetry.addData("going to", goSixInch);
 
                     switch (keyColumn){
                         case UNKNOWN:
@@ -169,7 +167,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                     break;
                 case TURNTOCRYPTO:
                     //robotHandler.drive.mecanum.setPower(.3,.3);
-                    if(turnTo(90, .3))
+                    if(turnTo(90, -.3))
                         startingPos = getEncoder();
                         auto = Auto.DRIVEFORWARDTOCRYPTO;
                     break;
@@ -184,10 +182,14 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     }
 
     public boolean turnTo(double angle, double speed){
-        double target = getHeading() + angle;
+        double heading = getHeading();
+        double target = heading + angle;
         target -= (target >= 360) ? 360 : 0;
         robotHandler.drive.mecanum.setPower(speed, speed);
 
+        telemetry.addData("Head",heading);
+        telemetry.addData("Traveling", target);
+        
         if(target < 182 && target > 178){
             robotHandler.drive.stop();
             return true;
