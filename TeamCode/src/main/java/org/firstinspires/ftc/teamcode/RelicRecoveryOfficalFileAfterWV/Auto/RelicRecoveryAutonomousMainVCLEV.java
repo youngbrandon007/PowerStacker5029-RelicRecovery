@@ -206,7 +206,7 @@ loadSwitchBoard();
                             }
                             break;
                         case PDRIVEFORWARDTOCRYPTO:
-                            //error
+                            //unneeded not used
                             startingPos = getEncoder();
 
                             break;
@@ -337,6 +337,7 @@ loadSwitchBoard();
                         case TURNTOCRYPTO:
                             alignLeft.setPosition(RelicRecoveryConstants.ALIGNDOWNLEFT);
                             if (turnTo(90, .3)) {
+                                wait.reset();
                                 startingPos = getEncoder();
                                 auto = Auto.DRIVEFORWARDTOCRYPTO;
                             }
@@ -347,7 +348,7 @@ loadSwitchBoard();
                             break;
                         case DRIVEFORWARDTOCRYPTO:
                             robotHandler.drive.mecanum.setPower(-.2,.2);
-                            if(Math.abs(getEncoder()-startingPos) > 1300) {
+                            if(Math.abs(getEncoder()-startingPos) > 1300 || wait.milliseconds() > 3000) {
                                 robotHandler.drive.stop();
                                 auto = Auto.ALIGNTOCRYPTO;
                             }
