@@ -310,7 +310,7 @@ loadSwitchBoard();
                             break;
                         case DRIVEFORWARD:
                             double pos = getEncoder();
-                            double dis = 500;
+                            double dis = 50 ;
 
                             double cir = 4 * Math.PI;
                             double goSixInch = 7.63 / cir * PineappleRobotConstants.NEV40CPR;
@@ -336,7 +336,7 @@ loadSwitchBoard();
                             break;
                         case TURNTOCRYPTO:
                             alignLeft.setPosition(RelicRecoveryConstants.ALIGNDOWNLEFT);
-                            if (turnTo(90, .3)) {
+                            if (turnTo(270, -.3)) {
                                 startingPos = getEncoder();
                                 auto = Auto.DRIVEFORWARDTOCRYPTO;
                             }
