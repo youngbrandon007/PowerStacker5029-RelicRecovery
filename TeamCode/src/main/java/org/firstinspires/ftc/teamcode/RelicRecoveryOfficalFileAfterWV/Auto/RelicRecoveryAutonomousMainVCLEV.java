@@ -173,7 +173,7 @@ loadSwitchBoard();
                             break;
                         case DRIVEFORWARD:
                             double pos = getEncoder();
-                            double dis = 500;
+                            double dis = 350;
 
                             double cir = 4 * Math.PI;
                             double goSixInch = 7.63 / cir * PineappleRobotConstants.NEV40CPR;
