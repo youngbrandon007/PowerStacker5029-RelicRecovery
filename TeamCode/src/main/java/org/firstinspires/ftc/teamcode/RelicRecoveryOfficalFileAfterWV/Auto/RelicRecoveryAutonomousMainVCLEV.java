@@ -202,15 +202,17 @@ loadSwitchBoard();
                             if (turnTo(270, -.3)) {
                                 startingPos = getEncoder();
                                 auto = Auto.DRIVEFORWARDTOCRYPTO;
+                                wait.reset();
                             }
                             break;
                         case PDRIVEFORWARDTOCRYPTO:
+                            //error
                             startingPos = getEncoder();
 
                             break;
                         case DRIVEFORWARDTOCRYPTO:
                             robotHandler.drive.mecanum.setPower(-.2,.2);
-                            if(Math.abs(getEncoder()-startingPos) > 1300) {
+                            if(Math.abs(getEncoder()-startingPos) > 1300 || wait.milliseconds() > 3000) {
                                 robotHandler.drive.stop();
                                 auto = Auto.ALIGNTOCRYPTO;
                             }
