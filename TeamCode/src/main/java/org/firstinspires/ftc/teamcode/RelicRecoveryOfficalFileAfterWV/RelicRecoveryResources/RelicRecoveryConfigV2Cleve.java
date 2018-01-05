@@ -131,4 +131,12 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
         telemetry.addData("Glyphs", glyphsEnabled);
         telemetry.addData("Position", position);
     }
+
+    public void loadSwitchBoardLoop() throws InterruptedException {
+        while (opModeIsActive()) {
+            loadSwitchBoard();
+            telemetry.update();
+            Thread.sleep(100);
+        }
+    }
 }

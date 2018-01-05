@@ -42,7 +42,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
     @Override
     public void runOpMode() throws InterruptedException {
         config(this);
-
+loadSwitchBoard();
         //load vuforia
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -132,8 +132,8 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
             telemetry.addData("wait", wait.milliseconds());
             telemetry.addData("STATE", auto);
             telemetry.addData("GYRO_YAW", getHeading());
-            switch (colorPosition) {
-                case REDFRONT:
+            switch (color) {
+                case RED:
 
                     switch (auto) {
                         case JEWELDOWN:
@@ -268,9 +268,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                             break;
                     }
                     break;
-                case REDBACK:
-                    break;
-                case BLUEFRONT:
+                case BLUE:
 
                     switch (auto) {
                         case JEWELDOWN:
@@ -405,8 +403,6 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
                             break;
                     }
                     break;
-                case BLUEBACK:
-                    break;
             }
             telemetry.update();
         }
@@ -492,7 +488,7 @@ public class RelicRecoveryAutonomousMainVCLEV extends RelicRecoveryConfigV2Cleve
             }
         }
 
-        robotHandler.drive.mecanum.setPower(rotation, rotation);
+        robotHandler.drive.mecanum.setPower(-rotation, -rotation);
         turnCount++;
         return false;
 
