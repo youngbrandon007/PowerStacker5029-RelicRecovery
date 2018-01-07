@@ -59,7 +59,7 @@ public abstract class RelicRecoveryConfigV2Cleve extends PineappleConfigLinearOp
     public ElapsedTime wait = new ElapsedTime();
 
     public boolean calibration_complete = false;
-    public PineappleEnum.JewelState state;
+    public PineappleEnum.JewelState state = PineappleEnum.JewelState.NON_NON;
     public double turnCount = 0;
 
 

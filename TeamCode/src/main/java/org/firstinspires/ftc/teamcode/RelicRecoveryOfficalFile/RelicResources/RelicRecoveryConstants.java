@@ -10,14 +10,14 @@ public class RelicRecoveryConstants {
     //V2Cleveland
     public static final double ALIGNDOWNRIGHT = 0;
     public static final double ALIGNUPRIGHT = 0;
-    public static final double ALIGNDOWNLEFT = .4;
+    public static final double ALIGNDOWNLEFT = .35;
     public static final double ALIGNUPLEFT = 1.0;
-    public static final double JEWELDOWN = 0.55;
+    public static final double JEWELDOWN = 0.6;
     public static final double JEWELUP = 0;
 
     //V2
     public static final double JEWELLEFTUP = 0;
-    public static final double JEWELLEFTDOWN = 0.47;
+    public static final double JEWELLEFTDOWN = .55;
     public static final double JEWELRIGHTUP = 1;
     public static final double JEWELRIGHTDOWN = 0.47;
     public static final double JEWELLEFTTURNLEFT = 0.2;
@@ -40,7 +40,7 @@ public class RelicRecoveryConstants {
     public static final double ROBOTTURNP = 0.01441838;
     public static final double ROBOTTURNI = 0;
     public static final double ROBOTTURND = 0.01197458;
-    public static final double FLIPOUTRIGHT = 0;
+    public static final double FLIPOUTRIGHT = 0.2;
     public static final double FLIPOUTLEFT = 1;
     public static final double FLIPINRIGHT = 1;
     public static final double FLIPINLEFT = 0;

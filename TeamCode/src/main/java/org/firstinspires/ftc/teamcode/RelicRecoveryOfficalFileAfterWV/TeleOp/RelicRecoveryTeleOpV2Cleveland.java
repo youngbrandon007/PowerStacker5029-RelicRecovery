@@ -77,7 +77,11 @@ public class RelicRecoveryTeleOpV2Cleveland extends RelicRecoveryConfigV2Cleve {
 
                 conveyRight.setPower(0);
                 conveyLeft.setPower(0);
-            } else {
+            } else if (gamepad1.b) {
+                alignLeft.setPosition(RelicRecoveryConstants.ALIGNDOWNLEFT);
+            }
+            else {
+                alignLeft.setPosition(RelicRecoveryConstants.ALIGNUPLEFT);
                 collectorLeft.setPosition(.5);
                 collectorRight.setPosition(.5);
 
