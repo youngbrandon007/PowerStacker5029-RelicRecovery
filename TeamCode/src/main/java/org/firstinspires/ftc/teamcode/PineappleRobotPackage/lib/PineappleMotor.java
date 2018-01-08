@@ -204,7 +204,7 @@ public class PineappleMotor {
 
     //Private Function
     //
-    //these are used to calculate the output to the motor for TeleOp such as scaling and range
+    //these are used to calculate the output to the motor for Tele such as scaling and range
 
     private double fixValue(double input) {
         input = scale(input);

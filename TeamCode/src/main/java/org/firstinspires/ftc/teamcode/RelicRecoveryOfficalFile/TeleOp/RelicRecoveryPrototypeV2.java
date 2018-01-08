@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConfigPrototypeV2;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
  * Created by ftcpi on 12/10/2017.
  */
 @TeleOp(name = "ProTele", group = "Linear Opmode")
-
+@Disabled
 public class RelicRecoveryPrototypeV2 extends RelicRecoveryConfigPrototypeV2 {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Old_Robots.Humanoid;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by Brandon on 8/26/2017.
  */
 @TeleOp(name = "Humanoid", group = "Linear Opmode")
+@Disabled
 public class Walking extends LinearOpMode{
     HConfigLinearOpMode config = new HConfigLinearOpMode();
 

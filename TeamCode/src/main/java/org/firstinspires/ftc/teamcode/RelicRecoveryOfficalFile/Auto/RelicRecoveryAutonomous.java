@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
 
 import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
@@ -25,7 +26,7 @@ import java.text.DecimalFormat;
  */
 
 @Autonomous(name = "RelicRecoveryAuto", group = "Linear Opmode")
-
+@Disabled
 public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 
     @Override

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFileAfterWV.RelicRecov
  * Created by Brandon on 12/11/2017.
  */
 @TeleOp(name = "Teleop Cleveland" )
+@Disabled
 public class RelicRecoveryTeleOpV2Cleveland extends RelicRecoveryConfigV2Cleve {
 
     private ElapsedTime runtime = new ElapsedTime();

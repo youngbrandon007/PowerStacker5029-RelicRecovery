@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto.Testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
  * Created by Brandon on 11/28/2017.
  */
 @TeleOp(name = "VuforiaGetValue",group = "Linear Opmode")
-
+@Disabled
 public class RelicRecoveryVuforiaTracker extends RelicRecoveryConfigV2 {
     @Override
     public void runOpMode() throws InterruptedException {
