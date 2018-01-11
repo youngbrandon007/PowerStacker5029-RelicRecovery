@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Brandon on 1/8/2018.
@@ -10,30 +11,34 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class Auto extends Config {
 
     enum InitEnum{
-        MAININIT, GYRO, VUFORIA, LOOKFORIMAGE, FINDKEYCOLUMN, FINDJEWEL
+        GYRO, VUFORIA, LOOKFORIMAGE, FINDKEYCOLUMN, FINDJEWEL, LOOP
     }
 
     enum AutoEnum{
+        WAIT,
         JEWELDOWN, JEWELPROCESS, JEWELHIT, JEWELUP, JEWELRESET,
-        ALIGNDRIVEOFFPLATFOR, ALIGNBACKINTOPLATFORM, ALIGNDRIVETOCENTER, ALIGNSTRAFFTOCENTERORTURN,
+        ALIGNDRIVEOFFPLATFORM, ALIGNBACKINTOPLATFORM, ALIGNDRIVETOCENTER, ALIGNSTRAFFTOCENTERORTURN,
         KEYCOLUMNSET,
         GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
         COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING
     }
 
+    ElapsedTime wait = new ElapsedTime();
 
+    AutoEnum auto = AutoEnum.JEWELDOWN;
+    InitEnum init = InitEnum.GYRO;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        config(this);
 
-
-        InitEnum init = InitEnum.MAININIT;
-
+        //INIT LOOP
         while(!opModeIsActive() && !isStopRequested()){
+            telemetry.addData("AUTO",init);
+            //Switch Board Loading
+            loadSwitchBoard();
+            displaySwitchBorad();
             switch(init){
-                case MAININIT:
-                    config(this);
-                    break;
                 case GYRO:
                     break;
                 case VUFORIA:
@@ -44,15 +49,25 @@ public class Auto extends Config {
                     break;
                 case FINDJEWEL:
                     break;
+                case LOOP:
+                    break;
             }
+            telemetry.update();
         }
+
         waitForStart();
+        wait.reset();
 
-        AutoEnum auto = AutoEnum.JEWELDOWN;
-
+        //MAIN LOOP
         while (opModeIsActive()){
+            telemetry.addData("AUTO", auto);
             switch(auto){
+                case WAIT:
+                    //if (!switchDelayEnabled || wait.seconds())
+                    break;
                 case JEWELDOWN:
+                    //Check for Jewels enabled
+                    if (!switchJewels) auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
                     break;
                 case JEWELPROCESS:
                     break;
@@ -62,7 +77,7 @@ public class Auto extends Config {
                     break;
                 case JEWELRESET:
                     break;
-                case ALIGNDRIVEOFFPLATFOR:
+                case ALIGNDRIVEOFFPLATFORM:
                     break;
                 case ALIGNBACKINTOPLATFORM:
                     break;
@@ -101,6 +116,40 @@ public class Auto extends Config {
                 case COLLECTPROCESSFORPLACING:
                     break;
             }
+            telemetry.update();
         }
+    }
+    //JEWEL FUNCTIONS HERE
+
+
+
+    //ALIGN FUNCTIONS HERE
+
+
+
+    //GLYPH FUNCTIONS HERE
+
+
+
+    //COLLECT FUNCTIONS HERE
+
+
+
+    //GENERAL FUNCTIONS HERE
+
+
+    //gyro Functions
+    //Has all turning abilities PID and not return amount robot needs to turn
+    double targetHeading = 0.0;
+    public double updateTurning(){
+        return 0.0;
+    }
+
+    public boolean isRobotCorrectDirection(){
+        return true;
+    }
+
+    public double getHeading(){
+        return 0.0;
     }
 }

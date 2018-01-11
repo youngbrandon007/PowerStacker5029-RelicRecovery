@@ -11,5 +11,11 @@ public class Tele extends Config{
     @Override
     public void runOpMode() throws InterruptedException {
         config(this);
+
+        waitForStart();
+
+        while (opModeIsActive()){
+            robotHandler.drive.mecanum.updateMecanum(gamepad1,1.0);
+        }
     }
 }

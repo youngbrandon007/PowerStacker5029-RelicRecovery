@@ -22,6 +22,15 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
     public RelicRecoveryEnums.StartingPosition switchPosition = RelicRecoveryEnums.StartingPosition.FRONT;
     public RelicRecoveryEnums.ColorPosition switchColorPosition = RelicRecoveryEnums.ColorPosition.REDFRONT;
+    //Still need detecting
+    public double slideDelay = 0.0;
+    public boolean switchDelayEnabled = true;
+    public boolean switchJewels = true;
+    public boolean switchGlyphs = true;
+    public boolean switchGlyphWhite = true;
+    public boolean switchMoreGlyphs = false;
+    public boolean switchPID = true;
+
 
     @Override
     public void config(LinearOpMode linearOpMode) {
@@ -35,15 +44,17 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     }
 
     public void loadSwitchBoard(){
-        switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
-        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
-
-
-        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
+//        switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
+//        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
+//        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
+//        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
+//        slideDelay = (switchDelayEnabled) ? robotHandler.switchBoard.loadAnalog("delay") : 0.0;
     }
 
     public void displaySwitchBorad(){
-        telemetry.addData("Color", switchColor);
-        telemetry.addData("Position", switchPosition);
+        String autonomousDescription = switchColor + " " + switchPosition + " @" + slideDelay + "s " + FontFormating.getMark(switchDelayEnabled) + "     PID" + FontFormating.getMark(switchPID);
+        String autonomousSettings = "_o̲_o̲_" + FontFormating.getMark(switchJewels) + " " + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchGlyphs) + " +" + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchMoreGlyphs);
+        telemetry.addLine(autonomousDescription);
+        telemetry.addLine(autonomousSettings);
     }
 }
