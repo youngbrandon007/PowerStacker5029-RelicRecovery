@@ -20,6 +20,17 @@ public class Constants {
         }
     }
 
+    public static class flip{
+        public static final double rightDown = 0.85;
+        public static final double leftDown = 0.15;
+
+        public static final double rightFlat = 0.7;
+        public static final double leftFlat = 0.3;
+
+        public static final double rightUp = 0.15;
+        public static final double leftUp = 0.85;
+    }
+
     public static class auto{
         public static class RF{
 

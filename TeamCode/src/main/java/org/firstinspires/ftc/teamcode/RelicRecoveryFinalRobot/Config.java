@@ -15,29 +15,33 @@ import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.Re
 
 public abstract class Config extends PineappleConfigLinearOpMode{
 
+    //DRIVE MOTORS
     public PineappleMotor driveFrontRight;
     public PineappleMotor driveFrontLeft;
     public PineappleMotor driveBackRight;
     public PineappleMotor driveBackLeft;
 
+    //MOTORS
+    public PineappleMotor motorLift;
+    public PineappleMotor motorCollect;
+
+    //SERVOS
+    public PineappleServo servoFlipR;
+    public PineappleServo servoFlipL;
+    //SEROVPOSITIONS
     public double servoRightDown = 0.85;
     public double servoLeftDown = 0.15;
 
     public double servoRightUp = 0.15;
     public double servoLeftUp = 0.85;
 
-    public PineappleMotor motorLift;
-    public PineappleMotor motorCollect;
-
-    public PineappleServo servoFlipR;
-    public PineappleServo servoFlipL;
-
+    //SWITCH BOARD
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
     public RelicRecoveryEnums.StartingPosition switchPosition = RelicRecoveryEnums.StartingPosition.FRONT;
     public RelicRecoveryEnums.ColorPosition switchColorPosition = RelicRecoveryEnums.ColorPosition.REDFRONT;
-    //Still need detecting
-    public double slideDelay = 0.0;
     public boolean switchDelayEnabled = true;
+    public double slideDelay = 0.0;
+    //Still need detecting
     public boolean switchJewels = true;
     public boolean switchGlyphs = true;
     public boolean switchGlyphWhite = true;
@@ -57,8 +61,8 @@ public abstract class Config extends PineappleConfigLinearOpMode{
         motorLift = robotHandler.motorHandler.newMotor("ML");
         motorCollect = robotHandler.motorHandler.newMotor("MC");
 
-        servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5,.2);
-        servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5,.2);
+        servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5, Constants.flip.rightDown);
+        servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.leftDown);
     }
 
     public void loadSwitchBoard(){
