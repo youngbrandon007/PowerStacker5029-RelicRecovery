@@ -29,11 +29,6 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     public PineappleServo servoFlipR;
     public PineappleServo servoFlipL;
     //SEROVPOSITIONS
-    public double servoRightDown = 0.85;
-    public double servoLeftDown = 0.15;
-
-    public double servoRightUp = 0.15;
-    public double servoLeftUp = 0.85;
 
     //SWITCH BOARD
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
