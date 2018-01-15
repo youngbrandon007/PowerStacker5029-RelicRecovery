@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigL
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
 import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
@@ -18,6 +19,18 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     public PineappleMotor driveFrontLeft;
     public PineappleMotor driveBackRight;
     public PineappleMotor driveBackLeft;
+
+    public double servoRightDown = 0.85;
+    public double servoLeftDown = 0.15;
+
+    public double servoRightUp = 0.15;
+    public double servoLeftUp = 0.85;
+
+    public PineappleMotor motorLift;
+    public PineappleMotor motorCollect;
+
+    public PineappleServo servoFlipR;
+    public PineappleServo servoFlipL;
 
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
     public RelicRecoveryEnums.StartingPosition switchPosition = RelicRecoveryEnums.StartingPosition.FRONT;
@@ -41,6 +54,11 @@ public abstract class Config extends PineappleConfigLinearOpMode{
         driveBackRight = robotHandler.motorHandler.newDriveMotor("BR", 1, false, false, PineappleEnum.MotorLoc.RIGHTBACK, PineappleEnum.MotorType.NEV40);
         driveBackLeft = robotHandler.motorHandler.newDriveMotor("BL", 1, false, false, PineappleEnum.MotorLoc.LEFTBACK, PineappleEnum.MotorType.NEV40);
 
+        motorLift = robotHandler.motorHandler.newMotor("ML");
+        motorCollect = robotHandler.motorHandler.newMotor("MC");
+
+        servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5,.2);
+        servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5,.2);
     }
 
     public void loadSwitchBoard(){
