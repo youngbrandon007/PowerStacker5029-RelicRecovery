@@ -18,27 +18,25 @@ public class Tele extends Config{
         boolean bClicked = false;
 
         while (opModeIsActive()){
-            robotHandler.drive.mecanum.updateMecanum(gamepad1,1.0);
+            robotHandler.drive.mecanum.updateMecanum(gamepad1,(gamepad1.right_bumper) ? 0.7 : 1.0);
 
-            motorCollect.setPower((gamepad1.right_bumper) ? 1 : (gamepad1.left_bumper) ? -1 : 0);
-            motorLift.setPower((gamepad1.dpad_up) ? -.3 : (gamepad1.dpad_down) ? .3 : 0);
+            motorCollect.setPower((gamepad1.right_trigger > 0.10) ? gamepad1.right_trigger : (gamepad1.left_trigger > 0.10) ? -gamepad1.left_trigger : (gamepad2.right_bumper) ? -1 : (gamepad2.left_bumper) ? 1 : 0);
+            motorLift.setPower((gamepad2.dpad_up) ? -1 : (gamepad2.dpad_down) ? .5 : 0);
 
-
-            if(gamepad1.b){
+            if(gamepad2.b){
                 servoFlipL.setPosition(Constants.flip.leftUp);
                 servoFlipR.setPosition(Constants.flip.rightUp);
-                bClicked = true;
-            }else if(bClicked = true){
+            }else if(gamepad2.x){
                 servoFlipL.setPosition(Constants.flip.leftFlat);
                 servoFlipR.setPosition(Constants.flip.rightFlat);
-                bClicked = false;
-            }else if(gamepad1.a){
+            }else if(gamepad2.a){
                 servoFlipL.setPosition(Constants.flip.leftDown);
                 servoFlipR.setPosition(Constants.flip.rightDown);
-            }else if(gamepad1.dpad_up){
-                servoFlipL.setPosition(Constants.flip.leftFlat);
-                servoFlipR.setPosition(Constants.flip.rightFlat);
             }
+
+            telemetry.update();
+
+
         }
     }
 }

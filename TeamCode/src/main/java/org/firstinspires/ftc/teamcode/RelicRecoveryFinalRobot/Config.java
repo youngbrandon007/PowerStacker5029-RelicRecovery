@@ -56,8 +56,8 @@ public abstract class Config extends PineappleConfigLinearOpMode{
         motorLift = robotHandler.motorHandler.newMotor("ML");
         motorCollect = robotHandler.motorHandler.newMotor("MC");
 
-        servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5, Constants.flip.rightDown);
-        servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.leftDown);
+        servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5, Constants.flip.leftDown);
+        servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.rightDown);
     }
 
     public void loadSwitchBoard(){
