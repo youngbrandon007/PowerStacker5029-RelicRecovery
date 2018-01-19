@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
+import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
 /**
  * Created by Brandon on 1/8/2018.
@@ -24,13 +25,18 @@ public abstract class Config extends PineappleConfigLinearOpMode{
 
     //MOTORS
     public PineappleMotor motorLift;
-    public PineappleMotor motorCollect;
+    public PineappleMotor motorCollectRight;
+    public PineappleMotor motorCollectLeft;
+    public PineappleMotor motorRelic;
 
     //SERVOS
     public PineappleServo servoFlipR;
     public PineappleServo servoFlipL;
+    public PineappleServo servoRelicGrab;
+    public PineappleServo servoRelicTurn;
 
     //SENSORS
+    public DigitalChannel limitLift;
     //GYRO
     public boolean calibration_complete = false;
     public final int NAVX_DIM_I2C_PORT = 0;
@@ -63,17 +69,21 @@ public abstract class Config extends PineappleConfigLinearOpMode{
 
         //MOTORS
         motorLift = robotHandler.motorHandler.newMotor("ML");
-        motorCollect = robotHandler.motorHandler.newMotor("MC");
+        motorCollectRight = robotHandler.motorHandler.newMotor("MCR");
+        motorCollectLeft = robotHandler.motorHandler.newMotor("MCL");
+        motorRelic = robotHandler.motorHandler.newMotor("MR");
 
         //SERVOS
         servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5, Constants.flip.leftDown);
         servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.rightDown);
+        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG",202.5, Constants.flip.rightDown);
 
         //SENSORS
-        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
-                NAVX_DIM_I2C_PORT,
-                AHRS.DeviceDataType.kProcessedData,
-                NAVX_DEVICE_UPDATE_RATE_HZ);
+//        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
+//                NAVX_DIM_I2C_PORT,
+//                AHRS.DeviceDataType.kProcessedData,
+//                NAVX_DEVICE_UPDATE_RATE_HZ);
+        limitLift = linearOpMode.hardwareMap.digitalChannel.get("LL");
     }
 
     public void loadSwitchBoard(){

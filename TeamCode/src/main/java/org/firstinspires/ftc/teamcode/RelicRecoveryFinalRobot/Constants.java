@@ -30,10 +30,15 @@ public class Constants {
         public static final double rightUp = 0.15;
         public static final double leftUp = 0.83;
     }
+    public static class relic{
+        public static final double grabClose = 0;
+        public static final double grabOpen = 0.5;
+    }
 
     public static class auto{
         public static class RF{
 
         }
     }
+    
 }

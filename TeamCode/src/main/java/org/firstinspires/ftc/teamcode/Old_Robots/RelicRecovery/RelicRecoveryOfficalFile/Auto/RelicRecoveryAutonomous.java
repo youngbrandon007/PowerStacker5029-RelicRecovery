@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.Auto;
+package org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.Auto;
 
-import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,18 +7,15 @@ import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
+import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
-
-import java.text.DecimalFormat;
 
 /**
  * Created by young on 9/14/2017.
@@ -125,10 +121,10 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
         hitJewels(state);
         ElapsedTime elapsedTime = new ElapsedTime();
         switch (position) {
-            case FRONT:
+            case RelicRecoveryEnums.StartingPosition.FRONT:
                 switch (color) {
 
-                    case RED:
+                    case RelicRecoveryEnums.AutoColor.RED:
                         //Red Front
 //                        elapsedTime.reset();                        //Drive forward
 //                        robotHandler.drive.mecanum.setPower(-.3, .3);
@@ -155,7 +151,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 //                        }
 
                         break;
-                    case BLUE:
+                    case RelicRecoveryEnums.AutoColor.BLUE:
                         //Blue Front
 
 
@@ -186,10 +182,10 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
                     //TODO SPIN out box
                 }
                 break;
-            case BACK:
+            case RelicRecoveryEnums.StartingPosition.BACK:
                 switch (color) {
 
-                    case RED:
+                    case RelicRecoveryEnums.AutoColor.RED:
                         //Red Front
                         elapsedTime.reset();                        //Drive forward
                         robotHandler.drive.mecanum.setMecanum(135,0.2,0,1);
@@ -212,7 +208,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAbstractAutonomous {
 //                        }
 
                         break;
-                    case BLUE:
+                    case RelicRecoveryEnums.AutoColor.BLUE:
                         //Blue Front
 
 
