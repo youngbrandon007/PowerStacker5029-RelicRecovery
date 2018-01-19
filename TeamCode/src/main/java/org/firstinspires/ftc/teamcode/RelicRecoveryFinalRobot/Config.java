@@ -76,7 +76,8 @@ public abstract class Config extends PineappleConfigLinearOpMode{
         //SERVOS
         servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5, Constants.flip.leftDown);
         servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.rightDown);
-        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG",202.5, Constants.flip.rightDown);
+        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG",202.5, Constants.relic.grabClose);
+        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT",202.5, 0);
 
         //SENSORS
 //        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),

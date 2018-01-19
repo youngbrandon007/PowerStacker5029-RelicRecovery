@@ -35,7 +35,7 @@ public class Constants {
     }
 
     public static class relic {
-        public static final double grabClose = 0;
+        public static final double grabClose = 0.1;
         public static final double grabOpen = 0.5;
     }
 
