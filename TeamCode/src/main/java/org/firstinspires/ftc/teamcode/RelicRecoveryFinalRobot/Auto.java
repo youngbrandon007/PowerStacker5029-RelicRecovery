@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.NONE;
+
 /**
  * Created by Brandon on 1/8/2018.
  */
@@ -126,14 +128,14 @@ public class Auto extends Config {
                 case JEWELRESET:
                     break;
                 case ALIGNDRIVEOFFPLATFORM:
-                    if(true){
+                    if (true) {
                         wait.reset();
                         auto = AutoEnum.ALIGNBACKINTOPLATFORM;
                     }
                     break;
                 case ALIGNBACKINTOPLATFORM:
 
-                    if(wait.milliseconds() > 500){
+                    if (wait.milliseconds() > 500) {
                         auto = AutoEnum.ALIGNDRIVETOCENTER;
                     }
                     break;
@@ -142,7 +144,7 @@ public class Auto extends Config {
                 case ALIGNSTRAFFTOCENTERORTURN:
                     break;
                 case KEYCOLUMNSET:
-                    if(keyColumn != RelicRecoveryVuMark.UNKNOWN){
+                    if (keyColumn != RelicRecoveryVuMark.UNKNOWN) {
                         targetColumn = keyColumn;
                     }
                     auto = AutoEnum.GLYPHARMDOWN;
@@ -185,7 +187,77 @@ public class Auto extends Config {
 
 
     //GLYPH FUNCTIONS HERE
+    public Constants.auto.autoGlyph.column getColumn(Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+        int[] cipherPoints = new int[3];
+        for (int i = 0; i < 3; i++) {
+            if (canGlyphsGoInColumn(i, firstGlyph, secondGlyph)) {
+                Constants.auto.autoGlyph.glyph[][] potBox = addGlyphsToColumn(i, BOX, firstGlyph, secondGlyph);
+                boolean[] workingCipher = {true, true, true, true, true, true};
+                for (int k = 0; k < 6; k++) {
+                    for (int j = 0; j < 4; j++) {
+                        for (int l = 0; l < 3; l++) {
+                            if (potBox[j][l] != NONE && potBox[j][l] != Constants.auto.autoGlyph.CIPHERS[k][j][l]) {
+                                j = 5;
+                                l = 4;
+                                workingCipher[k] = false;
+                            }
+                        }
+                    }
+                }
+                cipherPoints[i] = cipherPointsFinder(workingCipher);
+            }
+        }
+        int max = cipherPoints[0];
+        for (int i = 1; i < cipherPoints.length; i++) {
+            if (cipherPoints[i] > max) {
+                max = cipherPoints[i];
+            }
+        }
+        switch (max) {
+            case 0:
+                return Constants.auto.autoGlyph.column.RIGHT;
+            case 1:
+                return Constants.auto.autoGlyph.column.CENTER;
+            case 2:
+                return Constants.auto.autoGlyph.column.LEFT;
+            default:
+                return Constants.auto.autoGlyph.column.LEFT;
 
+        }
+    }
+
+    private static Constants.auto.autoGlyph.glyph[][] addGlyphsToColumn(int column, Constants.auto.autoGlyph.glyph[][] box, Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+
+    }
+
+    private boolean canGlyphsGoInColumn(int column, Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+        int numbOfGlyphs = 0;
+        if (firstGlyph != NONE) {
+            numbOfGlyphs++;
+        }
+        if (secondGlyph != NONE) {
+            numbOfGlyphs++;
+        }
+        int numbOfAvalibaleSpot = 0;
+        for (int i = 0; i < 4; i++) {
+            if (BOX[i][column] == NONE) {
+                numbOfAvalibaleSpot++;
+            }
+        }
+        return numbOfAvalibaleSpot <= numbOfGlyphs;
+    }
+
+    private static int cipherPointsFinder(boolean[] cipher) {
+        int val = 0;
+        int points = 0;
+        for (boolean cipherBool : cipher) {
+            if (cipherBool) {
+                points += (val == 0 || val == 1) ? 3 : (val == 2 || val == 3) ? 2 : 1;
+            }
+            val++;
+        }
+        return points;
+    }
 
     //COLLECT FUNCTIONS HERE
 

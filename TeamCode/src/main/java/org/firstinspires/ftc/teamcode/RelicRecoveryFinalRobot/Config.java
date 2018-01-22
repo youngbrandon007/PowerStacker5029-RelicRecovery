@@ -11,6 +11,10 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
 import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.BROWN;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.GREY;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.NONE;
+
 /**
  * Created by Brandon on 1/8/2018.
  */
@@ -35,6 +39,13 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     public PineappleServo servoRelicGrab;
     public PineappleServo servoRelicTurn;
 
+    //GLYPH
+    Constants.auto.autoGlyph.glyph[][] BOX = {
+            {NONE, NONE, NONE},
+            {NONE, NONE, NONE},
+            {NONE, NONE, NONE},
+            {NONE, NONE, NONE}
+    };
     //SENSORS
     public DigitalChannel limitLift;
     //GYRO

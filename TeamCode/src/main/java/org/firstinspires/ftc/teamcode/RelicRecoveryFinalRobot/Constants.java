@@ -2,6 +2,12 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants;
 
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.ciphers.BIRDBROWN;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.ciphers.BIRDGREY;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.ciphers.FROGBROWN;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.ciphers.FROGGREY;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.ciphers.SNAKEBROWN;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.ciphers.SNAKEGREY;
 import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.BROWN;
 import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.GREY;
 
@@ -48,7 +54,9 @@ public class Constants {
             public enum glyph {
                 GREY, BROWN, NONE
             }
-
+            public enum column {
+                LEFT, CENTER, RIGHT
+            }
             //START IN TOP LEFT
             public static class ciphers {
                 public static final autoGlyph.glyph[][] FROGBROWN = {
@@ -87,7 +95,10 @@ public class Constants {
                         {BROWN, GREY, GREY},
                         {BROWN, BROWN, GREY}
                 };
+
             }
+            public static final autoGlyph.glyph[][][] CIPHERS = {FROGBROWN, FROGGREY,BIRDBROWN,BIRDGREY,SNAKEBROWN,SNAKEGREY };
+
         }
     }
 
