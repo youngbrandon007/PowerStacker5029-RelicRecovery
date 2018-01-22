@@ -242,7 +242,11 @@ public class Auto extends Config {
     }
 
     private static Constants.auto.autoGlyph.glyph[][] addGlyphsToColumn(int column, Constants.auto.autoGlyph.glyph[][] box, Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+        for (int i = 0; i < 4; i++) {
+            if (box[i][column] != NONE) {
 
+            }
+        }
     }
 
     private boolean canGlyphsGoInColumn(int column, Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
@@ -267,7 +271,7 @@ public class Auto extends Config {
         int points = 0;
         for (boolean cipherBool : cipher) {
             if (cipherBool) {
-                points += (val == 0 || val == 1) ? 3 : (val == 2 || val == 3) ? 2 : 1;
+                points += (val == 0 || val == 1) ? 4 : (val == 2 || val == 3) ? 2 : 1;
             }
             val++;
         }
