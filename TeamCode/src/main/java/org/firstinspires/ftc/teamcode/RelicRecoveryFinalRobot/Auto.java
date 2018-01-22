@@ -25,8 +25,8 @@ public class Auto extends Config {
 
     ElapsedTime wait = new ElapsedTime();
 
-    AutoEnum auto = AutoEnum.JEWELDOWN;
     InitEnum init = InitEnum.GYRO;
+    AutoEnum auto = AutoEnum.JEWELDOWN;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,7 +63,9 @@ public class Auto extends Config {
             telemetry.addData("AUTO", auto);
             switch(auto){
                 case WAIT:
-                    //if (!switchDelayEnabled || wait.seconds())
+                    if (!switchDelayEnabled || wait.seconds() >= slideDelay){
+                        auto = AutoEnum.JEWELDOWN;
+                    }
                     break;
                 case JEWELDOWN:
                     //Check for Jewels enabled
