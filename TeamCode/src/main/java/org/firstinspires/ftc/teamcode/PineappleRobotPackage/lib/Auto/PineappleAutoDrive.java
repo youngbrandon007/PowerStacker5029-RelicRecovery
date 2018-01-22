@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -12,18 +11,13 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleD
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
-import org.firstinspires.ftc.teamcode.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
+import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Calendar;
-import java.util.Date;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by young on 8/6/2017.
