@@ -27,11 +27,11 @@ public class Auto extends Config {
 
     enum AutoEnum {
         WAIT,
-        JEWELDOWN, JEWELPROCESS, JEWELHIT, JEWELUP, JEWELRESET,
-        ALIGNDRIVEOFFPLATFORM, ALIGNBACKINTOPLATFORM, ALIGNDRIVETOCENTER, ALIGNSTRAFFTOCENTERORTURN,
+        JEWELS, JEWELDOWN, JEWELPROCESS, JEWELHIT, JEWELUP, JEWELRESET,
+        ALIGN,ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
         KEYCOLUMNSET,
-        GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
-        COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING
+        GLYPH,GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
+        COLLECT, COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING
     }
 
     ElapsedTime wait = new ElapsedTime();
@@ -48,6 +48,8 @@ public class Auto extends Config {
 
     boolean vuforiaInitialized = false;
     boolean imageVisible = false;
+
+    double PIDgyroCorrectionValue = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -111,13 +113,18 @@ public class Auto extends Config {
             telemetry.addData("AUTO", auto);
             switch (auto) {
                 case WAIT:
-                    if (!switchDelayEnabled || wait.seconds() > slideDelay) {
-                        auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
+                    if (!switchDelayEnabled || wait.seconds() >= slideDelay){
+                        auto = AutoEnum.JEWELS;
+                    }
+                    break;
+                case JEWELS:
+                    if (!switchJewels) {
+                        auto = AutoEnum.ALIGN;
+                    }else{
+                        auto = AutoEnum.JEWELDOWN;
                     }
                     break;
                 case JEWELDOWN:
-                    //Check for Jewels enabled
-                    if (!switchJewels) auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
                     break;
                 case JEWELPROCESS:
                     break;
@@ -138,16 +145,22 @@ public class Auto extends Config {
                     if (wait.milliseconds() > 500) {
                         auto = AutoEnum.ALIGNDRIVETOCENTER;
                     }
+
                     break;
-                case ALIGNDRIVETOCENTER:
+                case ALIGNTURN:
                     break;
-                case ALIGNSTRAFFTOCENTERORTURN:
+                case ALIGNDRIVEINTOCRYPTO:
                     break;
                 case KEYCOLUMNSET:
-                    if (keyColumn != RelicRecoveryVuMark.UNKNOWN) {
+
+                    if(switchKeyColumn && keyColumn != RelicRecoveryVuMark.UNKNOWN){
                         targetColumn = keyColumn;
+                    }else{
+                        //default column set here based on position
                     }
-                    auto = AutoEnum.GLYPHARMDOWN;
+                    auto = AutoEnum.GLYPH;
+                    break;
+                case GLYPH:
                     break;
                 case GLYPHARMDOWN:
                     break;
@@ -162,6 +175,8 @@ public class Auto extends Config {
                 case GLYPHPLACE:
                     break;
                 case GLYPHPLACERESET:
+                    break;
+                case COLLECT:
                     break;
                 case COLLECTDRIVEBACKFROMCRYPTO:
                     break;
@@ -264,19 +279,4 @@ public class Auto extends Config {
 
     //GENERAL FUNCTIONS HERE
 
-
-    //gyro Functions
-    double targetHeading = 0.0;
-
-    public double updateTurning() {
-        return 0.0;
-    }
-
-    public boolean isRobotCorrectDirection() {
-        return true;
-    }
-
-    public double getHeading() {
-        return navx_device.getYaw();
-    }
 }
