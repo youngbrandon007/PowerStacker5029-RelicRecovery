@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.column;
+import org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph;
 
 import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.NONE;
 
@@ -28,10 +30,10 @@ public class Auto extends Config {
     enum AutoEnum {
         WAIT,
         JEWELS, JEWELDOWN, JEWELPROCESS, JEWELHIT, JEWELUP, JEWELRESET,
-        ALIGN,ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
+        ALIGN, ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
         KEYCOLUMNSET,
-        GLYPH,GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
-        COLLECT, COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING
+        GLYPH, GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
+        COLLECT, COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, ALIGNBACKINTOPLATFORM, ALIGNDRIVETOCENTER, COLLECTPROCESSFORPLACING
     }
 
     ElapsedTime wait = new ElapsedTime();
@@ -113,14 +115,14 @@ public class Auto extends Config {
             telemetry.addData("AUTO", auto);
             switch (auto) {
                 case WAIT:
-                    if (!switchDelayEnabled || wait.seconds() >= slideDelay){
+                    if (!switchDelayEnabled || wait.seconds() >= slideDelay) {
                         auto = AutoEnum.JEWELS;
                     }
                     break;
                 case JEWELS:
                     if (!switchJewels) {
                         auto = AutoEnum.ALIGN;
-                    }else{
+                    } else {
                         auto = AutoEnum.JEWELDOWN;
                     }
                     break;
@@ -153,9 +155,9 @@ public class Auto extends Config {
                     break;
                 case KEYCOLUMNSET:
 
-                    if(switchKeyColumn && keyColumn != RelicRecoveryVuMark.UNKNOWN){
+                    if (switchKeyColumn && keyColumn != RelicRecoveryVuMark.UNKNOWN) {
                         targetColumn = keyColumn;
-                    }else{
+                    } else {
                         //default column set here based on position
                     }
                     auto = AutoEnum.GLYPH;
@@ -202,11 +204,11 @@ public class Auto extends Config {
 
 
     //GLYPH FUNCTIONS HERE
-    public Constants.auto.autoGlyph.column getColumn(Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+    public column getColumn(glyph firstGlyph, glyph secondGlyph) {
         int[] cipherPoints = new int[3];
         for (int i = 0; i < 3; i++) {
             if (canGlyphsGoInColumn(i, firstGlyph, secondGlyph)) {
-                Constants.auto.autoGlyph.glyph[][] potBox = addGlyphsToColumn(i, BOX, firstGlyph, secondGlyph);
+                glyph[][] potBox = addGlyphsToColumnAlg(i, BOX, firstGlyph, secondGlyph);
                 boolean[] workingCipher = {true, true, true, true, true, true};
                 for (int k = 0; k < 6; k++) {
                     for (int j = 0; j < 4; j++) {
@@ -230,26 +232,59 @@ public class Auto extends Config {
         }
         switch (max) {
             case 0:
-                return Constants.auto.autoGlyph.column.RIGHT;
+                return column.RIGHT;
             case 1:
-                return Constants.auto.autoGlyph.column.CENTER;
+                return column.CENTER;
             case 2:
-                return Constants.auto.autoGlyph.column.LEFT;
+                return column.LEFT;
             default:
-                return Constants.auto.autoGlyph.column.LEFT;
+                return column.LEFT;
 
         }
     }
 
-    private static Constants.auto.autoGlyph.glyph[][] addGlyphsToColumn(int column, Constants.auto.autoGlyph.glyph[][] box, Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+    private static glyph[][] addGlyphsToColumnAlg(int column, glyph[][] box, glyph firstGlyph, glyph secondGlyph) {
         for (int i = 0; i < 4; i++) {
             if (box[i][column] != NONE) {
+                if (secondGlyph != NONE) {
+                    box[i - 1][column] = secondGlyph;
+                    box[i - 2][column] = firstGlyph;
+                } else {
+                    box[i - 1][column] = firstGlyph;
+                }
+                i = 5;
+            }
+        }
+        return box;
+    }
 
+    public void addGlyphsToColumn(column column, glyph firstGlyph, glyph secondGlyph) {
+        int columnNumb = 1;
+        switch (column) {
+            case LEFT:
+                columnNumb = 0;
+                break;
+            case CENTER:
+                columnNumb = 1;
+                break;
+            case RIGHT:
+                columnNumb = 2;
+                break;
+        }
+        for (int i = 0; i < 4; i++) {
+            if (BOX[i][columnNumb] != NONE) {
+                if (secondGlyph != NONE) {
+                    BOX[i - 1][columnNumb] = secondGlyph;
+                    BOX[i - 2][columnNumb] = firstGlyph;
+                } else {
+                    BOX[i - 1][columnNumb] = firstGlyph;
+                }
+                i = 5;
             }
         }
     }
 
-    private boolean canGlyphsGoInColumn(int column, Constants.auto.autoGlyph.glyph firstGlyph, Constants.auto.autoGlyph.glyph secondGlyph) {
+    private boolean canGlyphsGoInColumn(int column, glyph firstGlyph, glyph secondGlyph) {
         int numbOfGlyphs = 0;
         if (firstGlyph != NONE) {
             numbOfGlyphs++;
