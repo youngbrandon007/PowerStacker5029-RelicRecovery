@@ -52,10 +52,10 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     //Still need detecting
     public boolean switchJewels = false;
     public boolean switchGlyphs = true;
-    public boolean switchGlyphWhite = true; // ignored right now
+    public boolean switchKeyColumn = false;
     public boolean switchMoreGlyphs = false;
     public boolean switchPID = false;
-
+    public boolean switchGlyphWhite = true; // ignored right now or might be a sensor
 
     @Override
     public void config(LinearOpMode linearOpMode) {
@@ -97,7 +97,7 @@ public abstract class Config extends PineappleConfigLinearOpMode{
 
     public void displaySwitchBorad(){
         String autonomousDescription = switchColor + " " + switchPosition + " @" + slideDelay + "s " + FontFormating.getMark(switchDelayEnabled) + "     PID" + FontFormating.getMark(switchPID);
-        String autonomousSettings = "_o̲_o̲_" + FontFormating.getMark(switchJewels) + " " + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchGlyphs) + " +" + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchMoreGlyphs);
+        String autonomousSettings = "_o̲_o̲_" + FontFormating.getMark(switchJewels) + " " + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchGlyphs) + " ⚿" + FontFormating.getBox(switchKeyColumn) + " +" + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchMoreGlyphs);
         telemetry.addLine(autonomousDescription);
         telemetry.addLine(autonomousSettings);
     }
