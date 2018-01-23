@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigL
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
 import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 
@@ -38,7 +39,10 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     public PineappleServo servoFlipL;
     public PineappleServo servoRelicGrab;
     public PineappleServo servoRelicTurn;
-
+    public PineappleServo servoJewelHit;
+    public PineappleServo servoJewel;
+    //JEWEL
+    public Constants.auto.jewel.jewelState jewelState = Constants.auto.jewel.jewelState.NON_NON;
     //GLYPH
     Constants.auto.autoGlyph.glyph[][] BOX = {
             {NONE, NONE, NONE},
@@ -48,6 +52,8 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     };
     //SENSORS
     public DigitalChannel limitLift;
+    public PineappleSensor csJewelLeft;
+    public PineappleSensor csJewelRight;
     //GYRO
     public boolean calibration_complete = false;
     public final int NAVX_DIM_I2C_PORT = 0;
@@ -89,12 +95,16 @@ public abstract class Config extends PineappleConfigLinearOpMode{
         servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.rightDown);
         servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG",202.5, Constants.relic.grabClose);
         servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT",202.5, 0);
-
+//        servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP); //TODO ADD FOR JEWEL
+//        servoJewelHit = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELHITLEFT);//TODO ADD FOR JEWEL
         //SENSORS
+//        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL"); //TODO ADD FOR JEWELS
+//        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");//TODO ADD FOR JEWEL
+
 //        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
 //                NAVX_DIM_I2C_PORT,
 //                AHRS.DeviceDataType.kProcessedData,
-//                NAVX_DEVICE_UPDATE_RATE_HZ);
+//                NAVX_DEVICE_UPDATE_RATE_HZ);//TODO ADD FOR PID
         limitLift = linearOpMode.hardwareMap.digitalChannel.get("LL");
     }
 
