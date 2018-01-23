@@ -463,7 +463,15 @@ public class Auto extends Config {
                     box[i - 1][column] = firstGlyph;
                 }
                 i = 5;
+            } else if (i==3) {
+            if (secondGlyph != NONE) {
+                    box[i - 1][column] = secondGlyph;
+                    box[i - 2][column] = firstGlyph;
+                } else {
+                    box[i - 1][column] = firstGlyph;
+                }
             }
+            
         }
         return box;
     }
@@ -490,6 +498,13 @@ public class Auto extends Config {
                     BOX[i - 1][columnNumb] = firstGlyph;
                 }
                 i = 5;
+            } else if (i==3) {
+                 if (secondGlyph != NONE) {
+                    BOX[i - 1][columnNumb] = secondGlyph;
+                    BOX[i - 2][columnNumb] = firstGlyph;
+                } else {
+                    BOX[i - 1][columnNumb] = firstGlyph;
+                }   
             }
         }
     }
