@@ -1,21 +1,52 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 
+import android.graphics.Bitmap;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraCalibration;
+import com.vuforia.Image;
+import com.vuforia.Matrix34F;
 import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Tool;
+import com.vuforia.Vec3F;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
 import org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.column;
 import org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph;
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia.SaveImage;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia.matToBitmap;
 import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph.NONE;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.jewel.jewelHitSide.LEFT;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.jewel.jewelHitSide.RIGHT;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.jewel.jewelState.BLUE_RED;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.jewel.jewelState.NON_NON;
+import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.jewel.jewelState.RED_BLUE;
 
 /**
  * Created by Brandon on 1/8/2018.
@@ -99,6 +130,19 @@ public class Auto extends Config {
                     if (listener.getPose() != null) {
                         imageVisible = true;
                         keyColumn = RelicRecoveryVuMark.from(relicTemplate);
+                        jewelState = getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
+
+                        switch (jewelState) {
+                            case NON_NON:
+                                telemetry.addData("Jewel State", "NON NON");
+                                break;
+                            case BLUE_RED:
+                                telemetry.addData("Jewel State", "RED BLUE");
+                                break;
+                            case RED_BLUE:
+                                telemetry.addData("Jewel State", "BLUE RED");
+                                break;
+                        }
                     } else {
                         imageVisible = false;
                     }
@@ -198,7 +242,107 @@ public class Auto extends Config {
             telemetry.update();
         }
     }
+
     //JEWEL FUNCTIONS HERE
+    public Constants.auto.jewel.jewelHitSide jewelHitSide() {
+        Constants.auto.jewel.jewelState left = getLeftCSJewelState();
+        Constants.auto.jewel.jewelState right = getRightCSJewelState();
+        Constants.auto.jewel.jewelState state;
+        if (left == right) {
+            if (left != NON_NON) {
+                state = left;
+            } else {
+                state = jewelState;
+            }
+
+        } else if (left != NON_NON &&left==jewelState) {
+            state = left;
+        } else if (right != NON_NON &&right==jewelState){
+            state = right;
+        } else if (left== NON_NON&&jewelState== NON_NON&&right!= NON_NON) {
+            state = right;
+        }else if (right== NON_NON&&jewelState== NON_NON&&left!= NON_NON) {
+            state = left;
+        } else {
+            state = NON_NON;
+        }
+        if (state == NON_NON) {
+            return Constants.auto.jewel.jewelHitSide.NONE;
+        }
+        return (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (state == RED_BLUE) ? RIGHT : LEFT : (state == RED_BLUE) ? LEFT : RIGHT;
+
+    }
+
+    public Constants.auto.jewel.jewelState getLeftCSJewelState() {
+        if (csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) > csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+            return BLUE_RED;
+        } else if (csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) < csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+            return RED_BLUE;
+        } else {
+            return NON_NON;
+        }
+    }
+
+    public Constants.auto.jewel.jewelState getRightCSJewelState() {
+
+        if (csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) < csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+            return BLUE_RED;
+        } else if (csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) > csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+            return RED_BLUE;
+        } else {
+            return NON_NON;
+        }
+    }
+    public static Constants.auto.jewel.jewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
+        try {
+            OpenGLMatrix pose = track.getRawPose();
+            if (pose != null && img != null && img.getPixels() != null) {
+                Matrix34F rawPose = new Matrix34F();
+                float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
+                rawPose.setData(poseData);
+                float[][] corners = new float[4][2];
+                corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -55, 50)).getData();//UL TODO FIND NEW LOCATIONS
+                corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -55, 50)).getData();//UR TODO FIND NEW LOCATIONS
+                corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -300, 50)).getData();//LR TODO FIND NEW LOCATIONS
+                corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -300, 50)).getData();//LL TODO FIND NEW LOCATIONS
+                Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
+                ByteBuffer pix = img.getPixels();
+                bm.copyPixelsFromBuffer(pix);
+                SaveImage(bm, "original");
+                Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
+                Utils.bitmapToMat(bm, crop);
+                float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
+                float y = Math.min(Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1]));
+                float width = Math.max(Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0]));
+                float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
+                x = Math.max(x, 0);
+                y = Math.max(y, 0);
+                if (width<20||height<20) {
+                    return NON_NON;
+                }
+                width = (x + width > crop.cols()) ? crop.cols() - x : width;
+                height = (x + height > crop.rows()) ? crop.rows() - x : height;
+                Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
+                SaveImage(matToBitmap(cropped), "crop");
+                Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL);
+                Mat mask = new Mat();
+                Core.inRange(cropped, new Scalar(50, 20, 70), new Scalar(255, 255, 120), mask);
+                SaveImage(matToBitmap(mask), "mask");
+                Moments mmnts = Imgproc.moments(mask, true);
+                if ((mmnts.get_m10() / mmnts.get_m00()) < cropped.cols() / 2) {
+                    return BLUE_RED;
+                } else {
+                    return RED_BLUE;
+                }
+
+            }
+            return NON_NON;
+        } catch (Exception e)
+
+        {
+            return NON_NON;
+        }
+    }
 
     //ALIGN FUNCTIONS HERE
 
