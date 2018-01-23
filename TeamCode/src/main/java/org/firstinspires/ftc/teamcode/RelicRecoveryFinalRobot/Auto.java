@@ -498,7 +498,7 @@ public class Auto extends Config {
                     BOX[i - 1][columnNumb] = firstGlyph;
                 }
                 i = 5;
-            } else if (i==3&&box[i][column]==NONE) {
+            } else if (i==3&&BOX[i][columnNumb]==NONE) {
                  if (secondGlyph != NONE) {
                     BOX[i - 1][columnNumb] = secondGlyph;
                     BOX[i - 2][columnNumb] = firstGlyph;
