@@ -112,6 +112,10 @@ public class Constants {
             public static final double JEWELHITRIGHT = 0;//TODO NEED TO FIND
             public static final double JEWELHITLEFT = 0;//TODO NEED TO FIND
             public static final double JEWELHITCENTER = 0;//TODO NEED TO FIND
+
+            public static final int JEWELDOWNMILI = 1000;
+            public static final int JEWELUPMILI = 1000;
+            public static final int JEWELHITMILI = 1000;
         }
     }
 
