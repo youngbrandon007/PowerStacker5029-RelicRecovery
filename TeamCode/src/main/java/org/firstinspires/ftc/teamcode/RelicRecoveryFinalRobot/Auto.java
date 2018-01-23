@@ -14,6 +14,7 @@ import com.vuforia.Vec3F;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -60,7 +61,7 @@ public class Auto extends Config {
 
     enum AutoEnum {
         WAIT,
-        JEWELS, JEWELDOWN, JEWELPROCESS, JEWELHIT, JEWELUP, JEWELRESET,
+        JEWELS, JEWELDOWN, JEWELHIT, JEWELUP, JEWELRESET,
         ALIGN, ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
         KEYCOLUMNSET,
         GLYPH, GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
@@ -168,17 +169,26 @@ public class Auto extends Config {
                         auto = AutoEnum.ALIGN;
                     } else {
                         auto = AutoEnum.JEWELDOWN;
+                        wait.reset();
                     }
                     break;
                 case JEWELDOWN:
-                    break;
-                case JEWELPROCESS:
+                    if (wait.milliseconds() > jewelDown()) {
+                        auto = AutoEnum.JEWELHIT;
+                    }
+                    jewelCSLEDON();
                     break;
                 case JEWELHIT:
+                    if (wait.milliseconds() > jewelHit()) {
+                        auto = AutoEnum.JEWELUP;
+                    }
                     break;
                 case JEWELUP:
-                    break;
-                case JEWELRESET:
+                    if (wait.milliseconds() > jewelUp()) {
+                        auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
+                    }
+                    jewelCSLEDOFF();
+
                     break;
                 case ALIGNDRIVEOFFPLATFORM:
                     if (true) {
@@ -244,6 +254,46 @@ public class Auto extends Config {
     }
 
     //JEWEL FUNCTIONS HERE
+    public void jewelCSLEDON() {
+        csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSLEDON);
+        csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSLEDON);
+
+    }
+
+    public void jewelCSLEDOFF() {
+        csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSLEDOFF);
+        csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSLEDOFF);
+
+    }
+
+    public int jewelDown() {
+        servoJewel.setPosition(Constants.auto.jewel.JEWELDOWN);
+        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITCENTER);
+        return Constants.auto.jewel.JEWELDOWNMILI;
+    }
+
+    public int jewelUp() {
+        servoJewel.setPosition(Constants.auto.jewel.JEWELUP);
+        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITCENTER);
+        return Constants.auto.jewel.JEWELUPMILI;
+    }
+
+    public int jewelHit() {
+        switch (jewelHitSide()) {
+            case RIGHT:
+                servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITRIGHT);
+                return Constants.auto.jewel.JEWELHITMILI;
+            case LEFT:
+                servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
+                return Constants.auto.jewel.JEWELHITMILI;
+            case NONE:
+                return 0;
+            default:
+                return 0;
+        }
+
+    }
+
     public Constants.auto.jewel.jewelHitSide jewelHitSide() {
         Constants.auto.jewel.jewelState left = getLeftCSJewelState();
         Constants.auto.jewel.jewelState right = getRightCSJewelState();
@@ -255,13 +305,13 @@ public class Auto extends Config {
                 state = jewelState;
             }
 
-        } else if (left != NON_NON &&left==jewelState) {
+        } else if (left != NON_NON && left == jewelState) {
             state = left;
-        } else if (right != NON_NON &&right==jewelState){
+        } else if (right != NON_NON && right == jewelState) {
             state = right;
-        } else if (left== NON_NON&&jewelState== NON_NON&&right!= NON_NON) {
+        } else if (left == NON_NON && jewelState == NON_NON && right != NON_NON) {
             state = right;
-        }else if (right== NON_NON&&jewelState== NON_NON&&left!= NON_NON) {
+        } else if (right == NON_NON && jewelState == NON_NON && left != NON_NON) {
             state = left;
         } else {
             state = NON_NON;
@@ -273,7 +323,7 @@ public class Auto extends Config {
 
     }
 
-    public Constants.auto.jewel.jewelState getLeftCSJewelState() {
+    private Constants.auto.jewel.jewelState getLeftCSJewelState() {
         if (csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) > csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
             return BLUE_RED;
         } else if (csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) < csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
@@ -283,7 +333,7 @@ public class Auto extends Config {
         }
     }
 
-    public Constants.auto.jewel.jewelState getRightCSJewelState() {
+    private Constants.auto.jewel.jewelState getRightCSJewelState() {
 
         if (csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) < csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
             return BLUE_RED;
@@ -293,6 +343,7 @@ public class Auto extends Config {
             return NON_NON;
         }
     }
+
     public static Constants.auto.jewel.jewelState getJewelConfig(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
         try {
             OpenGLMatrix pose = track.getRawPose();
@@ -317,7 +368,7 @@ public class Auto extends Config {
                 float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
                 x = Math.max(x, 0);
                 y = Math.max(y, 0);
-                if (width<20||height<20) {
+                if (width < 20 || height < 20) {
                     return NON_NON;
                 }
                 width = (x + width > crop.cols()) ? crop.cols() - x : width;
