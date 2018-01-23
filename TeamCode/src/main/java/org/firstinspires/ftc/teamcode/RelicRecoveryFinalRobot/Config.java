@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.kauailabs.navx.ftc.AHRS;
+import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
@@ -20,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
  * Created by Brandon on 1/8/2018.
  */
 
-public abstract class Config extends PineappleConfigLinearOpMode{
+public abstract class Config extends PineappleConfigLinearOpMode {
 
     //DRIVE MOTORS
     public PineappleMotor driveFrontRight;
@@ -55,10 +57,20 @@ public abstract class Config extends PineappleConfigLinearOpMode{
     public PineappleSensor csJewelLeft;
     public PineappleSensor csJewelRight;
     //GYRO
-    public boolean calibration_complete = false;
     public final int NAVX_DIM_I2C_PORT = 0;
     public AHRS navx_device;
+    public navXPIDController yawPIDController;
     public final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
+    public final double TOLERANCE_DEGREES = 2.0;
+    public final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
+    public final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
+    public final double YAW_PID_P = 0.005;
+    public final double YAW_PID_I = 0.0;
+    public final double YAW_PID_D = 0.0;
+
+    public boolean calibration_complete = false;
+
+    navXPIDController.PIDResult yawPIDResult;
 
     //SWITCH BOARD
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
@@ -91,10 +103,10 @@ public abstract class Config extends PineappleConfigLinearOpMode{
         motorRelic = robotHandler.motorHandler.newMotor("MR");
 
         //SERVOS
-        servoFlipL = robotHandler.servoHandler.newLimitServo( "SL", 202.5, Constants.flip.leftDown);
-        servoFlipR = robotHandler.servoHandler.newLimitServo("SR",202.5, Constants.flip.rightDown);
-        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG",202.5, Constants.relic.grabClose);
-        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT",202.5, 0);
+        servoFlipL = robotHandler.servoHandler.newLimitServo("SL", 202.5, Constants.flip.leftDown);
+        servoFlipR = robotHandler.servoHandler.newLimitServo("SR", 202.5, Constants.flip.rightDown);
+        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabClose);
+        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, 0);
 //        servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP); //TODO ADD FOR JEWEL
 //        servoJewelHit = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELHITLEFT);//TODO ADD FOR JEWEL
         //SENSORS
@@ -105,10 +117,16 @@ public abstract class Config extends PineappleConfigLinearOpMode{
 //                NAVX_DIM_I2C_PORT,
 //                AHRS.DeviceDataType.kProcessedData,
 //                NAVX_DEVICE_UPDATE_RATE_HZ);//TODO ADD FOR PID
+        yawPIDController.setSetpoint(0);
+        yawPIDController.setContinuous(true);
+        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
+        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+        yawPIDController.enable(true);
         limitLift = linearOpMode.hardwareMap.digitalChannel.get("LL");
     }
 
-    public void loadSwitchBoard(){
+    public void loadSwitchBoard() {
 //        switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
 //        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
 //        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
@@ -116,7 +134,7 @@ public abstract class Config extends PineappleConfigLinearOpMode{
 //        slideDelay = (switchDelayEnabled) ? robotHandler.switchBoard.loadAnalog("delay") : 0.0;
     }
 
-    public void displaySwitchBorad(){
+    public void displaySwitchBorad() {
         String autonomousDescription = switchColor + " " + switchPosition + " @" + slideDelay + "s " + FontFormating.getMark(switchDelayEnabled) + "     PID" + FontFormating.getMark(switchPID);
         String autonomousSettings = "_o̲_o̲_" + FontFormating.getMark(switchJewels) + " " + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchGlyphs) + " ⚿" + FontFormating.getBox(switchKeyColumn) + " +" + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchMoreGlyphs);
         telemetry.addLine(autonomousDescription);

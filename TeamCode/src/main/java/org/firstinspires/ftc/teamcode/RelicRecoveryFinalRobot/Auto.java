@@ -154,10 +154,23 @@ public class Auto extends Config {
 
         waitForStart();
         wait.reset();
-
+        double TARGETANGLE = 0;
         //MAIN LOOP
         while (opModeIsActive()) {
-            telemetry.addData("AUTO", auto);
+            //Always On Telemetry
+            telemetry.addData("AUTO: ", auto);
+            telemetry.addData("GYRO→TARGET: ", navx_device.getYaw()+"→"+TARGETANGLE);
+
+            yawPIDController.setSetpoint(TARGETANGLE);
+            if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
+                if (yawPIDResult.isOnTarget()) {
+                } else {
+                    double output = yawPIDResult.getOutput();
+                }
+            }
+
+
+
             switch (auto) {
                 case WAIT:
                     if (!switchDelayEnabled || wait.seconds() >= slideDelay) {

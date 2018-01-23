@@ -3,40 +3,49 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Vuforia;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import java.io.Console;
+import java.text.DecimalFormat;
 
 /**
  * Created by Brandon on 1/8/2018.
  */
-@Autonomous(name = "AUTO Van")
-@Disabled
-public class AutoVan extends Config {
+@Autonomous(name = "PIDTUNE")
+public class PIDTuning extends Config {
 
     @Override
     public void runOpMode() throws InterruptedException {
         config(this);
 
         waitForStart();
-        robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), 0.3, 0, 1);
-        Thread.sleep(1500);
-        servoFlipL.setPosition(Constants.flip.leftUp);
-        servoFlipR.setPosition(Constants.flip.rightUp);
-        Thread.sleep(500);
-        robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), 0.5, 0, 1);
-        Thread.sleep(2000);
-        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.5, 0, 1);
+        AnalogInput PPot = hardwareMap.analogInput.get("P");
+        AnalogInput IPot = hardwareMap.analogInput.get("I");
+        AnalogInput DPot = hardwareMap.analogInput.get("D");
 
-        Thread.sleep(500);
+        DecimalFormat decimalFormat = new DecimalFormat("#.########");
+        double P = Double.parseDouble(decimalFormat.format(PPot.getVoltage() / 20));
+        double I = Double.parseDouble(decimalFormat.format(IPot.getVoltage() / 50));
+
+        double D = Double.parseDouble(decimalFormat.format(DPot.getVoltage() / 50));
+        while (!opModeIsActive()) {
+            telemetry.addData("P:", P);
+            telemetry.addData("I:", I);
+            telemetry.addData("D:", D);
+            PPot.getVoltage();
+            P = Double.parseDouble(decimalFormat.format(PPot.getVoltage() / 20));
+            I = Double.parseDouble(decimalFormat.format(IPot.getVoltage() / 100));
+            D = Double.parseDouble(decimalFormat.format(DPot.getVoltage() / 20));
+            telemetry.update();
+        }
+        telemetry.addData("PID", "Tuning Finished Press play");
+        telemetry.update();
+        waitForStart();
+        robotHandler.auto.gyroTurnPID(90, P, I, D, navx_device);
 
     }
 
 }
+
+
+
