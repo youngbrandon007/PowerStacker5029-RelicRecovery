@@ -100,6 +100,19 @@ public class Constants {
             public static final autoGlyph.glyph[][][] CIPHERS = {FROGBROWN, FROGGREY,BIRDBROWN,BIRDGREY,SNAKEBROWN,SNAKEGREY };
 
         }
+        public static class jewel {
+            public enum jewelState {
+                BLUE_RED, RED_BLUE, NON_NON
+            }
+            public enum jewelHitSide {
+                RIGHT, LEFT, NONE
+            }
+            public static final double JEWELDOWN = 0;//TODO NEED TO FIND
+            public static final double JEWELUP = 0;//TODO NEED TO FIND
+            public static final double JEWELHITRIGHT = 0;//TODO NEED TO FIND
+            public static final double JEWELHITLEFT = 0;//TODO NEED TO FIND
+            public static final double JEWELHITCENTER = 0;//TODO NEED TO FIND
+        }
     }
 
 }
