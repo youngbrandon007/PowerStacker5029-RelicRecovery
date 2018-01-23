@@ -61,7 +61,7 @@ public class Auto extends Config {
 
     enum AutoEnum {
         WAIT,
-        JEWELS, JEWELDOWN, JEWELHIT, JEWELUP, JEWELRESET,
+        JEWELS, JEWELDOWN, JEWELHIT, JEWELUP,
         ALIGN, ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
         KEYCOLUMNSET,
         GLYPH, GLYPHARMDOWN, GLYPHSTRAFFTOCOLUMN, GLYPHDRIVETOCRYPTO, GLYPHSTRAFFTOALIGN, GLYPHBOTHARMSDOWN, GLYPHPLACE, GLYPHPLACERESET,
@@ -242,6 +242,7 @@ public class Auto extends Config {
                 case GLYPHBOTHARMSDOWN:
                     break;
                 case GLYPHPLACE:
+//                    addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
                     break;
                 case GLYPHPLACERESET:
                     break;
@@ -260,6 +261,7 @@ public class Auto extends Config {
                 case COLLECTRETRACESTEPS:
                     break;
                 case COLLECTPROCESSFORPLACING:
+//                    getColumn(FIRST GLYPH COLOR, SECOND GLYPH COLOR);
                     break;
             }
             telemetry.update();
