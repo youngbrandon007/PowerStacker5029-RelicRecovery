@@ -46,9 +46,6 @@ public class Constants {
     }
 
     public static class auto {
-        public static class RF {
-
-        }
 
         public static class autoGlyph {
             public enum glyph {
@@ -100,6 +97,18 @@ public class Constants {
             public static final autoGlyph.glyph[][][] CIPHERS = {FROGBROWN, FROGGREY,BIRDBROWN,BIRDGREY,SNAKEBROWN,SNAKEGREY };
 
         }
+
+        public static class Aligning{
+            public static final double leftUp = .5;
+            public static final double leftDown = .4;
+            public static final double rightUp = .5;
+            public static final double rightDown = .6;
+
+            //0 is left
+            //public static final double[][] FrontRedAlignArmPosition = {{ , , },{ , , }};
+            public static final double[] FrontRedAlignDrivingOffPlatform = {40.63 , 33.3, 31.37};
+        }
+
         public static class jewel {
             public enum jewelState {
                 BLUE_RED, RED_BLUE, NON_NON
