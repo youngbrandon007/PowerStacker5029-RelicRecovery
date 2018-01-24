@@ -54,7 +54,7 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
 public class Auto extends Config {
 
     enum InitEnum {
-        GYRO, VUFORIA, LOOP
+        HARDWAREINIT, GYRO, VUFORIA, LOOP
     }
 
     enum AutoEnum {
@@ -69,7 +69,7 @@ public class Auto extends Config {
     ElapsedTime wait = new ElapsedTime();
 
     AutoEnum auto = AutoEnum.WAIT;
-    InitEnum init = InitEnum.GYRO;
+    InitEnum init = InitEnum.HARDWAREINIT;
     RelicRecoveryVuMark targetColumn = RelicRecoveryVuMark.CENTER;
     RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 
@@ -80,8 +80,7 @@ public class Auto extends Config {
 
     boolean vuforiaInitialized = false;
     boolean imageVisible = false;
-
-    double PIDgyroCorrectionValue = 0.0;
+    boolean jewelScanned = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -100,7 +99,15 @@ public class Auto extends Config {
             telemetry.addLine(FontFormating.getMark(calibration_complete) + "GYRO CALIBRATION");
             telemetry.addLine(FontFormating.getMark(vuforiaInitialized) + "VUFORIA");
             telemetry.addLine(FontFormating.getMark(imageVisible) + "IMAGE VISIBLE-" + keyColumn);
+            telemetry.addLine(FontFormating.getMark(jewelScanned) + "JEWELS-" + jewelState);
+            telemetry.addLine(FontFormating.bigCheckMark(telemetry.getItemSeparator()));
             switch (init) {
+                case HARDWAREINIT:
+                    servoFlipL.setPosition(Constants.flip.leftFlat);
+                    servoFlipR.setPosition(Constants.flip.rightFlat);
+
+                    init = InitEnum.GYRO;
+                    break;
                 case GYRO:
                     calibration_complete = !navx_device.isCalibrating();
                     if (!calibration_complete) {
@@ -130,18 +137,6 @@ public class Auto extends Config {
                         imageVisible = true;
                         keyColumn = RelicRecoveryVuMark.from(relicTemplate);
                         jewelState = getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
-
-                        switch (jewelState) {
-                            case NON_NON:
-                                telemetry.addData("Jewel State", "NON NON");
-                                break;
-                            case BLUE_RED:
-                                telemetry.addData("Jewel State", "RED BLUE");
-                                break;
-                            case RED_BLUE:
-                                telemetry.addData("Jewel State", "BLUE RED");
-                                break;
-                        }
                     } else {
                         imageVisible = false;
                     }
@@ -159,7 +154,6 @@ public class Auto extends Config {
         while (opModeIsActive()) {
             //Always On Telemetry
             telemetry.addData("AUTO: ", auto);
-
 
             yawPIDController.setSetpoint(TARGETANGLE);
             if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
@@ -254,9 +248,19 @@ public class Auto extends Config {
                     }
                     break;
                 case GLYPHPLACE:
-//                    addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
+                    servoFlipL.setPosition(Constants.flip.leftUp);
+                    servoFlipR.setPosition(Constants.flip.rightUp);
+                    if(wait.milliseconds() > 1000){
+                        //addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
+                        auto = AutoEnum.GLYPHPLACERESET;
+                    }
                     break;
                 case GLYPHPLACERESET:
+                    servoFlipL.setPosition(Constants.flip.leftDown);
+                    servoFlipR.setPosition(Constants.flip.rightDown);
+                    if(wait.milliseconds() > 1000){
+                        stop();
+                    }
                     break;
                 case COLLECT:
                     break;

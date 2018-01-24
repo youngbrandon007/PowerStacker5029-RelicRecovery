@@ -9,6 +9,19 @@ public class FontFormating {
     public static final String xMark = "x";
     public static final String emptyBox = "□";
     public static final String filledBox = "■";
+    public static final String[] bigCheckMark =
+            {
+                    "                ▄▛▀ " +
+                    "              ▄█▀   " +
+                    "            ▄█▀     " +
+                    "          ▄██▀      " +
+                    "         ▄██        " +
+                    "  ▄     ██▀         " +
+                    " ▀██▄  ██▀        " +
+                    "  ▀██▄██▀         " +
+                    "   ▐███▌            " +
+                    "    ▀█▀             "
+            };
 
     public static String getMark(boolean mark){
         return (mark) ? checkMark : xMark;
@@ -16,5 +29,9 @@ public class FontFormating {
 
     public static String getBox(boolean filled){
         return (filled) ? filledBox : emptyBox;
+    }
+
+    public static String bigCheckMark(String itemSeperater){
+
     }
 }
