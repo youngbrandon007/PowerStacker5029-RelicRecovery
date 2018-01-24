@@ -236,15 +236,22 @@ public class Auto extends Config {
                     }
                     break;
                 case ALIGNDRIVEINTOCRYPTO:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), .3, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), .4, PIDrotationOut, 1.0);
                     if(wait.milliseconds() > 1000){
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPH;
                     }
                     break;
                 case GLYPH:
+                    auto = AutoEnum.GLYPHSTRAFFTOALIGN;
+                    wait.reset();
                     break;
                 case GLYPHSTRAFFTOALIGN:
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), .4, PIDrotationOut, 1.0);
+                    if(wait.milliseconds() > 500){
+                        robotHandler.drive.stop();
+                        
+                    }
                     break;
                 case GLYPHPLACE:
 //                    addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
