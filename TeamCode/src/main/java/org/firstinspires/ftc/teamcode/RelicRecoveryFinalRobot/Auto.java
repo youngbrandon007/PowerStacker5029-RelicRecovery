@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sun.tools.javac.main.OptionHelper;
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
 import com.vuforia.Matrix34F;
@@ -100,7 +101,8 @@ public class Auto extends Config {
             telemetry.addLine(FontFormating.getMark(vuforiaInitialized) + "VUFORIA");
             telemetry.addLine(FontFormating.getMark(imageVisible) + "IMAGE VISIBLE-" + keyColumn);
             telemetry.addLine(FontFormating.getMark(jewelScanned) + "JEWELS-" + jewelState);
-            telemetry.addLine(FontFormating.bigCheckMark(telemetry.getItemSeparator()));
+            FontFormating.bigCheckMark(telemetry);
+            telemetry.addData("GYRO",Mgyro.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING));
             switch (init) {
                 case HARDWAREINIT:
                     servoFlipL.setPosition(Constants.flip.leftFlat);
@@ -109,10 +111,11 @@ public class Auto extends Config {
                     init = InitEnum.GYRO;
                     break;
                 case GYRO:
-                    calibration_complete = !navx_device.isCalibrating();
+                    //calibration_complete = !navx_device.isCalibrating();
+                    calibration_complete= true;
                     if (!calibration_complete) {
                     } else {
-                        navx_device.zeroYaw();
+                        //navx_device.zeroYaw();
                         init = InitEnum.VUFORIA;
                     }
                     break;
@@ -155,18 +158,34 @@ public class Auto extends Config {
             //Always On Telemetry
             telemetry.addData("AUTO: ", auto);
 
-            yawPIDController.setSetpoint(TARGETANGLE);
-            if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
-                if (yawPIDResult.isOnTarget()) {
-                    PIDonTarget = true;
-                    PIDrotationOut = 0.0;
-                } else {
-                    PIDrotationOut = yawPIDResult.getOutput();
-                    PIDonTarget = false;
-                }
+//            yawPIDController.setSetpoint(TARGETANGLE);
+//            if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
+//                if (yawPIDResult.isOnTarget()) {
+//                    PIDonTarget = true;
+//                    PIDrotationOut = 0.0;
+//                } else {
+//                    PIDrotationOut = yawPIDResult.getOutput();
+//                    PIDonTarget = false;
+//                }
+//            }
+
+            double gyroOffset = Mgyro.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - TARGETANGLE;
+            while(gyroOffset > 180 || gyroOffset < -180){
+                gyroOffset += (gyroOffset > 180) ? -360 : (gyroOffset < -180) ? 360 : 0;
             }
 
-            telemetry.addLine("GYRO→TARGET: " + navx_device.getYaw()+"→"+TARGETANGLE);
+            if(gyroOffset > 2){
+                PIDrotationOut = .2;
+                PIDonTarget = false;
+            }else if(gyroOffset < -2){
+                PIDrotationOut = -.2;
+                PIDonTarget = false;
+            }else {
+                PIDrotationOut = 0;
+                PIDonTarget = true;
+            }
+            //navx_device.getYaw()
+            telemetry.addLine("GYRO→TARGET: " + Mgyro.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING)+"→"+TARGETANGLE + " " + gyroOffset + " " + PIDrotationOut + " " + PIDonTarget);
 
             switch (auto) {
                 case WAIT:
@@ -210,12 +229,11 @@ public class Auto extends Config {
                     } else {
                         //default column set here based on position
                     }
-                    auto = AutoEnum.GLYPH;
+                    auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
                     resetEncoders();
                     break;
                 case ALIGNDRIVEOFFPLATFORM:
-
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90),.5, PIDrotationOut, 1.0 );
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90),0.5, PIDrotationOut, 1.0 );
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.Aligning.FrontRedAlignDrivingOffPlatform[columnNumber(targetColumn)]))) {
                         robotHandler.drive.stop();
                         TARGETANGLE = 90;
@@ -223,14 +241,14 @@ public class Auto extends Config {
                     }
                     break;
                 case ALIGNTURN:
-                    robotHandler.drive.mecanum.setMecanum(0.0,0.0, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(0.0,0.0, PIDrotationOut * 3, 1.0);
                     if(PIDonTarget){
                         auto = AutoEnum.ALIGNDRIVEINTOCRYPTO;
                         wait.reset();
                     }
                     break;
                 case ALIGNDRIVEINTOCRYPTO:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), .4, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
                     if(wait.milliseconds() > 1000){
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPH;
@@ -241,10 +259,11 @@ public class Auto extends Config {
                     wait.reset();
                     break;
                 case GLYPHSTRAFFTOALIGN:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), .4, PIDrotationOut, 1.0);
-                    if(wait.milliseconds() > 500){
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), .6, PIDrotationOut, 1.0);
+                    if(wait.milliseconds() > 1000){
                         robotHandler.drive.stop();
-                        
+                        auto = AutoEnum.GLYPHPLACE;
+                        wait.reset();
                     }
                     break;
                 case GLYPHPLACE:
@@ -253,6 +272,7 @@ public class Auto extends Config {
                     if(wait.milliseconds() > 1000){
                         //addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
                         auto = AutoEnum.GLYPHPLACERESET;
+                        wait.reset();
                     }
                     break;
                 case GLYPHPLACERESET:

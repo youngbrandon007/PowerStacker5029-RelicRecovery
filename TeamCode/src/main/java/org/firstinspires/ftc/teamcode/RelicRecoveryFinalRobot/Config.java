@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogOutput;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
@@ -86,6 +89,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public boolean switchPID = false;
     public boolean switchGlyphWhite = true; // ignored right now or might be a sensor
 
+    public PineappleSensor Mgyro;
+
     @Override
     public void config(LinearOpMode linearOpMode) {
         robotHandler = new PineappleRobot(linearOpMode);
@@ -117,17 +122,20 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 //                NAVX_DIM_I2C_PORT,
 //                AHRS.DeviceDataType.kProcessedData,
 //                NAVX_DEVICE_UPDATE_RATE_HZ);//TODO ADD FOR PID
-        yawPIDController.setSetpoint(0);
-        yawPIDController.setContinuous(true);
-        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
-        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
-        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
-        yawPIDController.enable(true);
+//        yawPIDController.setSetpoint(0);
+//        yawPIDController.setContinuous(true);
+//        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
+//        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+//        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+//        yawPIDController.enable(true);
+
+        Mgyro = robotHandler.sensorHandler.newGyroSensor("MGYRO");
+
         limitLift = linearOpMode.hardwareMap.digitalChannel.get("LL");
     }
 
     public void loadSwitchBoard() {
-//        switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
+  //      switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
 //        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
 //        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
 //        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
