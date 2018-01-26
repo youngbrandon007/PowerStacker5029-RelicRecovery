@@ -42,8 +42,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     //SERVOS
     public PineappleServo servoFlipR;
     public PineappleServo servoFlipL;
-    public PineappleServo servoRelicGrab;
-    public PineappleServo servoRelicTurn;
+    public PineappleServo servoAlignLeft;
+    public PineappleServo servoAlignRight;
     public PineappleServo servoJewelHit;
     public PineappleServo servoJewel;
     //JEWEL
@@ -56,7 +56,10 @@ public abstract class Config extends PineappleConfigLinearOpMode {
             {NONE, NONE, NONE}
     };
     //SENSORS
-    public DigitalChannel limitLift;
+    public DigitalChannel limitLeftBack;
+    public DigitalChannel limitLeftSide;
+    public DigitalChannel limitRightBack;
+    public DigitalChannel limitRightSide;
     public PineappleSensor csJewelLeft;
     public PineappleSensor csJewelRight;
     //GYRO
@@ -110,13 +113,13 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         //SERVOS
         servoFlipL = robotHandler.servoHandler.newLimitServo("SL", 202.5, Constants.flip.leftDown);
         servoFlipR = robotHandler.servoHandler.newLimitServo("SR", 202.5, Constants.flip.rightDown);
-        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabClose);
-        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, 0);
-//        servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP); //TODO ADD FOR JEWEL
-//        servoJewelHit = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELHITLEFT);//TODO ADD FOR JEWEL
+        servoAlignLeft = robotHandler.servoHandler.newLimitServo("SAL", 202.5, Constants.alignment.ALIGNLEFTUP);
+        servoAlignRight = robotHandler.servoHandler.newLimitServo("SAR", 202.5, Constants.alignment.ALIGNRIGHTUP);
+        servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP); //TODO ADD FOR JEWEL
+        servoJewelHit = robotHandler.servoHandler.newLimitServo("SJH", 202.5, Constants.auto.jewel.JEWELHITLEFT);//TODO ADD FOR JEWEL
         //SENSORS
-//        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL"); //TODO ADD FOR JEWELS
-//        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");//TODO ADD FOR JEWEL
+        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL"); //TODO ADD FOR JEWELS
+        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");//TODO ADD FOR JEWEL
 
 //        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
 //                NAVX_DIM_I2C_PORT,
@@ -131,11 +134,14 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 
         Mgyro = robotHandler.sensorHandler.newGyroSensor("MGYRO");
 
-        limitLift = linearOpMode.hardwareMap.digitalChannel.get("LL");
+        limitLeftBack = linearOpMode.hardwareMap.digitalChannel.get("LLB");
+        limitLeftSide = linearOpMode.hardwareMap.digitalChannel.get("LLS");
+        limitRightBack = linearOpMode.hardwareMap.digitalChannel.get("LRB");
+        limitRightSide = linearOpMode.hardwareMap.digitalChannel.get("LRS");
     }
 
     public void loadSwitchBoard() {
-  //      switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.BLUE : RelicRecoveryEnums.AutoColor.RED;
+       switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.RED : RelicRecoveryEnums.AutoColor.BLUE;
 //        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
 //        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
 //        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");

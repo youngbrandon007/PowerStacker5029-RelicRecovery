@@ -17,9 +17,9 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
 
 public class Constants {
     public static class alignment {
-        public static final double ALIGNLEFTDOWN = 0.5;
+        public static final double ALIGNLEFTDOWN = 0.4;
         public static final double ALIGNLEFTUP = 1;
-        public static final double ALIGNRIGHTDOWN = 0.5;
+        public static final double ALIGNRIGHTDOWN = 0.6;
         public static final double ALIGNRIGHTUP = 0;
     }
     public static class drive {
@@ -111,7 +111,7 @@ public class Constants {
 
             //0 is left
             //public static final double[][] FrontRedAlignArmPosition = {{ , , },{ , , }};
-            public static final double[] FrontRedAlignDrivingOffPlatform = {40.63 , 33.3, 31.37};
+            public static final double[] FrontRedAlignDrivingOffPlatform = {45 , 34, 25};
         }
 
         public static class jewel {
@@ -121,15 +121,15 @@ public class Constants {
             public enum jewelHitSide {
                 RIGHT, LEFT, NONE
             }
-            public static final double JEWELDOWN = 0.7;//TODO NEED TO FIND
-            public static final double JEWELUP = 0;//TODO NEED TO FIND
-            public static final double JEWELHITRIGHT = 0;//TODO NEED TO FIND
-            public static final double JEWELHITLEFT = 1;//TODO NEED TO FIND
-            public static final double JEWELHITCENTER = 0.5;//TODO NEED TO FIND
+            public static final double JEWELDOWN = 0.95;
+            public static final double JEWELUP = 0.15;
+            public static final double JEWELHITRIGHT = 1;
+            public static final double JEWELHITLEFT = 0;
+            public static final double JEWELHITCENTER = 0.5;
 
-            public static final int JEWELDOWNMILI = 1000;
-            public static final int JEWELUPMILI = 1000;
-            public static final int JEWELHITMILI = 1000;
+            public static final int JEWELDOWNMILI = 1700;
+            public static final int JEWELUPMILI = 2500;
+            public static final int JEWELHITMILI = 1500;
 
         }
     }

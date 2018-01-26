@@ -23,9 +23,8 @@ public class Tele extends Config {
             collectorSpeed = (gamepad1.right_trigger > 0.10) ? gamepad1.right_trigger : (gamepad1.left_trigger > 0.10) ? -gamepad1.left_trigger : 0;
             motorCollectRight.setPower(collectorSpeed);
             motorCollectLeft.setPower(-collectorSpeed);
-            motorLift.setPower((gamepad2.dpad_up) ? -1 : (gamepad2.dpad_down) ? (limitLift.getState()) ? 0 : 0.5 : 0);
+            motorLift.setPower((gamepad2.dpad_up) ? -1 : (gamepad2.dpad_down) ? 1 : 0);
             motorRelic.setPower(gamepad2.left_stick_y);
-            servoRelicTurn.setPosition(servoRelicTurn.servoObject.getPosition() + (gamepad2.left_trigger - gamepad2.right_trigger)/20);
             if (gamepad2.y) {
                 servoFlipL.setPosition(Constants.flip.leftUp);
                 servoFlipR.setPosition(Constants.flip.rightUp);
@@ -36,9 +35,13 @@ public class Tele extends Config {
                 servoFlipL.setPosition(Constants.flip.leftDown);
                 servoFlipR.setPosition(Constants.flip.rightDown);
             } else if (gamepad2.right_bumper) {
-                servoRelicGrab.setPosition(Constants.relic.grabClose);
+                servoAlignLeft.setPosition(Constants.alignment.ALIGNRIGHTDOWN);
             } else if (gamepad2.left_bumper) {
-                servoRelicGrab.setPosition(Constants.relic.grabOpen);
+                servoAlignRight.setPosition(Constants.alignment.ALIGNLEFTDOWN);
+            } else {
+                servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTUP);
+                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTUP-.2);
+
             }
             telemetry.update();
 
