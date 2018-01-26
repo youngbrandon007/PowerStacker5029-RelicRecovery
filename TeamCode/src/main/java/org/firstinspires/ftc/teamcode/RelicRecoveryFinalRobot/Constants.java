@@ -16,7 +16,12 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
  */
 
 public class Constants {
-
+    public static class alignment {
+        public static final double ALIGNLEFTDOWN = 0.5;
+        public static final double ALIGNLEFTUP = 1;
+        public static final double ALIGNRIGHTDOWN = 0.5;
+        public static final double ALIGNRIGHTUP = 0;
+    }
     public static class drive {
         public static final double wheelSize = 4.0;
         public static final double gearRatio = 2.0 / 3.0;
@@ -107,15 +112,16 @@ public class Constants {
             public enum jewelHitSide {
                 RIGHT, LEFT, NONE
             }
-            public static final double JEWELDOWN = 0;//TODO NEED TO FIND
+            public static final double JEWELDOWN = 0.7;//TODO NEED TO FIND
             public static final double JEWELUP = 0;//TODO NEED TO FIND
             public static final double JEWELHITRIGHT = 0;//TODO NEED TO FIND
-            public static final double JEWELHITLEFT = 0;//TODO NEED TO FIND
-            public static final double JEWELHITCENTER = 0;//TODO NEED TO FIND
+            public static final double JEWELHITLEFT = 1;//TODO NEED TO FIND
+            public static final double JEWELHITCENTER = 0.5;//TODO NEED TO FIND
 
             public static final int JEWELDOWNMILI = 1000;
             public static final int JEWELUPMILI = 1000;
             public static final int JEWELHITMILI = 1000;
+
         }
     }
 

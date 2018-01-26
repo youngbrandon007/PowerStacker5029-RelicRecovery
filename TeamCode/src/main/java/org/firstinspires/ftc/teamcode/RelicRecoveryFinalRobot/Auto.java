@@ -294,7 +294,7 @@ public class Auto extends Config {
     }
 
     public int jewelHit() {
-        switch (jewelHitSide()) {
+        switch (jewelHitSideSimple()) {
             case RIGHT:
                 servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITRIGHT);
                 return Constants.auto.jewel.JEWELHITMILI;
@@ -308,7 +308,19 @@ public class Auto extends Config {
         }
 
     }
+    public Constants.auto.jewel.jewelHitSide jewelHitSideSimple() {
+        Constants.auto.jewel.jewelState left = getLeftCSJewelState();
+        Constants.auto.jewel.jewelState right = getRightCSJewelState();
+        Constants.auto.jewel.jewelState state;
 
+        if (left == right) {
+            state = left;
+        } else {
+            state = NON_NON;
+        }
+        return (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (state == RED_BLUE) ? RIGHT : LEFT : (state == RED_BLUE) ? LEFT : RIGHT;
+
+    }
     public Constants.auto.jewel.jewelHitSide jewelHitSide() {
         Constants.auto.jewel.jewelState left = getLeftCSJewelState();
         Constants.auto.jewel.jewelState right = getRightCSJewelState();

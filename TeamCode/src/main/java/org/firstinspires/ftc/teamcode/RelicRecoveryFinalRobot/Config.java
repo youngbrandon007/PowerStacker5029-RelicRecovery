@@ -79,7 +79,7 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public boolean switchDelayEnabled = false;
     public double slideDelay = 0.0;
     //Still need detecting
-    public boolean switchJewels = false;
+    public boolean switchJewels = true;
     public boolean switchGlyphs = true;
     public boolean switchKeyColumn = false;
     public boolean switchMoreGlyphs = false;
