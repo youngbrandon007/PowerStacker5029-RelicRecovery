@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
@@ -82,6 +83,7 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
     public RelicRecoveryEnums.StartingPosition switchPosition = RelicRecoveryEnums.StartingPosition.FRONT;
     public RelicRecoveryEnums.ColorPosition switchColorPosition = RelicRecoveryEnums.ColorPosition.REDFRONT;
+    public int colorPositionInt = 0;
     public boolean switchDelayEnabled = false;
     public double slideDelay = 0.0;
     //Still need detecting
@@ -146,11 +148,12 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 //        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
 //        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
 //        slideDelay = (switchDelayEnabled) ? robotHandler.switchBoard.loadAnalog("delay") : 0.0;
+        colorPositionInt = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 0 : 1 : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 2 : 3;
     }
 
     public void displaySwitchBorad() {
-        String autonomousDescription = switchColor + " " + switchPosition + " @" + slideDelay + "s " + FontFormating.getMark(switchDelayEnabled) + "     PID" + FontFormating.getMark(switchPID);
-        String autonomousSettings = "_o̲_o̲_" + FontFormating.getMark(switchJewels) + " " + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchGlyphs) + " ⚿" + FontFormating.getBox(switchKeyColumn) + " +" + FontFormating.getBox(switchGlyphWhite) + FontFormating.getMark(switchMoreGlyphs);
+        String autonomousDescription = switchColor + " " + switchPosition + "     " + slideDelay + "-SECONDS-" + FontFormating.getMark(switchDelayEnabled) + "     PID-" + FontFormating.getMark(switchPID);
+        String autonomousSettings = "JEWELS-" + FontFormating.getMark(switchJewels) + "     " + FontFormating.getBox(switchGlyphWhite) + "-" + FontFormating.getMark(switchGlyphs) + "     ⚿-" + FontFormating.getBox(switchKeyColumn) + "     MORE " + FontFormating.getBox(switchGlyphWhite) + "-" + FontFormating.getMark(switchMoreGlyphs);
         telemetry.addLine(autonomousDescription);
         telemetry.addLine(autonomousSettings);
     }
