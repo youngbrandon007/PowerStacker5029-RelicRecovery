@@ -213,8 +213,13 @@ public class Auto extends Config {
                     }
                     break;
                 case JEWELUP:
-                    if (wait.milliseconds() > jewelUp()) {
-                        auto = AutoEnum.ALIGN;
+                    if (wait.milliseconds() > jewelUp() / 2) {
+                        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
+
+                        if (wait.milliseconds() > jewelUp()) {
+                            auto = AutoEnum.ALIGN;
+
+                        }
 
                     }
                     jewelCSLEDOFF();
@@ -234,12 +239,13 @@ public class Auto extends Config {
                     auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
                     resetEncoders();
                     break;
+
                 case ALIGNDRIVEOFFPLATFORM:
                     double angle = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? 90 : 270;
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(angle), 0.5, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.Aligning.FrontRedAlignDrivingOffPlatform[columnNumber(targetColumn)]))) {
                         robotHandler.drive.stop();
-                        TARGETANGLE = angle;
+                        TARGETANGLE = 90;
                         auto = AutoEnum.ALIGNTURN;
                     }
                     break;
@@ -258,12 +264,12 @@ public class Auto extends Config {
                 case ALIGNDRIVEINTOCRYPTO:
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
                     if (switchColor == RelicRecoveryEnums.AutoColor.RED) {
-                        if (limitRightBack.getState()) {
+                        if (limitRightBack.getState()||wait.milliseconds()>5000) {
                             robotHandler.drive.stop();
                             auto = AutoEnum.GLYPH;
                         }
                     } else {
-                        if (limitLeftBack.getState()) {
+                        if (limitLeftBack.getState()||wait.milliseconds()>5000) {
                             robotHandler.drive.stop();
                             auto = AutoEnum.GLYPH;
                         }
@@ -277,13 +283,13 @@ public class Auto extends Config {
                     angle = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? 180 : 0;
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(angle), .6, PIDrotationOut, 1.0);
                     if (switchColor == RelicRecoveryEnums.AutoColor.RED) {
-                        if (limitRightSide.getState()) {
+                        if (limitRightSide.getState()||wait.milliseconds()>5000) {
                             robotHandler.drive.stop();
                             auto = AutoEnum.GLYPHPLACE;
                             wait.reset();
                         }
                     } else {
-                        if (limitLeftSide.getState()) {
+                        if (limitLeftSide.getState()||wait.milliseconds()>5000) {
                             robotHandler.drive.stop();
                             auto = AutoEnum.GLYPHPLACE;
                             wait.reset();
@@ -353,7 +359,6 @@ public class Auto extends Config {
 
     public int jewelUp() {
         servoJewel.setPosition(Constants.auto.jewel.JEWELUP);
-        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
         return Constants.auto.jewel.JEWELUPMILI;
     }
 
@@ -379,6 +384,10 @@ public class Auto extends Config {
         Constants.auto.jewel.jewelState state;
 
         if (left == right) {
+            state = left;
+        } else if (left == NON_NON&&right!=NON_NON){
+            state = right;
+        }else if (right == NON_NON&&left!=NON_NON){
             state = left;
         } else {
             state = NON_NON;

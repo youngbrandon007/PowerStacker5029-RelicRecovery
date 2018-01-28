@@ -35,12 +35,12 @@ public class Tele extends Config {
                 servoFlipL.setPosition(Constants.flip.leftDown);
                 servoFlipR.setPosition(Constants.flip.rightDown);
             } else if (gamepad2.right_bumper) {
-                servoAlignLeft.setPosition(Constants.alignment.ALIGNRIGHTDOWN);
+                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTDOWN);
             } else if (gamepad2.left_bumper) {
-                servoAlignRight.setPosition(Constants.alignment.ALIGNLEFTDOWN);
+                servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTDOWN);
             } else {
                 servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTUP);
-                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTUP-.2);
+                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTUP-.3);
 
             }
             telemetry.update();

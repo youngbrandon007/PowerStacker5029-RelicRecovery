@@ -111,7 +111,7 @@ public class Constants {
 
             //0 is left
             //public static final double[][] FrontRedAlignArmPosition = {{ , , },{ , , }};
-            public static final double[] FrontRedAlignDrivingOffPlatform = {45 , 34, 25};
+            public static final double[] FrontRedAlignDrivingOffPlatform = {35 , 28, 20};
         }
 
         public static class jewel {
@@ -121,15 +121,15 @@ public class Constants {
             public enum jewelHitSide {
                 RIGHT, LEFT, NONE
             }
-            public static final double JEWELDOWN = 0.95;
+            public static final double JEWELDOWN = 0.93;
             public static final double JEWELUP = 0.15;
-            public static final double JEWELHITRIGHT = 1;
-            public static final double JEWELHITLEFT = 0;
+            public static final double JEWELHITRIGHT = 0;
+            public static final double JEWELHITLEFT = 1;
             public static final double JEWELHITCENTER = 0.5;
 
-            public static final int JEWELDOWNMILI = 1700;
+            public static final int JEWELDOWNMILI = 2000;
             public static final int JEWELUPMILI = 2500;
-            public static final int JEWELHITMILI = 1500;
+            public static final int JEWELHITMILI = 3000;
 
         }
     }
