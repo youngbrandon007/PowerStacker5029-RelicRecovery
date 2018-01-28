@@ -214,8 +214,13 @@ public class Auto extends Config {
                     }
                     break;
                 case JEWELUP:
-                    if (wait.milliseconds() > jewelUp()) {
-                        auto = AutoEnum.ALIGN;
+                    if (wait.milliseconds() > jewelUp() / 2) {
+                        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
+
+                        if (wait.milliseconds() > jewelUp()) {
+                            auto = AutoEnum.ALIGN;
+
+                        }
 
                     }
                     jewelCSLEDOFF();
@@ -231,6 +236,7 @@ public class Auto extends Config {
                     auto = AutoEnum.ALIGNDRIVEOFFPLATFORM;
                     resetEncoders();
                     break;
+
                 case ALIGNDRIVEOFFPLATFORM:
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDriveOffPlatformDirection[colorPositionInt]), 0.5, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.AlignDrivingOffPlatformEncoder[colorPositionInt][columnNumber]))) {
@@ -250,9 +256,10 @@ public class Auto extends Config {
                     break;
                 case ALIGNDRIVEINTOCRYPTO:
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
-                    if((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][ columnNumber][0]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][columnNumber][1])){
+                    if((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][ columnNumber][0]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][columnNumber][1]) || wait.milliseconds()>5000){
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPH;
+
                     }
                     break;
                 case GLYPH:
@@ -261,10 +268,11 @@ public class Auto extends Config {
                     break;
                 case GLYPHSTRAFFTOALIGN:
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDrivingDirection[colorPositionInt][columnNumber]), .6, PIDrotationOut, 1.0);
-                    if((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][ columnNumber][0]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][columnNumber][1])) {
+                    if((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][ columnNumber][0]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][columnNumber][1]) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPHPLACE;
                         wait.reset();
+
                     }
                     break;
                 case GLYPHPLACE:
@@ -330,7 +338,6 @@ public class Auto extends Config {
 
     public int jewelUp() {
         servoJewel.setPosition(Constants.auto.jewel.JEWELUP);
-        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
         return Constants.auto.jewel.JEWELUPMILI;
     }
 
@@ -356,6 +363,10 @@ public class Auto extends Config {
         Constants.auto.jewel.jewelState state;
 
         if (left == right) {
+            state = left;
+        } else if (left == NON_NON&&right!=NON_NON){
+            state = right;
+        }else if (right == NON_NON&&left!=NON_NON){
             state = left;
         } else {
             state = NON_NON;

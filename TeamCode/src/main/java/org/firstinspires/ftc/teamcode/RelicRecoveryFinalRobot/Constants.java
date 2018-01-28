@@ -109,7 +109,7 @@ public class Constants {
             public static final double rightUp = .5;
             public static final double rightDown = .6;
 
-            //0 is left
+
             public static final double[][][] AlignArmPosition =
                     {
                             {{alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTUP, alignment.ALIGNLEFTUP, alignment.ALIGNLEFTUP}},
@@ -127,13 +127,14 @@ public class Constants {
                     };
             public static final double[][] AlignDrivingOffPlatformEncoder =
                     {
-                            {45, 34, 25},
+                            {35 , 28, 20},
                             {0,0,0}
                     };
             public static final double[] AlignDriveOffPlatformDirection =
                     {90, 270};
             public static final double[] AlignTurnAngle =
                     {90, 90};
+
         }
 
         public static class jewel {
@@ -143,15 +144,15 @@ public class Constants {
             public enum jewelHitSide {
                 RIGHT, LEFT, NONE
             }
-            public static final double JEWELDOWN = 0.95;
+            public static final double JEWELDOWN = 0.93;
             public static final double JEWELUP = 0.15;
-            public static final double JEWELHITRIGHT = 1;
-            public static final double JEWELHITLEFT = 0;
+            public static final double JEWELHITRIGHT = 0;
+            public static final double JEWELHITLEFT = 1;
             public static final double JEWELHITCENTER = 0.5;
 
-            public static final int JEWELDOWNMILI = 1700;
+            public static final int JEWELDOWNMILI = 2000;
             public static final int JEWELUPMILI = 2500;
-            public static final int JEWELHITMILI = 1500;
+            public static final int JEWELHITMILI = 3000;
 
         }
     }
