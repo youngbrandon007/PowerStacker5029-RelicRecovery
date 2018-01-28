@@ -26,7 +26,7 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
  * Created by Brandon on 1/8/2018.
  */
 @Autonomous(name = "AUTO Van")
-
+@Disabled
 public class AutoVan extends Config {
 
     @Override
