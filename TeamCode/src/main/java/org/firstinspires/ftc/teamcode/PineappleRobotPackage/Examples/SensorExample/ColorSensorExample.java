@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.Pineappl
 @TeleOp(name = "PineEx-ColorSensor", group = "Linear Opmode")
 @Disabled
 
-
 public class ColorSensorExample  extends LinearOpMode {
 
     PineappleRobot robot;

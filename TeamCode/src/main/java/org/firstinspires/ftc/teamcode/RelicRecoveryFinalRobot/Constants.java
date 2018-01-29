@@ -112,17 +112,17 @@ public class Constants {
 
             public static final double[][][] AlignArmPosition =
                     {
-                            {{alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTUP, alignment.ALIGNLEFTUP, alignment.ALIGNLEFTUP}},
+                            {{alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTUP, alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTUP}},
                             {{alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP  },{alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTDOWN,alignment.ALIGNLEFTDOWN}}
                     };
             public static final double[][] AlignDrivingDirection =
                     {
-                            {180,180,180},
+                            {180,0,180},
                             {0, 0,0}
                     };
             public static final boolean[][][] AlignSwitchClicked =
                     {
-                            {{true, true, true}, {false, false, false}},
+                            {{true, false, true}, {false, true, false}},
                             {{false, false, false}, {true, true, true}}
                     };
             public static final double[][] AlignDrivingOffPlatformEncoder =
@@ -134,6 +134,10 @@ public class Constants {
                     {90, 270};
             public static final double[] AlignTurnAngle =
                     {90, 90};
+
+            public static final double CollectDistToPit = 15.0;
+            public static final int collectDriveIntoPitTime = 2000;
+            public static final double GlyphDistanceToCrypto = 5.0;
 
         }
 

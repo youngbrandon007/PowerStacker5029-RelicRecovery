@@ -96,6 +96,9 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 
     public PineappleSensor Mgyro;
 
+    public PineappleSensor ColorFront;
+    public PineappleSensor ColorBack;
+
     @Override
     public void config(LinearOpMode linearOpMode) {
         robotHandler = new PineappleRobot(linearOpMode);
@@ -140,6 +143,9 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         limitLeftSide = linearOpMode.hardwareMap.digitalChannel.get("LLS");
         limitRightBack = linearOpMode.hardwareMap.digitalChannel.get("LRB");
         limitRightSide = linearOpMode.hardwareMap.digitalChannel.get("LRS");
+
+//        ColorFront = robotHandler.sensorHandler.newColorSensor("GCOLORF");
+//        ColorBack = robotHandler.sensorHandler.newColorSensor("GCOLORB");
     }
 
     public void loadSwitchBoard() {
