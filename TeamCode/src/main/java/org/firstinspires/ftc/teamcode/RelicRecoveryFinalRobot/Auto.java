@@ -153,6 +153,8 @@ public class Auto extends Config {
         double TARGETANGLE = 0.0;
         double PIDrotationOut = 0.0;
         boolean PIDonTarget = true;
+
+        auto = auto.ALIGN;
         //MAIN LOOP
         while (opModeIsActive()) {
             //Always On Telemetry
