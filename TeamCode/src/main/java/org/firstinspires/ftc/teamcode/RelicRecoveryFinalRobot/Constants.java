@@ -57,48 +57,49 @@ public class Constants {
                 GREY, BROWN, NONE
             }
             public enum column {
-                LEFT, CENTER, RIGHT
+                LEFT, CENTER, RIGHT, NONE
             }
             //START IN TOP LEFT
             public static class ciphers {
-                public static final autoGlyph.glyph[][] FROGBROWN = {
+                public static final autoGlyph.glyph[][] FROGGREY = {
                         {GREY, BROWN, GREY},
                         {BROWN, GREY, BROWN},
                         {GREY, BROWN, GREY},
                         {BROWN, GREY, BROWN}
                 };
-                public static final autoGlyph.glyph[][] FROGGREY = {
+                public static final autoGlyph.glyph[][] FROGBROWN = {
                         {BROWN, GREY, BROWN},
                         {GREY, BROWN, GREY},
-                        {BROWN, GREY, BROWN},
-                        {GREY, BROWN, GREY}
-                };
-                public static final autoGlyph.glyph[][] BIRDBROWN = {
-                        {GREY, BROWN, GREY},
-                        {BROWN, GREY, BROWN},
                         {BROWN, GREY, BROWN},
                         {GREY, BROWN, GREY}
                 };
                 public static final autoGlyph.glyph[][] BIRDGREY = {
+                        {GREY, BROWN, GREY},
+                        {BROWN, GREY, BROWN},
+                        {BROWN, GREY, BROWN},
+                        {GREY, BROWN, GREY}
+                };
+                public static final autoGlyph.glyph[][] BIRDBROWN = {
                         {BROWN, GREY, BROWN},
                         {GREY, BROWN, GREY},
                         {GREY, BROWN, GREY},
                         {BROWN, GREY, BROWN}
                 };
-                public static final autoGlyph.glyph[][] SNAKEBROWN = {
-                        {BROWN, GREY, GREY},
-                        {BROWN, BROWN, GREY},
-                        {GREY, BROWN, BROWN},
-                        {GREY, GREY, BROWN}
-                };
                 public static final autoGlyph.glyph[][] SNAKEGREY = {
-                        {GREY, BROWN, BROWN},
                         {GREY, GREY, BROWN},
+                        {GREY, BROWN, BROWN},
+                        {BROWN, BROWN, GREY},
+                        {BROWN, GREY, GREY}
+                };
+                public static final autoGlyph.glyph[][] SNAKEBROWN = {
+                        {BROWN, BROWN, GREY},
                         {BROWN, GREY, GREY},
-                        {BROWN, BROWN, GREY}
+                        {GREY, GREY, BROWN},
+                        {GREY, BROWN, BROWN}
                 };
 
             }
+
             public static final autoGlyph.glyph[][][] CIPHERS = {FROGBROWN, FROGGREY,BIRDBROWN,BIRDGREY,SNAKEBROWN,SNAKEGREY };
 
         }

@@ -563,12 +563,29 @@ public class Auto extends Config {
     public int columnNumber(RelicRecoveryVuMark vuMark) {
         return (targetColumn == RelicRecoveryVuMark.LEFT) ? 0 : (targetColumn == RelicRecoveryVuMark.CENTER) ? 1 : 2;
     }
-
+    public void addGlyphs(Constants.auto.autoGlyph.glyph one, Constants.auto.autoGlyph.glyph two) {
+        addGlyphsToColumn(getColumn(one, two), one, two);
+    }
+    public static Constants.auto.autoGlyph.glyph[][] moveGlyphs(Constants.auto.autoGlyph.glyph[][] box) {
+        Constants.auto.autoGlyph.glyph[][] newBox = {
+                {NONE, NONE, NONE},
+                {NONE, NONE, NONE},
+                {NONE, NONE, NONE},
+                {NONE, NONE, NONE}
+        };
+        for (int i = 0; i < newBox.length; i++) {
+            for (int j = 0; j < newBox[i].length; j++) {
+                newBox[i][j] = box[i][j];
+            }
+        }
+        return newBox;
+    }
     public column getColumn(glyph firstGlyph, glyph secondGlyph) {
         int[] cipherPoints = new int[3];
+
         for (int i = 0; i < 3; i++) {
             if (canGlyphsGoInColumn(i, firstGlyph, secondGlyph)) {
-                glyph[][] potBox = addGlyphsToColumnAlg(i, BOX, firstGlyph, secondGlyph);
+                glyph[][] potBox = addGlyphsToColumnAlg(i, moveGlyphs(BOX), firstGlyph, secondGlyph);
                 boolean[] workingCipher = {true, true, true, true, true, true};
                 for (int k = 0; k < 6; k++) {
                     for (int j = 0; j < 4; j++) {
@@ -584,42 +601,43 @@ public class Auto extends Config {
                 cipherPoints[i] = cipherPointsFinder(workingCipher);
             }
         }
-        int max = cipherPoints[0];
-        for (int i = 1; i < cipherPoints.length; i++) {
-            if (cipherPoints[i] > max) {
-                max = cipherPoints[i];
-            }
-        }
+        int max = getMax(cipherPoints);
+
         switch (max) {
             case 0:
-                return column.RIGHT;
+                return column.LEFT;
             case 1:
                 return column.CENTER;
             case 2:
-                return column.LEFT;
+                return column.RIGHT;
             default:
-                return column.LEFT;
+                return column.NONE;
 
         }
     }
 
-    private static glyph[][] addGlyphsToColumnAlg(int column, glyph[][] box, glyph firstGlyph, glyph secondGlyph) {
+    public static int getMax(int[] inputArray) {
+        int maxValue = inputArray[0];
+        int maxPos = 0;
+        for (int i = 1; i < inputArray.length; i++) {
+            if (inputArray[i] > maxValue) {
+                maxValue = inputArray[i];
+                maxPos = i;
+            }
+        }
+        return maxPos;
+    }
+
+    private glyph[][] addGlyphsToColumnAlg(int column, glyph[][] box, glyph firstGlyph, glyph secondGlyph) {
         for (int i = 0; i < 4; i++) {
-            if (box[i][column] != NONE) {
+            if (box[i][column] == NONE) {
                 if (secondGlyph != NONE) {
-                    box[i - 1][column] = secondGlyph;
-                    box[i - 2][column] = firstGlyph;
+                    box[i][column] = secondGlyph;
+                    box[i + 1][column] = firstGlyph;
                 } else {
-                    box[i - 1][column] = firstGlyph;
+                    box[i][column] = firstGlyph;
                 }
                 i = 5;
-            } else if (i == 3 && box[i][column] == NONE) {
-                if (secondGlyph != NONE) {
-                    box[i - 1][column] = secondGlyph;
-                    box[i - 2][column] = firstGlyph;
-                } else {
-                    box[i - 1][column] = firstGlyph;
-                }
             }
 
         }
@@ -640,22 +658,16 @@ public class Auto extends Config {
                 break;
         }
         for (int i = 0; i < 4; i++) {
-            if (BOX[i][columnNumb] != NONE) {
+            if (BOX[i][columnNumb] == NONE) {
                 if (secondGlyph != NONE) {
-                    BOX[i - 1][columnNumb] = secondGlyph;
-                    BOX[i - 2][columnNumb] = firstGlyph;
+                    BOX[i][columnNumb] = secondGlyph;
+                    BOX[i + 1][columnNumb] = firstGlyph;
                 } else {
-                    BOX[i - 1][columnNumb] = firstGlyph;
+                    BOX[i][columnNumb] = firstGlyph;
                 }
                 i = 5;
-            } else if (i == 3 && BOX[i][columnNumb] == NONE) {
-                if (secondGlyph != NONE) {
-                    BOX[i - 1][columnNumb] = secondGlyph;
-                    BOX[i - 2][columnNumb] = firstGlyph;
-                } else {
-                    BOX[i - 1][columnNumb] = firstGlyph;
-                }
             }
+
         }
     }
 
@@ -673,7 +685,7 @@ public class Auto extends Config {
                 numbOfAvalibaleSpot++;
             }
         }
-        return numbOfAvalibaleSpot <= numbOfGlyphs;
+        return numbOfAvalibaleSpot >= numbOfGlyphs;
     }
 
     private static int cipherPointsFinder(boolean[] cipher) {
@@ -687,6 +699,7 @@ public class Auto extends Config {
         }
         return points;
     }
+
 
     //COLLECT FUNCTIONS HERE
 
