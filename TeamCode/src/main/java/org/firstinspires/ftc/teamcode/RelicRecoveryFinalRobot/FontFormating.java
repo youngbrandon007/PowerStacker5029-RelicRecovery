@@ -13,16 +13,18 @@ public class FontFormating {
     public static final String filledBox = "■";
     public static final String[] bigCheckMark =
             {
-                    "                      ▄▛▀" ,
-                    "                   ▄█▀   " ,
-                    "                ▄█▀      " ,
-                    "             ▄██▀       " ,
-                    "           ▄██           " ,
-                    "  ▄       ██▀           " ,
-                    " ▀██▄  ██▀            " ,
-                    "   ▀██▄██              " ,
-                    "    ▐███▌                " ,
-                    "     ▀█▀                  "
+                    "                  ▗ " ,
+                            "                ▄▛▀ " ,
+                            "              ▄█▘   " ,
+                            "            ▄█▀     " ,
+                            "          ▗▟▛▘      " ,
+                            "         ▗█▛        " ,
+                            " ▗▄▖    ▟█▘         " ,
+                            " ▀██▖  ▟█▘          " ,
+                            "  ▝██▖▟█▘           " ,
+                            "   ▐███▌            " ,
+                            "    ▜█▛             " ,
+                            "    ▝               "
             };
 
     public static String getMark(boolean mark){

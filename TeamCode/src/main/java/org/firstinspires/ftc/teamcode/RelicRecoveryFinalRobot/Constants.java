@@ -103,15 +103,42 @@ public class Constants {
 
         }
 
-        public static class Aligning{
+        public static class aligning {
             public static final double leftUp = .5;
             public static final double leftDown = .4;
             public static final double rightUp = .5;
             public static final double rightDown = .6;
 
-            //0 is left
-            //public static final double[][] FrontRedAlignArmPosition = {{ , , },{ , , }};
-            public static final double[] FrontRedAlignDrivingOffPlatform = {35 , 28, 20};
+
+            public static final double[][][] AlignArmPosition =
+                    {
+                            {{alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTUP, alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTUP}},
+                            {{alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP  },{alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTDOWN,alignment.ALIGNLEFTDOWN}}
+                    };
+            public static final double[][] AlignDrivingDirection =
+                    {
+                            {180,0,180},
+                            {0, 0,0}
+                    };
+            public static final boolean[][][] AlignSwitchClicked =
+                    {
+                            {{true, false, true}, {false, true, false}},
+                            {{false, false, false}, {true, true, true}}
+                    };
+            public static final double[][] AlignDrivingOffPlatformEncoder =
+                    {
+                            {35 , 28, 20},
+                            {0,0,0}
+                    };
+            public static final double[] AlignDriveOffPlatformDirection =
+                    {90, 270};
+            public static final double[] AlignTurnAngle =
+                    {90, 90};
+
+            public static final double CollectDistToPit = 15.0;
+            public static final int collectDriveIntoPitTime = 2000;
+            public static final double GlyphDistanceToCrypto = 5.0;
+
         }
 
         public static class jewel {
