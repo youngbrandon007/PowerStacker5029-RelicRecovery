@@ -47,6 +47,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public PineappleServo servoAlignRight;
     public PineappleServo servoJewelHit;
     public PineappleServo servoJewel;
+    public PineappleServo servoRelicGrab;
+    public PineappleServo servoRelicTurn;
     //JEWEL
     public Constants.auto.jewel.jewelState jewelState = Constants.auto.jewel.jewelState.NON_NON;
     //GLYPH
@@ -120,16 +122,19 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         servoFlipR = robotHandler.servoHandler.newLimitServo("SR", 202.5, Constants.flip.rightDown);
         servoAlignLeft = robotHandler.servoHandler.newLimitServo("SAL", 202.5, Constants.alignment.ALIGNLEFTUP);
         servoAlignRight = robotHandler.servoHandler.newLimitServo("SAR", 202.5, Constants.alignment.ALIGNRIGHTUP);
-        servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP); //TODO ADD FOR JEWEL
-        servoJewelHit = robotHandler.servoHandler.newLimitServo("SJH", 202.5, Constants.auto.jewel.JEWELHITLEFT);//TODO ADD FOR JEWEL
+        servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP);
+        servoJewelHit = robotHandler.servoHandler.newLimitServo("SJH", 202.5, Constants.auto.jewel.JEWELHITLEFT);
+        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, Constants.relic.turnStraight);
+        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabOpen);
+
         //SENSORS
-        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL"); //TODO ADD FOR JEWELS
-        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");//TODO ADD FOR JEWEL
+        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
+        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
 
 //        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
 //                NAVX_DIM_I2C_PORT,
 //                AHRS.DeviceDataType.kProcessedData,
-//                NAVX_DEVICE_UPDATE_RATE_HZ);//TODO ADD FOR PID
+//                NAVX_DEVICE_UPDATE_RATE_HZ);
 //        yawPIDController.setSetpoint(0);
 //        yawPIDController.setContinuous(true);
 //        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
@@ -137,7 +142,7 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 //        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
 //        yawPIDController.enable(true);
 
-        Mgyro = robotHandler.sensorHandler.newGyroSensor("MGYRO");
+//        Mgyro = robotHandler.sensorHandler.newGyroSensor("MGYRO");
 
         limitLeftBack = linearOpMode.hardwareMap.digitalChannel.get("LLB");
         limitLeftSide = linearOpMode.hardwareMap.digitalChannel.get("LLS");

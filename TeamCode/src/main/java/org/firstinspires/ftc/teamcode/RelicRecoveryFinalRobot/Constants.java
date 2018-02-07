@@ -48,6 +48,10 @@ public class Constants {
     public static class relic {
         public static final double grabClose = 0.1;
         public static final double grabOpen = 0.5;
+        public static final double turnStraight = 0.5;
+        public static final double turnDown = 0;
+        public static final double turnFold = 1;
+
     }
 
     public static class auto {
