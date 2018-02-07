@@ -19,8 +19,9 @@ public class HConfigLinearOpMode extends PineappleConfigLinearOpMode {
 
 //    Servo HandFourFingers;
 //    Servo Head;
-    PineappleMotor Sholder;
-//    PineappleMotor Elbow;
+    PineappleMotor rShoulder;
+    PineappleMotor lShoulder;
+    //    PineappleMotor Elbow;
     PineappleMotor RightDrive;
     PineappleMotor LeftDrive;
     @Override
@@ -33,7 +34,7 @@ public class HConfigLinearOpMode extends PineappleConfigLinearOpMode {
         LeftDrive = robot.motorHandler.newDriveMotor("LD", PineappleEnum.MotorLoc.LEFT, PineappleEnum.MotorType.NEV60);
         RightDrive.maxPower = 0.5;
         LeftDrive.maxPower = 0.5;
-        Sholder = robot.motorHandler.newMotor("S", 1,false, false, PineappleEnum.MotorType.NEV60);
+        rShoulder = robot.motorHandler.newMotor("S", 1,false, false, PineappleEnum.MotorType.NEV60);
 //        Elbow = robot.motorHandler.newMotor("E", 1,false, false, PineappleEnum.MotorType.NEV60);
 //        Elbow.maxPower = 0.1;
 
