@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryConstants;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
@@ -73,13 +74,13 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public final double TOLERANCE_DEGREES = 2.0;
     public final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
     public final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
-    public final double YAW_PID_P = 0.005;
-    public final double YAW_PID_I = 0.0;
-    public final double YAW_PID_D = 0.0;
+    public final double YAW_PID_P = Constants.PID.P;
+    public final double YAW_PID_I = Constants.PID.I;
+    public final double YAW_PID_D = Constants.PID.D;
+    public navXPIDController.PIDResult yawPIDResult;
 
     public boolean calibration_complete = false;
 
-    navXPIDController.PIDResult yawPIDResult;
 
     //SWITCH BOARD
     public RelicRecoveryEnums.AutoColor switchColor = RelicRecoveryEnums.AutoColor.RED;
@@ -93,10 +94,10 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public boolean switchGlyphs = true;
     public boolean switchKeyColumn = false;
     public boolean switchMoreGlyphs = false;
-    public boolean switchPID = false;
+    public boolean switchPID = true;
     public boolean switchGlyphWhite = true; // ignored right now or might be a sensor
 
-    public PineappleSensor Mgyro;
+
 
     public PineappleSensor ColorFront;
     public PineappleSensor ColorBack;
@@ -124,33 +125,34 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         servoAlignRight = robotHandler.servoHandler.newLimitServo("SAR", 202.5, Constants.alignment.ALIGNRIGHTUP);
         servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP);
         servoJewelHit = robotHandler.servoHandler.newLimitServo("SJH", 202.5, Constants.auto.jewel.JEWELHITLEFT);
-        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, Constants.relic.turnStraight);
-        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabOpen);
+        servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, Constants.relic.turnFold);
+        servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabIn);
 
         //SENSORS
         csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
         csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
 
-//        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
-//                NAVX_DIM_I2C_PORT,
-//                AHRS.DeviceDataType.kProcessedData,
-//                NAVX_DEVICE_UPDATE_RATE_HZ);
-//        yawPIDController.setSetpoint(0);
-//        yawPIDController.setContinuous(true);
-//        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
-//        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
-//        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
-//        yawPIDController.enable(true);
-
-//        Mgyro = robotHandler.sensorHandler.newGyroSensor("MGYRO");
+        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
+                NAVX_DIM_I2C_PORT,
+                AHRS.DeviceDataType.kProcessedData,
+                NAVX_DEVICE_UPDATE_RATE_HZ);
+        yawPIDController = new navXPIDController(navx_device,
+                navXPIDController.navXTimestampedDataSource.YAW);
+        yawPIDController.setSetpoint(0);
+        yawPIDController.setContinuous(false);
+        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
+        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+        yawPIDController.enable(true);
 
         limitLeftBack = linearOpMode.hardwareMap.digitalChannel.get("LLB");
         limitLeftSide = linearOpMode.hardwareMap.digitalChannel.get("LLS");
         limitRightBack = linearOpMode.hardwareMap.digitalChannel.get("LRB");
         limitRightSide = linearOpMode.hardwareMap.digitalChannel.get("LRS");
 
-//        ColorFront = robotHandler.sensorHandler.newColorSensor("GCOLORF");
-//        ColorBack = robotHandler.sensorHandler.newColorSensor("GCOLORB");
+        ColorFront = robotHandler.sensorHandler.newColorSensor("GCOLORF");
+        ColorBack = robotHandler.sensorHandler.newColorSensor("GCOLORB");
+
     }
 
     public void loadSwitchBoard() {
@@ -159,7 +161,7 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 //        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
 //        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
 //        slideDelay = (switchDelayEnabled) ? robotHandler.switchBoard.loadAnalog("delay") : 0.0;
-        colorPositionInt = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 0 : 1 : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 2 : 3;
+        colorPositionInt = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 0 : 2 : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 1 : 3;
     }
 
     public void displaySwitchBorad() {

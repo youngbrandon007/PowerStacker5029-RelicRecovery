@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import android.graphics.Bitmap;
 
+import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -23,8 +24,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.android.dx.cf.cst.ConstantTags;
 import org.firstinspires.ftc.teamcode.Old_Robots.RelicRecovery.RelicRecoveryOfficalFile.RelicResources.RelicRecoveryEnums;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
 import org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.column;
 import org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.auto.autoGlyph.glyph;
 import org.opencv.android.Utils;
@@ -66,7 +69,7 @@ public class Auto extends Config {
         ALIGN, ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
         KEYCOLUMNSET,
         GLYPH, GLYPHSTRAFFTOALIGN, GLYPHPLACE, GLYPHPLACERESET,
-        COLLECT, COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING
+        COLLECT, COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING, CHANGESETPOINT
     }
 
     ElapsedTime wait = new ElapsedTime();
@@ -75,6 +78,7 @@ public class Auto extends Config {
     InitEnum init = InitEnum.HARDWAREINIT;
     RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
     RelicRecoveryVuMark targetColumn = RelicRecoveryVuMark.CENTER;
+    RelicRecoveryVuMark previousColumn = RelicRecoveryVuMark.CENTER;
     int columnNumber = 1;
 
 
@@ -82,7 +86,7 @@ public class Auto extends Config {
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
     VuforiaTrackableDefaultListener listener;
-
+    glyph startGlyph;
     boolean vuforiaInitialized = false;
     boolean imageVisible = false;
     boolean jewelScanned = false;
@@ -99,7 +103,7 @@ public class Auto extends Config {
             loadSwitchBoard();
 
             //Telemetry
-            telemetry.addData("AUTO", init);
+            telemetry.addData("INIT", init);
             telemetry.addLine();
             displaySwitchBorad();
             telemetry.addLine();
@@ -107,6 +111,11 @@ public class Auto extends Config {
             telemetry.addLine(FontFormating.getMark(vuforiaInitialized) + "VUFORIA");
             telemetry.addLine(FontFormating.getMark(imageVisible) + "IMAGE VISIBLE-" + keyColumn);
             telemetry.addLine(FontFormating.getMark(jewelScanned) + "JEWELS-" + jewelState);
+            telemetry.addData("LB", limitLeftBack.getState());
+            telemetry.addData("LS", limitLeftSide.getState());
+            telemetry.addData("RB", limitRightBack.getState());
+            telemetry.addData("RS", limitRightSide.getState());
+
             switch (init) {
                 case HARDWAREINIT:
                     servoFlipL.setPosition(Constants.flip.leftFlat);
@@ -115,11 +124,11 @@ public class Auto extends Config {
                     init = InitEnum.GYRO;
                     break;
                 case GYRO:
-                    //calibration_complete = !navx_device.isCalibrating();
-                    calibration_complete = true;
+                    calibration_complete = !navx_device.isCalibrating();
                     if (!calibration_complete) {
                     } else {
-                        //navx_device.zeroYaw();
+                        navx_device.zeroYaw();
+                        yawPIDResult = new navXPIDController.PIDResult();
                         init = InitEnum.VUFORIA;
                     }
                     break;
@@ -144,55 +153,58 @@ public class Auto extends Config {
                     if (listener.getPose() != null) {
                         imageVisible = true;
                         keyColumn = RelicRecoveryVuMark.from(relicTemplate);
-//                        jewelState = getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
+                        jewelState = getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
                     } else {
                         imageVisible = false;
                     }
+                    startGlyph = getBackGlyph();
                     break;
             }
             telemetry.update();
         }
-
+        addGlyphsToColumn(keyColumn, startGlyph, NONE);
         waitForStart();
         wait.reset();
         double TARGETANGLE = 0.0;
-        double PIDrotationOut;
-        boolean PIDonTarget;
+        double PIDrotationOut = 0;
+        boolean PIDonTarget = false;
         int trackBack = 0;
+
+        auto = AutoEnum.ALIGN;
 
         //MAIN LOOP
         while (opModeIsActive()) {
             //Always On Telemetry
             telemetry.addData("AUTO: ", auto);
-
-//            yawPIDController.setSetpoint(TARGETANGLE);
-//            if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
-//                if (yawPIDResult.isOnTarget()) {
-//                    PIDonTarget = true;
-//                    PIDrotationOut = 0.0;
-//                } else {
-//                    PIDrotationOut = yawPIDResult.getOutput();
-//                    PIDonTarget = false;
-//                }
-//            }
-
-            double gyroOffset = Mgyro.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - TARGETANGLE;
-            while (gyroOffset > 180 || gyroOffset < -180) {
-                gyroOffset += (gyroOffset > 180) ? -360 : (gyroOffset < -180) ? 360 : 0;
-            }
-
-            if (gyroOffset > 2) {
-                PIDrotationOut = .2;
-                PIDonTarget = false;
-            } else if (gyroOffset < -2) {
-                PIDrotationOut = -.2;
-                PIDonTarget = false;
+            if (switchPID) {
+                if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
+                    if (yawPIDResult.isOnTarget()) {
+                        PIDonTarget = true;
+                        PIDrotationOut = 0.0;
+                    } else {
+                        PIDrotationOut = yawPIDResult.getOutput();
+                        PIDonTarget = false;
+                    }
+                }
             } else {
-                PIDrotationOut = 0;
-                PIDonTarget = true;
+                double gyroOffset = navx_device.getYaw() - TARGETANGLE;
+                while (gyroOffset > 180 || gyroOffset < -180) {
+                    gyroOffset += (gyroOffset > 180) ? -360 : (gyroOffset < -180) ? 360 : 0;
+                }
+
+                if (gyroOffset > 2) {
+                    PIDrotationOut = .2;
+                    PIDonTarget = false;
+                } else if (gyroOffset < -2) {
+                    PIDrotationOut = -.2;
+                    PIDonTarget = false;
+                } else {
+                    PIDrotationOut = 0;
+                    PIDonTarget = true;
+                }
             }
             //navx_device.getYaw()
-            telemetry.addLine("GYRO→TARGET: " + Mgyro.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) + "→" + TARGETANGLE + " " + gyroOffset + " " + PIDrotationOut + " " + PIDonTarget);
+            telemetry.addLine("GYRO→TARGET: " + navx_device.getYaw() + "→" + TARGETANGLE);
 
             switch (auto) {
                 case WAIT:
@@ -237,7 +249,7 @@ public class Auto extends Config {
                     auto = AutoEnum.KEYCOLUMNSET;
                     break;
                 case KEYCOLUMNSET:
-                    if(keyColumn != RelicRecoveryVuMark.UNKNOWN){
+                    if (keyColumn != RelicRecoveryVuMark.UNKNOWN) {
                         targetColumn = keyColumn;
                     }
                     columnNumber = columnNumber(targetColumn);
@@ -250,24 +262,26 @@ public class Auto extends Config {
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.AlignDrivingOffPlatformEncoder[colorPositionInt][columnNumber]))) {
                         robotHandler.drive.stop();
                         TARGETANGLE = Constants.auto.aligning.AlignTurnAngle[colorPositionInt];
+                        yawPIDController.setSetpoint(TARGETANGLE);
                         auto = AutoEnum.ALIGNTURN;
                     }
                     break;
                 case ALIGNTURN:
-                    robotHandler.drive.mecanum.setMecanum(0.0, 0.0, PIDrotationOut * 3, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(0.0, 0.0, PIDrotationOut, 1.0);
                     servoAlignRight.setPosition(Constants.auto.aligning.AlignArmPosition[colorPositionInt][0][columnNumber]);
                     servoAlignLeft.setPosition(Constants.auto.aligning.AlignArmPosition[colorPositionInt][1][columnNumber]);
                     if (PIDonTarget) {
+                        robotHandler.drive.stop();
                         auto = AutoEnum.ALIGNDRIVEINTOCRYPTO;
                         wait.reset();
                     }
                     break;
                 case ALIGNDRIVEINTOCRYPTO:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
-                    if((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][0][columnNumber]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][1][columnNumber]) || wait.milliseconds()>5000){
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .5, PIDrotationOut, 1.0);
+                    if ((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][0][columnNumber]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][1][columnNumber]) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPH;
-
+                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 1.0, PIDrotationOut, 1.0);
                     }
                     break;
                 case GLYPH:
@@ -276,14 +290,16 @@ public class Auto extends Config {
                     break;
                 case GLYPHSTRAFFTOALIGN:
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDrivingDirection[colorPositionInt][columnNumber]), .6, PIDrotationOut, 1.0);
-                    if((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][0][columnNumber]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][1][columnNumber]) || wait.milliseconds() > 5000) {
+                    if ((limitRightSide.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][0][columnNumber]) || (limitLeftSide.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][1][columnNumber]) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPHPLACE;
                         wait.reset();
+                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDrivingDirection[colorPositionInt][columnNumber] + 180), 1.0, PIDrotationOut, 1.0);
 
                     }
                     break;
                 case GLYPHPLACE:
+                    robotHandler.drive.stop();
                     servoFlipL.setPosition(Constants.flip.leftUp);
                     servoFlipR.setPosition(Constants.flip.rightUp);
                     if (wait.milliseconds() > 1000) {
@@ -311,8 +327,8 @@ public class Auto extends Config {
                 case COLLECTSTARTTRACKING:
                     break;
                 case COLLECTGOTOPIT:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), .7, PIDrotationOut, 1.0);
-                    if(traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.CollectDistToPit))){
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 1.0, PIDrotationOut, 1.0);
+                    if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.CollectDistToPit))) {
                         robotHandler.drive.stop();
                         wait.reset();
                         auto = AutoEnum.COLLECTGLYPHS;
@@ -321,10 +337,10 @@ public class Auto extends Config {
                     }
                     break;
                 case COLLECTGLYPHS:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), .4, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.7, PIDrotationOut, 1.0);
                     motorCollectRight.setPower(1.0);
                     motorCollectLeft.setPower(-1.0);
-                    if(wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime){
+                    if (wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime) {
                         robotHandler.drive.stop();
                         trackBack = getTraveledEncoderTicks();
                         resetEncoders();
@@ -335,22 +351,42 @@ public class Auto extends Config {
                     break;
                 case COLLECTRETRACESTEPS:
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .6, PIDrotationOut, 1.0);
-                    if(traveledEncoderTicks(trackBack - Constants.drive.countsPerInches(Constants.auto.aligning.GlyphDistanceToCrypto))){
+                    if (traveledEncoderTicks(trackBack - Constants.drive.countsPerInches(Constants.auto.aligning.GlyphDistanceToCrypto))) {
                         robotHandler.drive.stop();
-                        auto = AutoEnum.COLLECTPROCESSFORPLACING;
+                        auto = AutoEnum.CHANGESETPOINT;
                         wait.reset();
                     }
                     break;
+                case CHANGESETPOINT:
+                    previousColumn = targetColumn;
+                    targetColumn = getColumn(getFrontGyph(), getBackGlyph());
+                    addGlyphsToColumn(targetColumn,getFrontGyph(), getBackGlyph());
+                    telemetry.addData("Target", targetColumn);
+                    columnNumber = columnNumber(targetColumn);
+                    auto = AutoEnum.COLLECTPROCESSFORPLACING;
+                    break;
                 case COLLECTPROCESSFORPLACING:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), .7, PIDrotationOut, 1.0);
-                    if(wait.milliseconds() > 300){
+                    double direction = 0.0;
+                    double distance = 0.0;
+                    double alignment = 0;
+                    double previousColumnNumber = columnNumber(previousColumn);
+                    distance = (columnNumber * previousColumnNumber) * Constants.auto.aligning.columnStraffDistance;
+                    alignment = (columnNumber == 0) ? 0 : (columnNumber == 2) ? 1 : (BOX[0][0] == NONE) ? 0 : 1;
+                    distance += (alignment == 1) ? Constants.auto.aligning.alignStraffDistance : -Constants.auto.aligning.alignStraffDistance;
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), 1.0, PIDrotationOut, 1.0);
+                    if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.CryptoDistanceDriveSideWays)) || wait.milliseconds() > 100) {
                         robotHandler.drive.stop();
                         wait.reset();
                         auto = AutoEnum.ALIGNDRIVEINTOCRYPTO;
                     }
 //                    getColumn(FIRST GLYPH COLOR, SECOND GLYPH COLOR);
                     break;
+
+
             }
+            telemetry.addData("Front glyph", getFrontGyph());
+            telemetry.addData("Back Glyph", getBackGlyph());
+            telemetry.addData("Target Column", targetColumn);
             telemetry.update();
         }
     }
@@ -402,9 +438,9 @@ public class Auto extends Config {
 
         if (left == right) {
             state = left;
-        } else if (left == NON_NON&&right!=NON_NON){
+        } else if (left == NON_NON && right != NON_NON) {
             state = right;
-        }else if (right == NON_NON&&left!=NON_NON){
+        } else if (right == NON_NON && left != NON_NON) {
             state = left;
         } else {
             state = NON_NON;
@@ -531,7 +567,7 @@ public class Auto extends Config {
         return (getTraveledEncoderTicks() > ticks);
     }
 
-    public int getTraveledEncoderTicks(){
+    public int getTraveledEncoderTicks() {
         double[] currentPosition = getEncoderPositions();
         double total = 0.0;
         for (int i = 0; i < 4; i++) {
@@ -563,9 +599,8 @@ public class Auto extends Config {
     public int columnNumber(RelicRecoveryVuMark vuMark) {
         return (targetColumn == RelicRecoveryVuMark.LEFT) ? 0 : (targetColumn == RelicRecoveryVuMark.CENTER) ? 1 : 2;
     }
-    public void addGlyphs(Constants.auto.autoGlyph.glyph one, Constants.auto.autoGlyph.glyph two) {
-        addGlyphsToColumn(getColumn(one, two), one, two);
-    }
+
+
     public static Constants.auto.autoGlyph.glyph[][] moveGlyphs(Constants.auto.autoGlyph.glyph[][] box) {
         Constants.auto.autoGlyph.glyph[][] newBox = {
                 {NONE, NONE, NONE},
@@ -580,7 +615,8 @@ public class Auto extends Config {
         }
         return newBox;
     }
-    public column getColumn(glyph firstGlyph, glyph secondGlyph) {
+
+    public RelicRecoveryVuMark getColumn(glyph firstGlyph, glyph secondGlyph) {
         int[] cipherPoints = new int[3];
 
         for (int i = 0; i < 3; i++) {
@@ -605,13 +641,13 @@ public class Auto extends Config {
 
         switch (max) {
             case 0:
-                return column.LEFT;
+                return RelicRecoveryVuMark.LEFT;
             case 1:
-                return column.CENTER;
+                return RelicRecoveryVuMark.CENTER;
             case 2:
-                return column.RIGHT;
+                return RelicRecoveryVuMark.RIGHT;
             default:
-                return column.NONE;
+                return RelicRecoveryVuMark.UNKNOWN;
 
         }
     }
@@ -644,7 +680,7 @@ public class Auto extends Config {
         return box;
     }
 
-    public void addGlyphsToColumn(column column, glyph firstGlyph, glyph secondGlyph) {
+    public void addGlyphsToColumn(RelicRecoveryVuMark column, glyph firstGlyph, glyph secondGlyph) {
         int columnNumb = 1;
         switch (column) {
             case LEFT:
@@ -703,20 +739,20 @@ public class Auto extends Config {
 
     //COLLECT FUNCTIONS HERE
 
-    public glyph getFrontGyph(){
+    public Constants.auto.autoGlyph.glyph getFrontGyph() {
         return getGlyph(ColorFront.getValue(PineappleEnum.PineappleSensorEnum.CSAVG));
     }
 
-    public glyph getBackGlyph(){
+    public Constants.auto.autoGlyph.glyph getBackGlyph() {
         return getGlyph(ColorBack.getValue(PineappleEnum.PineappleSensorEnum.CSAVG));
     }
 
-    public glyph getGlyph(double colorValue){
-        if(colorValue > 10 && colorValue < 15){
+    public Constants.auto.autoGlyph.glyph getGlyph(double colorValue) {
+        if (colorValue >= 8) {
             return GREY;
-        }else if(colorValue > 30 && colorValue < 45){
+        } else if (colorValue > 0 && colorValue < 8) {
             return BROWN;
-        }else{
+        } else {
             return NONE;
         }
     }

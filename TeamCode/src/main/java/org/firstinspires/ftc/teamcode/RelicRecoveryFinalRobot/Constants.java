@@ -16,11 +16,16 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
  */
 
 public class Constants {
+    public static class PID {
+        public static final double P = 0.01441838;
+        public static final double I = 0.0000588888;
+        public static final double D = 0.01794917;
+    }
     public static class alignment {
-        public static final double ALIGNLEFTDOWN = 0.4;
-        public static final double ALIGNLEFTUP = 1;
-        public static final double ALIGNRIGHTDOWN = 0.6;
-        public static final double ALIGNRIGHTUP = 0;
+        public static final double ALIGNLEFTDOWN = 0.42;
+        public static final double ALIGNLEFTUP = 0.8;
+        public static final double ALIGNRIGHTDOWN = 0.4;
+        public static final double ALIGNRIGHTUP = 0.0;
     }
     public static class drive {
         public static final double wheelSize = 4.0;
@@ -35,8 +40,8 @@ public class Constants {
     }
 
     public static class flip {
-        public static final double rightDown = 0.85;
-        public static final double leftDown = 0.05;
+        public static final double rightDown = 0.75;
+        public static final double leftDown = 0.13;
 
         public static final double rightFlat = 0.7;
         public static final double leftFlat = 0.29;
@@ -46,10 +51,11 @@ public class Constants {
     }
 
     public static class relic {
-        public static final double grabClose = 0.1;
-        public static final double grabOpen = 0.5;
-        public static final double turnStraight = 0.5;
-        public static final double turnDown = 0;
+        public static final double grabClose = 0.15;
+        public static final double grabIn = 0;
+        public static final double grabOpen = 0.7;
+        public static final double turnStraight = 0.7;
+        public static final double turnDown = 0.1;
         public static final double turnFold = 1;
 
     }
@@ -117,33 +123,35 @@ public class Constants {
 
             public static final double[][][] AlignArmPosition =
                     {
-                            {{alignment.ALIGNRIGHTDOWN, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTUP, alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTUP}},
+                            {{alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTUP}},
                             {{alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP  },{alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTDOWN,alignment.ALIGNLEFTDOWN}}
                     };
             public static final double[][] AlignDrivingDirection =
                     {
-                            {180,0,180},
+                            {0,0,180},
                             {0, 0,0}
                     };
             public static final boolean[][][] AlignSwitchClicked =
                     {
-                            {{true, false, true}, {false, true, false}},
+                            {{false, false, true}, {true, true, false}},
                             {{false, false, false}, {true, true, true}}
                     };
             public static final double[][] AlignDrivingOffPlatformEncoder =
                     {
-                            {35 , 28, 20},
+                            {24 , 20, 18},
                             {0,0,0}
                     };
             public static final double[] AlignDriveOffPlatformDirection =
-                    {90, 270};
+                    {270, 90};
             public static final double[] AlignTurnAngle =
                     {90, 90};
 
             public static final double CollectDistToPit = 15.0;
-            public static final int collectDriveIntoPitTime = 2000;
-            public static final double GlyphDistanceToCrypto = 5.0;
-
+            public static final int collectDriveIntoPitTime = 3000;
+            public static final double GlyphDistanceToCrypto = 10.0;
+            public static final double CryptoDistanceDriveSideWays = 10.0;
+            public static final double columnStraffDistance = 9.0;
+            public static final double alignStraffDistance = 3;
         }
 
         public static class jewel {
