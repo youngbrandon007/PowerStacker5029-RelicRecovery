@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogOutput;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -66,6 +69,9 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public DigitalChannel limitRightSide;
     public PineappleSensor csJewelLeft;
     public PineappleSensor csJewelRight;
+    public ColorSensor csFrontGlyph;
+    public ColorSensor csBackGlyph;
+
     //GYRO
     public final int NAVX_DIM_I2C_PORT = 0;
     public AHRS navx_device;
@@ -99,9 +105,6 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 
 
 
-    public PineappleSensor ColorFront;
-    public PineappleSensor ColorBack;
-
     @Override
     public void config(LinearOpMode linearOpMode) {
         robotHandler = new PineappleRobot(linearOpMode);
@@ -129,8 +132,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabIn);
 
         //SENSORS
-        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
-        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
+//        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
+//        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
 
         navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
                 NAVX_DIM_I2C_PORT,
@@ -150,9 +153,12 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         limitRightBack = linearOpMode.hardwareMap.digitalChannel.get("LRB");
         limitRightSide = linearOpMode.hardwareMap.digitalChannel.get("LRS");
 
-        ColorFront = robotHandler.sensorHandler.newColorSensor("GCOLORF");
-        ColorBack = robotHandler.sensorHandler.newColorSensor("GCOLORB");
-
+        csFrontGlyph = linearOpMode.hardwareMap.colorSensor.get("CSF");
+        csFrontGlyph.setI2cAddress(I2cAddr.create7bit(0x3c));
+        csBackGlyph = linearOpMode.hardwareMap.colorSensor.get("CSB");
+        csBackGlyph.setI2cAddress(I2cAddr.create7bit(0x4c));
+        csFrontGlyph.enableLed(true);
+        csBackGlyph.enableLed(true);
     }
 
     public void loadSwitchBoard() {

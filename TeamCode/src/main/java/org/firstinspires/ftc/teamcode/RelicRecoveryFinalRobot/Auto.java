@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 
 import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.CameraCalibration;
@@ -68,7 +69,7 @@ public class Auto extends Config {
         JEWELS, JEWELDOWN, JEWELHIT, JEWELUP,
         ALIGN, ALIGNDRIVEOFFPLATFORM, ALIGNTURN, ALIGNDRIVEINTOCRYPTO,
         KEYCOLUMNSET,
-        GLYPH, GLYPHSTRAFFTOALIGN, GLYPHPLACE, GLYPHPLACERESET,
+        GLYPH, GLYPHSTRAFFTOALIGN, GLYPHPLACE, GLYPHINTOBOX, GLYPHPLACERESET,
         COLLECT, COLLECTDRIVEBACKFROMCRYPTO, COLLECTSTRAFFTOCENTER, COLLECTSTARTTRACKING, COLLECTGOTOPIT, COLLECTGLYPHS, COLLECTRETRACESTEPS, COLLECTPROCESSFORPLACING, CHANGESETPOINT
     }
 
@@ -115,7 +116,11 @@ public class Auto extends Config {
             telemetry.addData("LS", limitLeftSide.getState());
             telemetry.addData("RB", limitRightBack.getState());
             telemetry.addData("RS", limitRightSide.getState());
+            telemetry.addData("Front Glyph", getFrontGyph());
+            telemetry.addData("Back Glyph", getBackGlyph());
 
+            telemetry.addData("Front AVG",  csAvg(csFrontGlyph));
+            telemetry.addData("Back AVG", csAvg(csBackGlyph));
             switch (init) {
                 case HARDWAREINIT:
                     servoFlipL.setPosition(Constants.flip.leftFlat);
@@ -169,7 +174,8 @@ public class Auto extends Config {
         double PIDrotationOut = 0;
         boolean PIDonTarget = false;
         int trackBack = 0;
-
+        int alignmentArm = 1;
+        boolean firstGlyph = true;
         auto = AutoEnum.ALIGN;
 
         //MAIN LOOP
@@ -203,7 +209,6 @@ public class Auto extends Config {
                     PIDonTarget = true;
                 }
             }
-            //navx_device.getYaw()
             telemetry.addLine("GYRO→TARGET: " + navx_device.getYaw() + "→" + TARGETANGLE);
 
             switch (auto) {
@@ -268,8 +273,17 @@ public class Auto extends Config {
                     break;
                 case ALIGNTURN:
                     robotHandler.drive.mecanum.setMecanum(0.0, 0.0, PIDrotationOut, 1.0);
-                    servoAlignRight.setPosition(Constants.auto.aligning.AlignArmPosition[colorPositionInt][0][columnNumber]);
-                    servoAlignLeft.setPosition(Constants.auto.aligning.AlignArmPosition[colorPositionInt][1][columnNumber]);
+                    if (firstGlyph) {
+                        servoAlignRight.setPosition(Constants.auto.aligning.AlignArmPosition[colorPositionInt][0][columnNumber]);
+                        servoAlignLeft.setPosition(Constants.auto.aligning.AlignArmPosition[colorPositionInt][1][columnNumber]);
+                    } else {
+                        if (alignmentArm==0){
+                            servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTDOWN);
+
+                        } else {
+                            servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTDOWN);
+                        }
+                    }
                     if (PIDonTarget) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.ALIGNDRIVEINTOCRYPTO;
@@ -277,6 +291,7 @@ public class Auto extends Config {
                     }
                     break;
                 case ALIGNDRIVEINTOCRYPTO:
+
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .5, PIDrotationOut, 1.0);
                     if ((limitRightBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][0][columnNumber]) || (limitLeftBack.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][1][columnNumber]) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
@@ -289,10 +304,11 @@ public class Auto extends Config {
                     wait.reset();
                     break;
                 case GLYPHSTRAFFTOALIGN:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDrivingDirection[colorPositionInt][columnNumber]), .6, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians((firstGlyph) ? Constants.auto.aligning.AlignDrivingDirection[colorPositionInt][columnNumber] : (alignmentArm == 0) ? 180 : 0), .6, PIDrotationOut, 1.0);
                     if ((limitRightSide.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][0][columnNumber]) || (limitLeftSide.getState() && Constants.auto.aligning.AlignSwitchClicked[colorPositionInt][1][columnNumber]) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPHPLACE;
+                        firstGlyph = false;
                         wait.reset();
                         robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDrivingDirection[colorPositionInt][columnNumber] + 180), 1.0, PIDrotationOut, 1.0);
 
@@ -302,7 +318,17 @@ public class Auto extends Config {
                     robotHandler.drive.stop();
                     servoFlipL.setPosition(Constants.flip.leftUp);
                     servoFlipR.setPosition(Constants.flip.rightUp);
+                    servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTUP);
+                    servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTUP);
                     if (wait.milliseconds() > 1000) {
+                        //addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
+                        auto = AutoEnum.GLYPHINTOBOX;
+                        wait.reset();
+                    }
+                    break;
+                case GLYPHINTOBOX:
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), 0.4, PIDrotationOut, 1.0);
+                    if (wait.milliseconds() > 500) {
                         //addGlyphsToColumn(COLUMN, FIRST GLYPH COLOR, SECOND GLYPH COLOR);
                         auto = AutoEnum.GLYPHPLACERESET;
                         wait.reset();
@@ -327,7 +353,7 @@ public class Auto extends Config {
                 case COLLECTSTARTTRACKING:
                     break;
                 case COLLECTGOTOPIT:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 1.0, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.7, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.CollectDistToPit))) {
                         robotHandler.drive.stop();
                         wait.reset();
@@ -337,10 +363,10 @@ public class Auto extends Config {
                     }
                     break;
                 case COLLECTGLYPHS:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.7, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.3, PIDrotationOut, 1.0);
                     motorCollectRight.setPower(1.0);
                     motorCollectLeft.setPower(-1.0);
-                    if (wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime) {
+                    if (wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime || getFrontGyph() != NONE && getBackGlyph() != NONE) {
                         robotHandler.drive.stop();
                         trackBack = getTraveledEncoderTicks();
                         resetEncoders();
@@ -360,26 +386,31 @@ public class Auto extends Config {
                 case CHANGESETPOINT:
                     previousColumn = targetColumn;
                     targetColumn = getColumn(getFrontGyph(), getBackGlyph());
-                    addGlyphsToColumn(targetColumn,getFrontGyph(), getBackGlyph());
+                    addGlyphsToColumn(targetColumn, getFrontGyph(), getBackGlyph());
                     telemetry.addData("Target", targetColumn);
                     columnNumber = columnNumber(targetColumn);
                     auto = AutoEnum.COLLECTPROCESSFORPLACING;
                     break;
                 case COLLECTPROCESSFORPLACING:
                     double direction = 0.0;
-                    double distance = 0.0;
-                    double alignment = 0;
+                    double distance;
+                    int alignment;
                     double previousColumnNumber = columnNumber(previousColumn);
                     distance = (columnNumber * previousColumnNumber) * Constants.auto.aligning.columnStraffDistance;
                     alignment = (columnNumber == 0) ? 0 : (columnNumber == 2) ? 1 : (BOX[0][0] == NONE) ? 0 : 1;
                     distance += (alignment == 1) ? Constants.auto.aligning.alignStraffDistance : -Constants.auto.aligning.alignStraffDistance;
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(180), 1.0, PIDrotationOut, 1.0);
-                    if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.CryptoDistanceDriveSideWays)) || wait.milliseconds() > 100) {
+                    if (distance > 0) {
+                        direction = 180;
+                    } else if (distance < 0) {
+                        direction = 0;
+                    }
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(direction), 1.0, PIDrotationOut, 1.0);
+                    if (traveledEncoderTicks(Constants.drive.countsPerInches(distance)) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         wait.reset();
                         auto = AutoEnum.ALIGNDRIVEINTOCRYPTO;
                     }
-//                    getColumn(FIRST GLYPH COLOR, SECOND GLYPH COLOR);
+                    alignmentArm = alignment;
                     break;
 
 
@@ -740,17 +771,17 @@ public class Auto extends Config {
     //COLLECT FUNCTIONS HERE
 
     public Constants.auto.autoGlyph.glyph getFrontGyph() {
-        return getGlyph(ColorFront.getValue(PineappleEnum.PineappleSensorEnum.CSAVG));
+        return getGlyph(csAvg(csFrontGlyph));
     }
 
     public Constants.auto.autoGlyph.glyph getBackGlyph() {
-        return getGlyph(ColorBack.getValue(PineappleEnum.PineappleSensorEnum.CSAVG));
+        return getGlyph(csAvg(csBackGlyph));
     }
 
     public Constants.auto.autoGlyph.glyph getGlyph(double colorValue) {
-        if (colorValue >= 8) {
+        if (colorValue >= 4) {
             return GREY;
-        } else if (colorValue > 0 && colorValue < 8) {
+        } else if (colorValue > 0 && colorValue < 4) {
             return BROWN;
         } else {
             return NONE;
@@ -758,5 +789,7 @@ public class Auto extends Config {
     }
 
     //GENERAL FUNCTIONS HERE
-
+    public static double csAvg(ColorSensor cs){
+        return (cs.blue()+cs.green()+cs.red())/3.0;
+    }
 }

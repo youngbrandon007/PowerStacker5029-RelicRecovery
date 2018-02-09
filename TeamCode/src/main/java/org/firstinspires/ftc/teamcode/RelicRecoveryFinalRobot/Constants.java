@@ -40,11 +40,11 @@ public class Constants {
     }
 
     public static class flip {
-        public static final double rightDown = 0.75;
-        public static final double leftDown = 0.13;
+        public static final double rightDown = 0.77;
+        public static final double leftDown = 0.23;
 
-        public static final double rightFlat = 0.7;
-        public static final double leftFlat = 0.29;
+        public static final double rightFlat = 0.67;
+        public static final double leftFlat = 0.32;
 
         public static final double rightUp = 0.2;
         public static final double leftUp = 0.81;

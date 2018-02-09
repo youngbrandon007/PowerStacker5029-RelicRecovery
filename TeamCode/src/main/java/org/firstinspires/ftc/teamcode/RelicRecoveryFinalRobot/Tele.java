@@ -42,10 +42,15 @@ public class Tele extends Config {
                 servoRelicTurn.setPosition(Constants.relic.turnStraight);
             }else if (gamepad2.left_trigger>0.2){
                 servoRelicTurn.setPosition(Constants.relic.turnDown);
+            } else if (gamepad1.right_bumper){
+                servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTDOWN);
+            }
+            else if (gamepad1.left_bumper){
+                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTDOWN);
             }
             else {
                 servoAlignRight.setPosition(Constants.alignment.ALIGNRIGHTUP);
-                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTUP - .3);
+                servoAlignLeft.setPosition(Constants.alignment.ALIGNLEFTUP);
 
             }
             telemetry.update();
