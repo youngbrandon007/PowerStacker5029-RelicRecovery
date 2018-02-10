@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsAnalogOpticalDistanceSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -69,8 +71,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public DigitalChannel limitRightSide;
     public PineappleSensor csJewelLeft;
     public PineappleSensor csJewelRight;
-    public ColorSensor csFrontGlyph;
-    public ColorSensor csBackGlyph;
+    public OpticalDistanceSensor opticalGlyph;
+    public ColorSensor glyphColor;
 
     //GYRO
     public final int NAVX_DIM_I2C_PORT = 0;
@@ -153,12 +155,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         limitRightBack = linearOpMode.hardwareMap.digitalChannel.get("LRB");
         limitRightSide = linearOpMode.hardwareMap.digitalChannel.get("LRS");
 
-        csFrontGlyph = linearOpMode.hardwareMap.colorSensor.get("CSF");
-        csFrontGlyph.setI2cAddress(I2cAddr.create7bit(0x3c));
-        csBackGlyph = linearOpMode.hardwareMap.colorSensor.get("CSB");
-        csBackGlyph.setI2cAddress(I2cAddr.create7bit(0x4c));
-        csFrontGlyph.enableLed(true);
-        csBackGlyph.enableLed(true);
+        opticalGlyph = linearOpMode.hardwareMap.opticalDistanceSensor.get("OPT");
+        glyphColor = linearOpMode.hardwareMap.colorSensor.get("GC");
     }
 
     public void loadSwitchBoard() {

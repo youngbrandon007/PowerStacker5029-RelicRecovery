@@ -18,13 +18,13 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
 public class Constants {
     public static class PID {
         public static final double P = 0.01441838;
-        public static final double I = 0.0000588888;
-        public static final double D = 0.01794917;
+        public static final double I = 0.0000488888;
+        public static final double D = 0.02094917;
     }
     public static class alignment {
         public static final double ALIGNLEFTDOWN = 0.42;
-        public static final double ALIGNLEFTUP = 0.8;
-        public static final double ALIGNRIGHTDOWN = 0.4;
+        public static final double ALIGNLEFTUP = 0.7;
+        public static final double ALIGNRIGHTDOWN = 0.63;
         public static final double ALIGNRIGHTUP = 0.0;
     }
     public static class drive {
@@ -41,7 +41,7 @@ public class Constants {
 
     public static class flip {
         public static final double rightDown = 0.77;
-        public static final double leftDown = 0.23;
+        public static final double leftDown = 0.21;
 
         public static final double rightFlat = 0.67;
         public static final double leftFlat = 0.32;
@@ -147,11 +147,11 @@ public class Constants {
                     {90, 90};
 
             public static final double CollectDistToPit = 15.0;
-            public static final int collectDriveIntoPitTime = 3000;
+            public static final int collectDriveIntoPitTime = 4000;
             public static final double GlyphDistanceToCrypto = 10.0;
             public static final double CryptoDistanceDriveSideWays = 10.0;
-            public static final double columnStraffDistance = 9.0;
-            public static final double alignStraffDistance = 3;
+            public static final double columnStraffDistance = 6;
+            public static final double alignStraffDistance = 2;
         }
 
         public static class jewel {
