@@ -142,7 +142,7 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         yawPIDController = new navXPIDController(navx_device,
                 navXPIDController.navXTimestampedDataSource.YAW);
         yawPIDController.setSetpoint(0);
-        yawPIDController.setContinuous(false);
+        yawPIDController.setContinuous(true);
         yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
         yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
         yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
