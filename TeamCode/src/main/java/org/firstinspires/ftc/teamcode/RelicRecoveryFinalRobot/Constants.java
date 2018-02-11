@@ -17,15 +17,17 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
 
 public class Constants {
     public static class PID {
-        public static final double P = 0.01441838;
-        public static final double I = 0.0000488888;
-        public static final double D = 0.02094917;
+        public static final double P = 0.020;
+        public static final double I = .00015;
+        public static final double D = 0.10;
     }
     public static class alignment {
+        public static final double ALIGNLEFTINIT = 0.78;
         public static final double ALIGNLEFTDOWN = 0.42;
-        public static final double ALIGNLEFTUP = 0.7;
-        public static final double ALIGNRIGHTDOWN = 0.63;
-        public static final double ALIGNRIGHTUP = 0.0;
+        public static final double ALIGNLEFTUP = 0.75;
+        public static final double ALIGNRIGHTINIT = 0.17;
+        public static final double ALIGNRIGHTDOWN = 0.83;
+        public static final double ALIGNRIGHTUP = 0.2;
     }
     public static class drive {
         public static final double wheelSize = 4.0;
@@ -55,7 +57,7 @@ public class Constants {
         public static final double grabIn = 0;
         public static final double grabOpen = 0.7;
         public static final double turnStraight = 0.7;
-        public static final double turnDown = 0.1;
+        public static final double turnDown = 0;
         public static final double turnFold = 1;
 
     }
@@ -138,7 +140,7 @@ public class Constants {
                     };
             public static final double[][] AlignDrivingOffPlatformEncoder =
                     {
-                            {24 , 20, 18},
+                            {22 , 18, 16},
                             {0,0,0}
                     };
             public static final double[] AlignDriveOffPlatformDirection =
@@ -146,12 +148,11 @@ public class Constants {
             public static final double[] AlignTurnAngle =
                     {90, 90};
 
-            public static final double CollectDistToPit = 15.0;
-            public static final int collectDriveIntoPitTime = 4000;
+            public static final double CollectDistToPit = 14.0;
+            public static final int collectDriveIntoPitTime = 2000;
             public static final double GlyphDistanceToCrypto = 10.0;
-            public static final double CryptoDistanceDriveSideWays = 10.0;
-            public static final double columnStraffDistance = 6;
-            public static final double alignStraffDistance = 2;
+            public static final double columnStraffDistance = 7.63;
+            public static final double alignStraffDistance = 3.0;//1.5;
         }
 
         public static class jewel {

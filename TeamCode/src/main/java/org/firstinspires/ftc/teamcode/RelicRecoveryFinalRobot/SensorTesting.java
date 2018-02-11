@@ -14,6 +14,7 @@ public class SensorTesting extends Config {
 
         waitForStart();
         while(opModeIsActive()){
+            telemetry.addData("LIFT", motorLift.getEncoderPosition());
             telemetry.addData("LB", limitLeftBack.getState());
             telemetry.addData("LS", limitLeftSide.getState());
             telemetry.addData("RB", limitRightBack.getState());

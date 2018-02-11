@@ -99,11 +99,9 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public double slideDelay = 0.0;
     //Still need detecting
     public boolean switchJewels = true;
-    public boolean switchGlyphs = true;
-    public boolean switchKeyColumn = false;
-    public boolean switchMoreGlyphs = false;
+    public boolean switchMoreGlyphs = true;
     public boolean switchPID = true;
-    public boolean switchGlyphWhite = true; // ignored right now or might be a sensor
+    public boolean switchHitBadJewel = false;
 
 
 
@@ -126,8 +124,8 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         //SERVOS
         servoFlipL = robotHandler.servoHandler.newLimitServo("SL", 202.5, Constants.flip.leftDown);
         servoFlipR = robotHandler.servoHandler.newLimitServo("SR", 202.5, Constants.flip.rightDown);
-        servoAlignLeft = robotHandler.servoHandler.newLimitServo("SAL", 202.5, Constants.alignment.ALIGNLEFTUP);
-        servoAlignRight = robotHandler.servoHandler.newLimitServo("SAR", 202.5, Constants.alignment.ALIGNRIGHTUP);
+        servoAlignLeft = robotHandler.servoHandler.newLimitServo("SAL", 202.5, Constants.alignment.ALIGNLEFTINIT);
+        servoAlignRight = robotHandler.servoHandler.newLimitServo("SAR", 202.5, Constants.alignment.ALIGNRIGHTINIT);
         servoJewel = robotHandler.servoHandler.newLimitServo("SJ", 202.5, Constants.auto.jewel.JEWELUP);
         servoJewelHit = robotHandler.servoHandler.newLimitServo("SJH", 202.5, Constants.auto.jewel.JEWELHITLEFT);
         servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, Constants.relic.turnFold);
@@ -161,16 +159,22 @@ public abstract class Config extends PineappleConfigLinearOpMode {
 
     public void loadSwitchBoard() {
        switchColor = (robotHandler.switchBoard.loadDigital("color")) ? RelicRecoveryEnums.AutoColor.RED : RelicRecoveryEnums.AutoColor.BLUE;
-//        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
-//        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
-//        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
-//        slideDelay = (switchDelayEnabled) ? robotHandler.switchBoard.loadAnalog("delay") : 0.0;
+        switchPosition = (robotHandler.switchBoard.loadDigital("position")) ? RelicRecoveryEnums.StartingPosition.FRONT : RelicRecoveryEnums.StartingPosition.BACK;
+        switchColorPosition = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.REDFRONT : RelicRecoveryEnums.ColorPosition.REDBACK : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? RelicRecoveryEnums.ColorPosition.BLUEFRONT : RelicRecoveryEnums.ColorPosition.BLUEBACK;
+        switchDelayEnabled = robotHandler.switchBoard.loadDigital("delayEnabled");
+        slideDelay = (switchDelayEnabled) ? Math.round((1-robotHandler.switchBoard.loadAnalog("delay"))*30)/2 : 0.0;
+
+        switchMoreGlyphs = robotHandler.switchBoard.loadDigital("moreGlyph");
+        switchPID = robotHandler.switchBoard.loadDigital("PID");
+        switchJewels = robotHandler.switchBoard.loadDigital("jewel");
+        switchHitBadJewel = robotHandler.switchBoard.loadDigital("badJewel");
+
         colorPositionInt = (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 0 : 2 : (switchPosition == RelicRecoveryEnums.StartingPosition.FRONT) ? 1 : 3;
     }
 
-    public void displaySwitchBorad() {
+    public void displaySwitchBorad(boolean switchGlyphWhite) {
         String autonomousDescription = switchColor + " " + switchPosition + "     " + slideDelay + "-SECONDS-" + FontFormating.getMark(switchDelayEnabled) + "     PID-" + FontFormating.getMark(switchPID);
-        String autonomousSettings = "JEWELS-" + FontFormating.getMark(switchJewels) + "     " + FontFormating.getBox(switchGlyphWhite) + "-" + FontFormating.getMark(switchGlyphs) + "     ⚿-" + FontFormating.getBox(switchKeyColumn) + "     MORE " + FontFormating.getBox(switchGlyphWhite) + "-" + FontFormating.getMark(switchMoreGlyphs);
+        String autonomousSettings = "JEWELS-" + FontFormating.getMark(switchJewels) + "     BAD-" + FontFormating.getMark(switchHitBadJewel) + "     MORE " + FontFormating.getBox(switchGlyphWhite) + "-" + FontFormating.getMark(switchMoreGlyphs);
         telemetry.addLine(autonomousDescription);
         telemetry.addLine(autonomousSettings);
     }

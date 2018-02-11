@@ -14,7 +14,7 @@ public class SwitchBoard extends Config{
         waitForStart();
         while (opModeIsActive()){
             loadSwitchBoard();
-            displaySwitchBorad();
+            displaySwitchBorad(true);
             telemetry.update();
         }
     }
