@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
+import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,11 +14,20 @@ public class Tele extends Config {
     @Override
     public void runOpMode() throws InterruptedException {
         config(this);
-
+        while(!isStarted()&&!isStopRequested()){
+            telemetry.addData("PID","CALIBRATING");
+        calibration_complete = !navx_device.isCalibrating();
+        if (!calibration_complete) {
+        } else {
+            navx_device.zeroYaw();
+            yawPIDResult = new navXPIDController.PIDResult();
+        }}
         waitForStart();
 
 //        boolean bClicked = false;
         double collectorSpeed = 0;
+        double  PIDrotationOut = 0;
+        boolean PIDON = true;
         ElapsedTime collectorRPMTimer = new ElapsedTime();
         ElapsedTime collectorRPM= new ElapsedTime();
         double prervPos = motorCollectLeft.getEncoderPosition();
@@ -29,7 +39,28 @@ public class Tele extends Config {
             telemetry.addData("Encoder Val Right", motorCollectRight.getEncoderPosition());
             telemetry.addData("Encoder Val Left", motorCollectLeft.getEncoderPosition());
             telemetry.addData("Collector RPM", RPM);
-            robotHandler.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? 0.7 : 1.0);
+            if (gamepad1.right_stick_x<=0.07&&gamepad1.right_stick_x>=-0.07){
+                if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
+                    if (yawPIDResult.isOnTarget()) {
+                        PIDrotationOut = 0.0;
+                    } else {
+                        PIDrotationOut = yawPIDResult.getOutput();
+                    }
+                }
+            } else {
+                yawPIDController.setSetpoint(navx_device.getYaw());
+                PIDrotationOut = 0;
+            }
+            if (gamepad1.right_bumper){
+                PIDON = false;
+            }
+            if (gamepad1.left_bumper){
+                PIDON = true;
+            }
+            if (!PIDON){
+                PIDrotationOut=0;
+            }
+            robotHandler.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? 0.7 : 1.0, PIDrotationOut);
             collectorSpeed = (gamepad1.right_trigger > 0.10) ? gamepad1.right_trigger : (gamepad1.left_trigger > 0.10) ? -gamepad1.left_trigger : 0;
             motorCollectRight.setPower(collectorSpeed);
             motorCollectLeft.setPower(-collectorSpeed);

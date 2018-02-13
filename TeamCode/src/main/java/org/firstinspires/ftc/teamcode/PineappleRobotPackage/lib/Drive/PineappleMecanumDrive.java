@@ -54,12 +54,21 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
 
 
     }
-
     public void updateMecanum(Gamepad pad, double scale) {
 
         double angle = mecDirectionFromJoystick(pad);
         double speed = mecSpeedFromJoystick(pad);
         double rotation = mecSpinFromJoystick(pad);
+
+        setMecanum(angle, speed, rotation, scale);
+
+    }
+
+    public void updateMecanum(Gamepad pad, double scale, double PID) {
+
+        double angle = mecDirectionFromJoystick(pad);
+        double speed = mecSpeedFromJoystick(pad);
+        double rotation = mecSpinFromJoystick(pad)+PID;
 
         setMecanum(angle, speed, rotation, scale);
 

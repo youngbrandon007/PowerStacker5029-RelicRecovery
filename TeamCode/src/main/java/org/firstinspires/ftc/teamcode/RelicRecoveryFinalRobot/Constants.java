@@ -17,13 +17,13 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
 
 public class Constants {
     public static class PID {
-        public static final double P = 0.020;
+        public static final double P = 0.019;
         public static final double I = .00015;
         public static final double D = 0.10;
     }
     public static class alignment {
         public static final double ALIGNLEFTINIT = 0.78;
-        public static final double ALIGNLEFTDOWN = 0.42;
+        public static final double ALIGNLEFTDOWN = 0.5;
         public static final double ALIGNLEFTUP = 0.75;
         public static final double ALIGNRIGHTINIT = 0.17;
         public static final double ALIGNRIGHTDOWN = 0.83;
@@ -55,7 +55,7 @@ public class Constants {
     public static class relic {
         public static final double grabClose = 0.15;
         public static final double grabIn = 0;
-        public static final double grabOpen = 0.7;
+        public static final double grabOpen = 0.6;
         public static final double turnStraight = 0.7;
         public static final double turnDown = 0;
         public static final double turnFold = 1;
@@ -148,11 +148,11 @@ public class Constants {
             public static final double[] AlignTurnAngle =
                     {90, 90};
 
-            public static final double CollectDistToPit = 14.0;
-            public static final int collectDriveIntoPitTime = 2000;
-            public static final double GlyphDistanceToCrypto = 10.0;
-            public static final double columnStraffDistance = 7.63;
-            public static final double alignStraffDistance = 3.0;//1.5;
+            public static final double CollectDistToPit = 8;
+            public static final int collectDriveIntoPitTime = 1000;
+            public static final double GlyphDistanceToCrypto = 14;
+            public static final double columnStraffDistance = 7;
+            public static final double alignStraffDistance = 1.5;//1.5;
         }
 
         public static class jewel {

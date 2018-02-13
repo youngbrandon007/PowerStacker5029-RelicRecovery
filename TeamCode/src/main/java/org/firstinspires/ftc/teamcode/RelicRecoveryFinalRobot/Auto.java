@@ -306,7 +306,6 @@ public class Auto extends Config {
                     if ((limitRightBack.getState() && usingRightArm) || (limitLeftBack.getState() && !usingRightArm) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPH;
-                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.4, PIDrotationOut, 1.0);
                     }
                     break;
                 case GLYPH:
@@ -318,7 +317,8 @@ public class Auto extends Config {
                     if ((limitRightSide.getState() && usingRightArm) || (limitLeftSide.getState() && !usingRightArm) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPHPLACE;
-                        robotHandler.drive.mecanum.setMecanum(Math.toRadians((usingRightArm) ? 0 : 180), 0.7, PIDrotationOut, 1.0);
+                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.4, PIDrotationOut, 1.0);
+//                        robotHandler.drive.mecanum.setMecanum(Math.toRadians((usingRightArm) ? 0 : 180), 0.7, PIDrotationOut, 1.0);
                         wait.reset();
                     }
                     break;
@@ -383,15 +383,15 @@ public class Auto extends Config {
                 case COLLECTGLYPHS:
                     motorCollectRight.setPower(1.0);
                     motorCollectLeft.setPower(-1.0);
-                     if (RPM<0) {
-                        x++;
-
-                     }
-                    if (x>20) {
-                        x--;
-                        motorCollectRight.setPower(-1.0);
-                        motorCollectLeft.setPower(1.0);
-                    }
+//                     if (RPM<0) {
+//                        x++;
+//
+//                     }
+//                    if (x>1) {
+//                        x--;
+//                        motorCollectRight.setPower(-1.0);
+//                        motorCollectLeft.setPower(1.0);
+//                    }
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(60))) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.COLLECTFINISHCOLLECTING;
@@ -456,7 +456,7 @@ public class Auto extends Config {
                     } else {
                         lift = 2;
                     }
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .6, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(trackBack - Constants.drive.countsPerInches(Constants.auto.aligning.GlyphDistanceToCrypto))) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.COLLECTPROCESSFORPLACING;
