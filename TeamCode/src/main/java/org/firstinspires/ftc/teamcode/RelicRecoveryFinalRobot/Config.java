@@ -55,6 +55,7 @@ public abstract class Config extends PineappleConfigLinearOpMode {
     public PineappleServo servoJewel;
     public PineappleServo servoRelicGrab;
     public PineappleServo servoRelicTurn;
+    public PineappleServo servoGlyphStop;
     //JEWEL
     public Constants.auto.jewel.jewelState jewelState = Constants.auto.jewel.jewelState.NON_NON;
     //GLYPH
@@ -130,10 +131,11 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         servoJewelHit = robotHandler.servoHandler.newLimitServo("SJH", 202.5, Constants.auto.jewel.JEWELHITLEFT);
         servoRelicTurn = robotHandler.servoHandler.newLimitServo("SRT", 202.5, Constants.relic.turnFold);
         servoRelicGrab = robotHandler.servoHandler.newLimitServo("SRG", 202.5, Constants.relic.grabIn);
+        servoGlyphStop = robotHandler.servoHandler.newLimitServo("SGS", 202.5, Constants.flip.stopDown);
 
         //SENSORS
-//        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
-//        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
+        csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
+        csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
 
         navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
                 NAVX_DIM_I2C_PORT,
