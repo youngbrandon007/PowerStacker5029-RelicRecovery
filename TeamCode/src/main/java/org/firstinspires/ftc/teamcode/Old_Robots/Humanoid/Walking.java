@@ -39,10 +39,10 @@ public class Walking extends LinearOpMode{
                 config.rShoulder.update(0.15);
             }
               else if (gamepad1.left_bumper){
-                config.rShoulder.update(-0.15);
+                config.lShoulder.update(-0.15);
             }
               else if (gamepad1.left_trigger > 0.2){
-                config.rShoulder.update(0.15);
+                config.lShoulder.update(0.15);
             }
               else{
 //                config.Head.setPosition(0.5);
