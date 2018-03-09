@@ -17,13 +17,13 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot.Constants.a
 
 public class Constants {
     public static class PID {
-        public static final double P = 0.019;
-        public static final double I = .00015;
-        public static final double D = 0.10;
+        public static final double P = 0.025;
+        public static final double I = .0002;
+        public static final double D = 0.055;
     }
     public static class alignment {
         public static final double ALIGNLEFTINIT = 0.78;
-        public static final double ALIGNLEFTDOWN = 0.5;
+        public static final double ALIGNLEFTDOWN = 0.45;
         public static final double ALIGNLEFTUP = 0.75;
         public static final double ALIGNRIGHTINIT = 0.17;
         public static final double ALIGNRIGHTDOWN = 0.83;
@@ -50,6 +50,8 @@ public class Constants {
 
         public static final double rightUp = 0.2;
         public static final double leftUp = 0.81;
+        public static final double stopUp = 0.5;
+        public static final double stopDown = 1;
     }
 
     public static class relic {
@@ -148,8 +150,8 @@ public class Constants {
             public static final double[] AlignTurnAngle =
                     {90, 90};
 
-            public static final double CollectDistToPit = 8;
-            public static final int collectDriveIntoPitTime = 1000;
+            public static final double CollectDistToPit = 10;
+            public static final int collectDriveIntoPitTime = 2000;
             public static final double GlyphDistanceToCrypto = 14;
             public static final double columnStraffDistance = 7;
             public static final double alignStraffDistance = 1.5;//1.5;
@@ -162,15 +164,15 @@ public class Constants {
             public enum jewelHitSide {
                 RIGHT, LEFT, NONE
             }
-            public static final double JEWELDOWN = 0.93;
-            public static final double JEWELUP = 0.15;
+            public static final double JEWELDOWN = 0.6;
+            public static final double JEWELUP = 0;
             public static final double JEWELHITRIGHT = 0;
             public static final double JEWELHITLEFT = 1;
             public static final double JEWELHITCENTER = 0.5;
 
-            public static final int JEWELDOWNMILI = 2000;
-            public static final int JEWELUPMILI = 2500;
-            public static final int JEWELHITMILI = 3000;
+            public static final int JEWELDOWNMILI = 1500;
+            public static final int JEWELUPMILI = 1000;
+            public static final int JEWELHITMILI = 1000;
 
         }
     }

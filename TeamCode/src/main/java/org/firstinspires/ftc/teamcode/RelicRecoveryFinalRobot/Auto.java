@@ -191,7 +191,7 @@ public class Auto extends Config {
         collectorRPMTimer.reset();
         double prervTime = collectorRPMTimer.milliseconds();
         double prervPos = motorCollectLeft.getEncoderPosition();
-        int x =0;
+        int x = 0;
         //MAIN LOOP
         while (opModeIsActive()) {
             //Always On Telemetry
@@ -217,10 +217,10 @@ public class Auto extends Config {
                 }
 
                 if (gyroOffset > 2) {
-                    PIDrotationOut = .2;
+                    PIDrotationOut = -.2;
                     PIDonTarget = false;
                 } else if (gyroOffset < -2) {
-                    PIDrotationOut = -.2;
+                    PIDrotationOut = .2;
                     PIDonTarget = false;
                 } else {
                     PIDrotationOut = 0;
@@ -244,24 +244,28 @@ public class Auto extends Config {
                     }
                     break;
                 case JEWELDOWN:
-                    if (wait.milliseconds() > jewelDown()) {
-                        auto = AutoEnum.JEWELHIT;
+                    servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITCENTER);
+
+                    if (wait.milliseconds() > 200) {
+                        servoJewel.setPosition(Constants.auto.jewel.JEWELDOWN);
+
+                        if (wait.milliseconds() > 400) {
+                            auto = AutoEnum.JEWELHIT;
+                            wait.reset();
+                        }
                     }
                     jewelCSLEDON();
                     break;
                 case JEWELHIT:
                     if (wait.milliseconds() > jewelHit()) {
                         auto = AutoEnum.JEWELUP;
+                        wait.reset();
                     }
                     break;
                 case JEWELUP:
                     if (wait.milliseconds() > jewelUp() / 2) {
-                        servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
-
-                        if (wait.milliseconds() > jewelUp()) {
                             auto = AutoEnum.ALIGN;
-
-                        }
+                            wait.reset();
 
                     }
                     jewelCSLEDOFF();
@@ -281,6 +285,7 @@ public class Auto extends Config {
                     break;
 
                 case ALIGNDRIVEOFFPLATFORM:
+                    servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(Constants.auto.aligning.AlignDriveOffPlatformDirection[colorPositionInt]), 0.5, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.AlignDrivingOffPlatformEncoder[colorPositionInt][columnNumber]))) {
                         robotHandler.drive.stop();
@@ -301,11 +306,15 @@ public class Auto extends Config {
                     }
                     break;
                 case ALIGNDRIVEINTOCRYPTO:
-
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
+//                    switchPID = false;
+                    PIDrotationOut = 0;
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .5, PIDrotationOut, 1.0);
                     if ((limitRightBack.getState() && usingRightArm) || (limitLeftBack.getState() && !usingRightArm) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPH;
+                        motorCollectRight.setPower(0);
+                        motorCollectLeft.setPower(0);
+                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.4, PIDrotationOut, 1.0);
                     }
                     break;
                 case GLYPH:
@@ -313,18 +322,20 @@ public class Auto extends Config {
                     wait.reset();
                     break;
                 case GLYPHSTRAFFTOALIGN:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians((usingRightArm) ? 180 : 0), .6, PIDrotationOut, 1.0);
+                    switchPID = false;
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians((usingRightArm) ? 180 : 0), .7, PIDrotationOut, 1.0);
                     if ((limitRightSide.getState() && usingRightArm) || (limitLeftSide.getState() && !usingRightArm) || wait.milliseconds() > 5000) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.GLYPHPLACE;
-                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.4, PIDrotationOut, 1.0);
-//                        robotHandler.drive.mecanum.setMecanum(Math.toRadians((usingRightArm) ? 0 : 180), 0.7, PIDrotationOut, 1.0);
+//                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.4, PIDrotationOut, 1.0);
+                        robotHandler.drive.mecanum.setMecanum(Math.toRadians((usingRightArm) ? 0 : 180), 0.6, PIDrotationOut, 1.0);
                         wait.reset();
                     }
                     break;
 
                 case GLYPHPLACE:
-                    robotHandler.drive.stop();
+
+                    robotHandler.drive. mecanum.setMecanum(0, 0, PIDrotationOut, 1.0);
 
 
                     servoFlipL.setPosition(Constants.flip.leftUp);
@@ -349,13 +360,13 @@ public class Auto extends Config {
                     }
                     break;
                 case GLYPHPLACERESET:
+                    robotHandler.drive. mecanum.setMecanum(0, 0, PIDrotationOut, 1.0);
                     lift = 0;
                     robotHandler.drive.stop();
                     servoFlipL.setPosition(Constants.flip.leftDown);
                     servoFlipR.setPosition(Constants.flip.rightDown);
                     if (wait.milliseconds() > 500) {
                         auto = AutoEnum.COLLECT;
-                        yawPIDController.setSetpoint(TARGETANGLE);
                     }
                     break;
                 case COLLECT:
@@ -370,7 +381,7 @@ public class Auto extends Config {
                 case COLLECTSTARTTRACKING:
                     break;
                 case COLLECTGOTOPIT:
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.7, PIDrotationOut, 1.0);
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 1.0, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(Constants.auto.aligning.CollectDistToPit))) {
                         robotHandler.drive.stop();
                         wait.reset();
@@ -381,50 +392,68 @@ public class Auto extends Config {
                     }
                     break;
                 case COLLECTGLYPHS:
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.6, PIDrotationOut, 1.0);
+
                     motorCollectRight.setPower(1.0);
                     motorCollectLeft.setPower(-1.0);
-//                     if (RPM<0) {
-//                        x++;
-//
-//                     }
-//                    if (x>1) {
-//                        x--;
-//                        motorCollectRight.setPower(-1.0);
-//                        motorCollectLeft.setPower(1.0);
-//                    }
-                    if (traveledEncoderTicks(Constants.drive.countsPerInches(60))) {
+////                     if (RPM<0) {
+////                        x++;
+////
+////                     }
+////                    if (x>1) {
+////                        x--;
+////                        motorCollectRight.setPower(-1.0);
+////                        motorCollectLeft.setPower(1.0);
+////                    }
+                    if (traveledEncoderTicks(Constants.drive.countsPerInches(40))) {
                         robotHandler.drive.stop();
                         auto = AutoEnum.COLLECTFINISHCOLLECTING;
                         wait.reset();
                         backGlyph = getGlyph();
-                    } else if ((glyphColor.red() + glyphColor.blue() + glyphColor.green()) / 3.0 > 0) {
-                        if (oneGlyphCollected == 0) {
+                    } else if ((oneGlyphCollected == 1 && wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime) || opticalGlyph.getLightDetected() > 0.0) {
+                        robotHandler.drive.stop();
+                        auto = AutoEnum.COLLECTFINISHCOLLECTING;
+                        wait.reset();
+                        backGlyph = getGlyph();
+                    } else if((glyphColor.red() + glyphColor.green() + glyphColor.blue())/3.0 > 0){
+                        if(oneGlyphCollected == 0) {
                             wait.reset();
-                            robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .6, PIDrotationOut, 1.0);
+                            oneGlyphCollected = 1;
                         }
-                        oneGlyphCollected = 1;
-                        if (wait.milliseconds() > 250) {
-                            robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.5, PIDrotationOut, 1.0);
-                        }
-                        if (wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime || opticalGlyph.getLightDetected() > 0.0) {
-                            robotHandler.drive.stop();
-                            auto = AutoEnum.COLLECTFINISHCOLLECTING;
-                            wait.reset();
-                            backGlyph = getGlyph();
-                        }
-                    } else {
+                    }else {
 
-                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.5, PIDrotationOut, 1.0);
+                        robotHandler.drive.mecanum.setMecanum(Math.toRadians(90), 0.4, PIDrotationOut, 1.0);
                     }
+
+//                    if (wait.milliseconds() > Constants.auto.aligning.collectDriveIntoPitTime || opticalGlyph.getLightDetected() > 0.0){
+//                        robotHandler.drive.stop();
+//                        auto = AutoEnum.COLLECTFINISHCOLLECTING;
+//                        wait.reset();
+//                        backGlyph = getGlyph();
+//                    }
+
                     break;
                 case COLLECTFINISHCOLLECTING:
-                    trackBack = getTraveledEncoderTicks();
-                    resetEncoders();
-                    auto = AutoEnum.CHANGESETPOINT;
-                    frontGlyph = getGlyph();
-                    servoFlipL.setPosition(Constants.flip.leftFlat);
-                    servoFlipR.setPosition(Constants.flip.rightFlat);
+                        trackBack = getTraveledEncoderTicks();
+                        resetEncoders();
+                        auto = AutoEnum.COLLECTRETRACESTEPS;
 
+
+                        wait.reset();
+                    break;
+                case COLLECTRETRACESTEPS:
+
+                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .6, PIDrotationOut, 1.0);
+                    if (traveledEncoderTicks(trackBack - Constants.drive.countsPerInches(Constants.auto.aligning.GlyphDistanceToCrypto))) {
+                        robotHandler.drive.stop();
+                        auto = AutoEnum.CHANGESETPOINT;
+                        resetEncoders();
+                        frontGlyph = getGlyph();
+                        servoFlipL.setPosition(Constants.flip.leftFlat);
+                        servoFlipR.setPosition(Constants.flip.rightFlat);
+                        motorCollectRight.setPower(-1.0);
+                        motorCollectLeft.setPower(1.0);
+                    }
                     break;
                 case CHANGESETPOINT:
                     previousColumn = targetColumn;
@@ -446,9 +475,9 @@ public class Auto extends Config {
                     distance = Math.abs(distance);
 
                     resetEncoders();
-                    auto = AutoEnum.COLLECTRETRACESTEPS;
+                    auto = AutoEnum.COLLECTPROCESSFORPLACING;
                     break;
-                case COLLECTRETRACESTEPS:
+                case COLLECTPROCESSFORPLACING:
                     if (BOX[0][columnNumber] == NONE) {
 
                     } else if (BOX[1][columnNumber] == NONE) {
@@ -456,16 +485,6 @@ public class Auto extends Config {
                     } else {
                         lift = 2;
                     }
-                    robotHandler.drive.mecanum.setMecanum(Math.toRadians(270), .4, PIDrotationOut, 1.0);
-                    if (traveledEncoderTicks(trackBack - Constants.drive.countsPerInches(Constants.auto.aligning.GlyphDistanceToCrypto))) {
-                        robotHandler.drive.stop();
-                        auto = AutoEnum.COLLECTPROCESSFORPLACING;
-                        resetEncoders();
-                    }
-                    break;
-
-                case COLLECTPROCESSFORPLACING:
-
 
                     robotHandler.drive.mecanum.setMecanum(Math.toRadians(direction), 0.7, PIDrotationOut, 1.0);
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(distance))) {// || wait.milliseconds() > 5000) {
@@ -529,8 +548,9 @@ public class Auto extends Config {
     }
 
     public int jewelDown() {
-        servoJewel.setPosition(Constants.auto.jewel.JEWELDOWN);
         servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITCENTER);
+
+        servoJewel.setPosition(Constants.auto.jewel.JEWELDOWN);
         return Constants.auto.jewel.JEWELDOWNMILI;
     }
 
@@ -559,16 +579,16 @@ public class Auto extends Config {
         Constants.auto.jewel.jewelState left = getLeftCSJewelState();
         Constants.auto.jewel.jewelState right = getRightCSJewelState();
         Constants.auto.jewel.jewelState state;
-
-        if (left == right) {
-            state = left;
-        } else if (left == NON_NON && right != NON_NON) {
-            state = right;
-        } else if (right == NON_NON && left != NON_NON) {
-            state = left;
-        } else {
-            state = NON_NON;
-        }
+        state = left;
+//        if (left == right) {
+//            state = left;
+//        } else if (left == NON_NON && right != NON_NON) {
+//            state = right;
+//        } else if (right == NON_NON && left != NON_NON) {
+//            state = left;
+//        } else {
+//            state = NON_NON;
+//        }
         return (switchColor == RelicRecoveryEnums.AutoColor.RED) ? (state == RED_BLUE) ? RIGHT : LEFT : (state == RED_BLUE) ? LEFT : RIGHT;
 
     }
@@ -631,10 +651,10 @@ public class Auto extends Config {
                 float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
                 rawPose.setData(poseData);
                 float[][] corners = new float[4][2];
-                corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -55, 50)).getData();//UL TODO FIND NEW LOCATIONS
-                corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -55, 50)).getData();//UR TODO FIND NEW LOCATIONS
-                corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -300, 50)).getData();//LR TODO FIND NEW LOCATIONS
-                corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -300, 50)).getData();//LL TODO FIND NEW LOCATIONS
+                corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -55, 100)).getData();//UL TODO FIND NEW LOCATIONS
+                corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -55, 100)).getData();//UR TODO FIND NEW LOCATIONS
+                corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -300, 100)).getData();//LR TODO FIND NEW LOCATIONS
+                corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -300, 100)).getData();//LL TODO FIND NEW LOCATIONS
                 Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
                 ByteBuffer pix = img.getPixels();
                 bm.copyPixelsFromBuffer(pix);
