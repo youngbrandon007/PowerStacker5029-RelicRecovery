@@ -14,15 +14,15 @@ public class Tele extends Config {
     @Override
     public void runOpMode() throws InterruptedException {
         config(this);
-        while (!isStarted() && !isStopRequested()) {
-            telemetry.addData("PID", "CALIBRATING");
-            calibration_complete = !navx_device.isCalibrating();
-            if (!calibration_complete) {
-            } else {
-                navx_device.zeroYaw();
-                yawPIDResult = new navXPIDController.PIDResult();
-            }
-        }
+//        while (!isStarted() && !isStopRequested()) {
+//            telemetry.addData("PID", "CALIBRATING");
+//            calibration_complete = !navx_device.isCalibrating();
+//            if (!calibration_complete) {
+//            } else {
+//                navx_device.zeroYaw();
+//                yawPIDResult = new navXPIDController.PIDResult();
+//            }
+//        }
         waitForStart();
 
 //        boolean bClicked = false;
@@ -43,27 +43,27 @@ public class Tele extends Config {
 //            telemetry.addData("Encoder Val Left", motorCollectLeft.getEncoderPosition());Ad
 //            telemetry.addData("Collector RPM", RPM);
             //PID
-            if (PIDON&&gamepad1.right_stick_x == 0) {
-                if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
-                    if (yawPIDResult.isOnTarget()) {
-                        PIDrotationOut = 0.0;
-                    } else {
-                        PIDrotationOut = yawPIDResult.getOutput();
-                    }
-                }
-            } else {
-                yawPIDController.setSetpoint(navx_device.getYaw());
-                PIDrotationOut = 0;
-            }
-            if (gamepad1.right_bumper) {
-                PIDON = false;
-            }
-            if (gamepad1.left_bumper) {
-                PIDON = true;
-            }
-            if (!PIDON) {
-                PIDrotationOut = 0;
-            }
+//            if (PIDON&&gamepad1.right_stick_x == 0) {
+//                if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
+//                    if (yawPIDResult.isOnTarget()) {
+//                        PIDrotationOut = 0.0;
+//                    } else {
+//                        PIDrotationOut = yawPIDResult.getOutput();
+//                    }
+//                }
+//            } else {
+//                yawPIDController.setSetpoint(navx_device.getYaw());
+//                PIDrotationOut = 0;
+//            }
+//            if (gamepad1.right_bumper) {
+//                PIDON = false;
+//            }
+//            if (gamepad1.left_bumper) {
+//                PIDON = true;
+//            }
+//            if (!PIDON) {
+//                PIDrotationOut = 0;
+//            }
 
             robotHandler.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? 0.7 : 1.0, PIDrotationOut);
             collectorSpeed = (gamepad1.right_trigger > 0.10) ? gamepad1.right_trigger : (gamepad1.left_trigger > 0.10) ? -gamepad1.left_trigger : 0;
@@ -140,8 +140,7 @@ public class Tele extends Config {
             }
 
             servoRelicTurn.setPosition(gamepad2.right_stick_y*0.000001+servoRelicTurn.servoObject.getPosition());
-            telemetry.addData("PID", PIDON);
-            telemetry.addData("Gyro", navx_device.getYaw());
+//            telemetry.addData("PID", PIDON);
             telemetry.addData("Lift", motorLift.getEncoderPosition());
             telemetry.update();
 //            if (collectorRPM.milliseconds() > 500) {
