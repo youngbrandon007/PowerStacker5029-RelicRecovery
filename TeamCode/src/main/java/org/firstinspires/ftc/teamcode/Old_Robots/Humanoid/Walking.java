@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Fixed by Vishnu on 2/03/2018
  */
 @TeleOp(name = "Humanoid", group = "Linear Opmode")
-public class Walking extends LinearOpMode{
+public class Walking extends LinearOpMode {
     HConfigLinearOpMode config = new HConfigLinearOpMode();
 
 
@@ -20,27 +20,27 @@ public class Walking extends LinearOpMode{
         waitForStart();
 
 
-
-        while(opModeIsActive()){
-
-            if (gamepad1.right_bumper){
-                config.rShoulder.update(-0.15);
-            }
-              else if (gamepad1.right_trigger > 0.2){
-                config.rShoulder.update(0.15);
-            }
-              else if (gamepad1.left_bumper){
-                config.rShoulder.update(-0.15);
-            }
-              else if (gamepad1.left_trigger > 0.2){
-                config.rShoulder.update(0.15);
-            }
-              else{
-                config.rShoulder.update(0);
-            }
-
-            config.robot.drive.tank.setPower(gamepad1.right_stick_y, -gamepad1.left_stick_y);
-
+        while (opModeIsActive()) {
+//
+//            if (gamepad1.right_bumper){
+//                config.rShoulder.update(-0.15);
+//            }
+//              else if (gamepad1.right_trigger > 0.2){
+//                config.rShoulder.update(0.15);
+//            }
+//              else if (gamepad1.left_bumper){
+//                config.lShoulder.update(-0.15);
+//            }
+//              else if (gamepad1.left_trigger > 0.2){
+//                config.lShoulder.update(0.15);
+//            }
+//              else{
+//                config.rShoulder.update(0);
+//            }
+//
+//            config.robot.drive.tank.setPower(gamepad1.right_stick_y, -gamepad1.left_stick_y);
+//
+//        }
         }
     }
 }

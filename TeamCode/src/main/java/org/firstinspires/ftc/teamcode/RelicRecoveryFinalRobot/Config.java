@@ -137,25 +137,25 @@ public abstract class Config extends PineappleConfigLinearOpMode {
         csJewelLeft = robotHandler.sensorHandler.newColorSensor("CSJL");
         csJewelRight = robotHandler.sensorHandler.newColorSensor("CSJR");
 
-        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
-                NAVX_DIM_I2C_PORT,
-                AHRS.DeviceDataType.kProcessedData,
-                NAVX_DEVICE_UPDATE_RATE_HZ);
-        yawPIDController = new navXPIDController(navx_device,
-                navXPIDController.navXTimestampedDataSource.YAW);
-        yawPIDController.setSetpoint(0);
-        yawPIDController.setContinuous(true);
-        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
-        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
-        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
-        yawPIDController.enable(true);
+//        navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
+//                NAVX_DIM_I2C_PORT,
+//                AHRS.DeviceDataType.kProcessedData,
+//                NAVX_DEVICE_UPDATE_RATE_HZ);
+//        yawPIDController = new navXPIDController(navx_device,
+//                navXPIDController.navXTimestampedDataSource.YAW);
+//        yawPIDController.setSetpoint(0);
+//        yawPIDController.setContinuous(true);
+//        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
+//        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+//        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+//        yawPIDController.enable(true);
 
         limitLeftBack = linearOpMode.hardwareMap.digitalChannel.get("LLB");
         limitLeftSide = linearOpMode.hardwareMap.digitalChannel.get("LLS");
         limitRightBack = linearOpMode.hardwareMap.digitalChannel.get("LRB");
         limitRightSide = linearOpMode.hardwareMap.digitalChannel.get("LRS");
 
-        opticalGlyph = linearOpMode.hardwareMap.opticalDistanceSensor.get("OPT");
+//        opticalGlyph = linearOpMode.hardwareMap.opticalDistanceSensor.get("OPT");
         glyphColor = linearOpMode.hardwareMap.colorSensor.get("GC");
     }
 

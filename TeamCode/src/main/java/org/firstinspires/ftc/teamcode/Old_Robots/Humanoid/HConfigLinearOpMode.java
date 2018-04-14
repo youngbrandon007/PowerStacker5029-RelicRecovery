@@ -33,7 +33,6 @@ public class HConfigLinearOpMode extends PineappleConfigLinearOpMode {
         RightDrive.maxPower = 0.5;
         LeftDrive.maxPower = 0.5;
         rShoulder = robot.motorHandler.newMotor("S", 1,false, false, PineappleEnum.MotorType.NEV60);
-
     }
 
     @Override
