@@ -69,7 +69,7 @@ public class Tele extends Config {
             collectorSpeed = (gamepad1.right_trigger > 0.10) ? gamepad1.right_trigger : (gamepad1.left_trigger > 0.10) ? -gamepad1.left_trigger : 0;
             motorCollectRight.setPower(collectorSpeed);
             motorCollectLeft.setPower(-collectorSpeed);
-            motorRelic.setPower(-((gamepad2.b)?gamepad2.left_stick_y/3:gamepad2.left_stick_y));
+            motorRelic.setPower((gamepad2.b)?gamepad2.left_stick_y/3:gamepad2.left_stick_y);
 
             if (gamepad2.right_bumper) {
                 servoRelicGrab.setPosition(Constants.relic.grabClose);
@@ -116,13 +116,13 @@ public class Tele extends Config {
                 servoJewelHit.setPosition(Constants.auto.jewel.JEWELHITLEFT);
                 servoJewel.setPosition(Constants.auto.jewel.JEWELUP);
             }
-//
-//            if (gamepad2.dpad_right) {
-//                liftTarget = 2800;
-//            }
-//            if (gamepad1.dpad_left) {
-//                liftTarget = 0;
-//            }
+
+            if (gamepad2.dpad_right) {
+                liftTarget = 2800;
+            }
+            if (gamepad1.dpad_left) {
+                liftTarget = 0;
+            }
             if (autoLiftOn) {
                 if (liftTarget > Math.abs(motorLift.getEncoderPosition())) {
                     motorLift.setPower(-1);
@@ -139,9 +139,15 @@ public class Tele extends Config {
                 servoGlyphStop.setPosition(Constants.flip.stopDown);
             }
 
+<<<<<<< HEAD
 
             servoRelicTurn.setPosition(gamepad2.right_stick_y*0.000001+servoRelicTurn.servoObject.getPosition());
 //            telemetry.addData("PID", PIDON);
+=======
+            servoRelicTurn.setPosition(gamepad2.right_stick_y*0.000001+servoRelicTurn.servoObject.getPosition());
+            telemetry.addData("PID", PIDON);
+            telemetry.addData("Gyro", navx_device.getYaw());
+>>>>>>> parent of 60202ec... Commits from outreaches and Worlds
             telemetry.addData("Lift", motorLift.getEncoderPosition());
             telemetry.update();
 //            if (collectorRPM.milliseconds() > 500) {
