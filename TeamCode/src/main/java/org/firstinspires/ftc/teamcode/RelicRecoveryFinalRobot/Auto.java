@@ -394,6 +394,15 @@ public class Auto extends Config {
                     }
                     break;
                 case COLLECTGLYPHS:
+////                     if (RPM<0) {
+////                        x++;
+////
+////                     }
+////                    if (x>1) {
+////                        x--;
+////                        motorCollectRight.setPower(-1.0);
+////                        motorCollectLeft.setPower(1.0);
+////                    }
 
                     if (traveledEncoderTicks(Constants.drive.countsPerInches(50))) {
                         robotHandler.drive.stop();

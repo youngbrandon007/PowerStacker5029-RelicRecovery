@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Fixed by Vishnu on 2/03/2018
  */
 @TeleOp(name = "Humanoid", group = "Linear Opmode")
-@Disabled
 public class Walking extends LinearOpMode {
     HConfigLinearOpMode config = new HConfigLinearOpMode();
 
