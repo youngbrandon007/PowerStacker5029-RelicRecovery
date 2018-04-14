@@ -42,14 +42,14 @@ public class Constants {
     }
 
     public static class flip {
-        public static final double rightDown = 0.77;
-        public static final double leftDown = 0.21;
+        public static final double rightDown = 0.60;
+        public static final double leftDown = 0.38;
 
-        public static final double rightFlat = 0.67;
-        public static final double leftFlat = 0.32;
+        public static final double rightFlat = 0.50;
+        public static final double leftFlat = 0.49;
 
-        public static final double rightUp = 0.2;
-        public static final double leftUp = 0.81;
+        public static final double rightUp = 0.03;
+        public static final double leftUp = 0.98;
         public static final double stopUp = 0.5;
         public static final double stopDown = 1;
     }
@@ -130,11 +130,11 @@ public class Constants {
                             {{alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTDOWN  },{alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTUP}},
                             {{alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP, alignment.ALIGNRIGHTUP  },{alignment.ALIGNLEFTDOWN, alignment.ALIGNLEFTDOWN,alignment.ALIGNLEFTDOWN}}
                     };
-            public static final double[][] AlignDrivingDirection =
-                    {
-                            {0,0,180},
-                            {0, 0,0}
-                    };
+//            public static final double[][] AlignDrivingDirection =
+//                    {
+//                            {0,0,180},
+//                            {0, 0,0}
+//                    };
             public static final boolean[][][] AlignSwitchClicked =
                     {
                             {{false, false, true}, {true, true, false}},
@@ -142,8 +142,8 @@ public class Constants {
                     };
             public static final double[][] AlignDrivingOffPlatformEncoder =
                     {
-                            {22 , 18, 16},
-                            {0,0,0}
+                            {22 , 19, 16},
+                            {16,19,22}
                     };
             public static final double[] AlignDriveOffPlatformDirection =
                     {270, 90};
@@ -164,14 +164,14 @@ public class Constants {
             public enum jewelHitSide {
                 RIGHT, LEFT, NONE
             }
-            public static final double JEWELDOWN = 0.6;
-            public static final double JEWELUP = 0;
+            public static final double JEWELDOWN = 0.8;
+            public static final double JEWELUP = 0.2;
             public static final double JEWELHITRIGHT = 0;
             public static final double JEWELHITLEFT = 1;
             public static final double JEWELHITCENTER = 0.5;
 
             public static final int JEWELDOWNMILI = 1500;
-            public static final int JEWELUPMILI = 1000;
+            public static final int JEWELUPMILI = 500;
             public static final int JEWELHITMILI = 1000;
 
         }
